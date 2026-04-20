@@ -120,6 +120,13 @@
             <version>1.19.6</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Flyway para migraciones de BD -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>9.22.0</version>
+        </dependency>
     </dependencies>
 
     <build>
