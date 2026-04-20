@@ -123,4 +123,64 @@ public class Lista {
             .filter(t -> !t.isCompletada())
             .toList();
     }
+
+    /**
+     * Añade una lista previa (prerequisito) para poder transferir tarjetas a esta lista.
+     * 
+     * @param idListaPrevia ID de la lista que debe completarse antes
+     */
+    public void agregarListaPrevia(String idListaPrevia) {
+        if (idListaPrevia == null || idListaPrevia.trim().isEmpty()) {
+            throw new IllegalArgumentException("El ID de la lista previa no puede estar vacío");
+        }
+        if (!listasPrevias.contains(idListaPrevia)) {
+            listasPrevias.add(idListaPrevia);
+            fechaActualizacion = LocalDateTime.now();
+        }
+    }
+
+    /**
+     * Elimina una lista previa de los requisitos.
+     * 
+     * @param idListaPrevia ID de la lista previa a eliminar
+     */
+    public void eliminarListaPrevia(String idListaPrevia) {
+        if (listasPrevias.remove(idListaPrevia)) {
+            fechaActualizacion = LocalDateTime.now();
+        }
+    }
+
+    /**
+     * Verifica si esta lista tiene prerequisitos.
+     * 
+     * @return true si hay listas previas requeridas
+     */
+    public boolean tienePrerequisitos() {
+        return !listasPrevias.isEmpty();
+    }
+
+    /**
+     * Obtiene las listas previas requeridas.
+     * 
+     * @return lista inmutable de IDs de listas previas
+     */
+    public List<String> obtenerListasPrevias() {
+        return Collections.unmodifiableList(listasPrevias);
+    }
+
+    /**
+     * Verifica si una tarjeta cumple con los requisitos para ser movida a esta lista.
+     * La tarjeta debe estar completada para poder moverse a una lista con requisitos.
+     * 
+     * @param tarjeta tarjeta a validar
+     * @return true si cumple los requisitos o no hay requisitos
+     */
+    public boolean cumpleRequisitos(Tarjeta tarjeta) {
+        if (listasPrevias.isEmpty()) {
+            return true; // No hay requisitos
+        }
+        
+        // Para moverse a una lista con requisitos, la tarjeta debe estar completada
+        return tarjeta.isCompletada();
+    }
 }

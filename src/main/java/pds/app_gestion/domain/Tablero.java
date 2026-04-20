@@ -103,6 +103,15 @@ public class Tablero {
     }
 
     /**
+     * Obtiene todas las listas del tablero.
+     * 
+     * @return lista inmutable de todas las listas
+     */
+    public List<Lista> obtenerListas() {
+        return Collections.unmodifiableList(listas);
+    }
+
+    /**
      * Bloquea el tablero temporalmente.
      * 
      * Cuando un tablero está bloqueado, solo se pueden mover tarjetas entre listas,
@@ -205,7 +214,7 @@ public class Tablero {
      * @param tipo tipo de acción
      * @param detalles detalles de la acción
      */
-    private void registrarAccion(String tipo, String detalles) {
+    public void registrarAccion(String tipo, String detalles) {
         historial.add(new RegistroAccion(tipo, detalles, LocalDateTime.now()));
     }
 
