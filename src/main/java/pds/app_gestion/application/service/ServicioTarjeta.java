@@ -160,6 +160,77 @@ public class ServicioTarjeta {
     }
 
     /**
+     * Caso de uso: Obtener tarjetas de una lista filtradas por etiquetas.
+     * 
+     * @param idTablero ID del tablero
+     * @param idLista ID de la lista
+     * @param emailUsuario email del usuario que solicita
+     * @param nombreEtiquetas conjunto de nombres de etiquetas para filtrar
+     * @return lista de tarjetas que contienen todas las etiquetas especificadas
+     */
+    public java.util.List<TarjetaResponse> obtenerTarjetasPorEtiquetas(String idTablero, String idLista, 
+                                                                       String emailUsuario, java.util.Set<String> nombreEtiquetas) {
+        if (nombreEtiquetas == null || nombreEtiquetas.isEmpty()) {
+            return obtenerTodasLasTarjetas(idTablero, idLista, emailUsuario);
+        }
+        
+        Tablero tablero = obtenerTablero(idTablero, emailUsuario);
+        Lista lista = obtenerLista(tablero, idLista);
+        
+        return lista.getTarjetas().stream()
+            .filter(tarjeta -> contieneTodasLasEtiquetas(tarjeta, nombreEtiquetas))
+            .map(this::convertirATarjetaResponse)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Caso de uso: Obtener todas las tarjetas de una lista.
+     * 
+     * @param idTablero ID del tablero
+     * @param idLista ID de la lista
+     * @param emailUsuario email del usuario que solicita
+     * @return lista de todas las tarjetas de la lista
+     */
+    public java.util.List<TarjetaResponse> obtenerTodasLasTarjetas(String idTablero, String idLista, String emailUsuario) {
+        Tablero tablero = obtenerTablero(idTablero, emailUsuario);
+        Lista lista = obtenerLista(tablero, idLista);
+        
+        return lista.getTarjetas().stream()
+            .map(this::convertirATarjetaResponse)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Caso de uso: Obtener todas las etiquetas únicas usadas en las tarjetas de una lista.
+     * 
+     * @param idTablero ID del tablero
+     * @param idLista ID de la lista
+     * @param emailUsuario email del usuario que solicita
+     * @return conjunto de etiquetas únicas de la lista
+     */
+    public java.util.Set<EtiquetaResponse> obtenerEtiquetasDeLista(String idTablero, String idLista, String emailUsuario) {
+        Tablero tablero = obtenerTablero(idTablero, emailUsuario);
+        Lista lista = obtenerLista(tablero, idLista);
+        
+        return lista.getTarjetas().stream()
+            .flatMap(tarjeta -> tarjeta.getEtiquetas().stream())
+            .map(e -> EtiquetaResponse.builder()
+                .nombre(e.getNombre())
+                .color(e.getColor())
+                .build())
+            .collect(Collectors.toSet());
+    }
+
+    /**
+     * Verifica si una tarjeta contiene todas las etiquetas especificadas.
+     */
+    private boolean contieneTodasLasEtiquetas(Tarjeta tarjeta, java.util.Set<String> nombreEtiquetas) {
+        return nombreEtiquetas.stream()
+            .allMatch(nombre -> tarjeta.getEtiquetas().stream()
+                .anyMatch(etiqueta -> etiqueta.getNombre().equalsIgnoreCase(nombre)));
+    }
+
+    /**
      * Convierte una Tarjeta de dominio a TarjetaResponse.
      */
     private TarjetaResponse convertirATarjetaResponse(Tarjeta tarjeta) {

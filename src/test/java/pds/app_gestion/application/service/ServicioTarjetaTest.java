@@ -144,4 +144,111 @@ public class ServicioTarjetaTest {
             servicioTarjeta.crearTarjeta("1", "lista-1", "adrian@example.com", request);
         });
     }
+
+    @Test
+    void obtenerTarjetasPorEtiquetasUnicaExitosamente() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        Lista lista = new Lista("lista-1", "Por hacer");
+        
+        Tarjeta tarjeta1 = new Tarjeta("t1", "Tarea 1", "");
+        tarjeta1.agregarEtiqueta(new Etiqueta("Urgente", "#FF0000"));
+        
+        Tarjeta tarjeta2 = new Tarjeta("t2", "Tarea 2", "");
+        tarjeta2.agregarEtiqueta(new Etiqueta("Baja", "#00FF00"));
+        
+        Tarjeta tarjeta3 = new Tarjeta("t3", "Tarea 3", "");
+        tarjeta3.agregarEtiqueta(new Etiqueta("Urgente", "#FF0000"));
+        
+        lista.agregarTarjeta(tarjeta1);
+        lista.agregarTarjeta(tarjeta2);
+        lista.agregarTarjeta(tarjeta3);
+        tablero.agregarLista(lista);
+        
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        var etiquetas = new java.util.HashSet<String>();
+        etiquetas.add("Urgente");
+        
+        var response = servicioTarjeta.obtenerTarjetasPorEtiquetas("1", "lista-1", "adrian@example.com", etiquetas);
+
+        assertEquals(2, response.size());
+        assertTrue(response.stream().anyMatch(t -> t.getId().equals("t1")));
+        assertTrue(response.stream().anyMatch(t -> t.getId().equals("t3")));
+    }
+
+    @Test
+    void obtenerTarjetasPorMultiplesEtiquetasExitosamente() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        Lista lista = new Lista("lista-1", "Por hacer");
+        
+        Tarjeta tarjeta1 = new Tarjeta("t1", "Tarea 1", "");
+        tarjeta1.agregarEtiqueta(new Etiqueta("Urgente", "#FF0000"));
+        tarjeta1.agregarEtiqueta(new Etiqueta("Backend", "#0000FF"));
+        
+        Tarjeta tarjeta2 = new Tarjeta("t2", "Tarea 2", "");
+        tarjeta2.agregarEtiqueta(new Etiqueta("Urgente", "#FF0000"));
+        
+        Tarjeta tarjeta3 = new Tarjeta("t3", "Tarea 3", "");
+        tarjeta3.agregarEtiqueta(new Etiqueta("Backend", "#0000FF"));
+        
+        lista.agregarTarjeta(tarjeta1);
+        lista.agregarTarjeta(tarjeta2);
+        lista.agregarTarjeta(tarjeta3);
+        tablero.agregarLista(lista);
+        
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        var etiquetas = new java.util.HashSet<String>();
+        etiquetas.add("Urgente");
+        etiquetas.add("Backend");
+        
+        var response = servicioTarjeta.obtenerTarjetasPorEtiquetas("1", "lista-1", "adrian@example.com", etiquetas);
+
+        assertEquals(1, response.size());
+        assertEquals("t1", response.get(0).getId());
+    }
+
+    @Test
+    void obtenerTodasLasTarjetasExitosamente() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        Lista lista = new Lista("lista-1", "Por hacer");
+        
+        Tarjeta tarjeta1 = new Tarjeta("t1", "Tarea 1", "");
+        Tarjeta tarjeta2 = new Tarjeta("t2", "Tarea 2", "");
+        
+        lista.agregarTarjeta(tarjeta1);
+        lista.agregarTarjeta(tarjeta2);
+        tablero.agregarLista(lista);
+        
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        var response = servicioTarjeta.obtenerTodasLasTarjetas("1", "lista-1", "adrian@example.com");
+
+        assertEquals(2, response.size());
+    }
+
+    @Test
+    void obtenerEtiquetasDeLista() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        Lista lista = new Lista("lista-1", "Por hacer");
+        
+        Tarjeta tarjeta1 = new Tarjeta("t1", "Tarea 1", "");
+        tarjeta1.agregarEtiqueta(new Etiqueta("Urgente", "#FF0000"));
+        tarjeta1.agregarEtiqueta(new Etiqueta("Backend", "#0000FF"));
+        
+        Tarjeta tarjeta2 = new Tarjeta("t2", "Tarea 2", "");
+        tarjeta2.agregarEtiqueta(new Etiqueta("Urgente", "#FF0000"));
+        
+        lista.agregarTarjeta(tarjeta1);
+        lista.agregarTarjeta(tarjeta2);
+        tablero.agregarLista(lista);
+        
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        var response = servicioTarjeta.obtenerEtiquetasDeLista("1", "lista-1", "adrian@example.com");
+
+        assertEquals(2, response.size());
+        assertTrue(response.stream().anyMatch(e -> e.getNombre().equals("Urgente")));
+        assertTrue(response.stream().anyMatch(e -> e.getNombre().equals("Backend")));
+    }
 }
