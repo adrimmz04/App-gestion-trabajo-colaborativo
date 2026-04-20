@@ -139,6 +139,13 @@
             <artifactId>caffeine</artifactId>
             <version>3.1.8</version>
         </dependency>
+
+        <!-- Envers para auditoría de cambios -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-envers</artifactId>
+            <version>6.2.9.Final</version>
+        </dependency>
     </dependencies>
 
     <build>

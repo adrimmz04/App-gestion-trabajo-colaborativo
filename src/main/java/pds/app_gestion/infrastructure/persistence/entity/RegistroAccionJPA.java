@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import java.time.LocalDateTime;
 
 /**
  * Entidad JPA para persistir el historial de acciones en tableros.
  * Mapea el objeto de valor RegistroAccion del dominio.
+ * Anotada con @Audited para mantener historial automático de cambios.
  */
 @Entity
 @Table(name = "registros_acciones")
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Audited
 public class RegistroAccionJPA {
 
     @Id

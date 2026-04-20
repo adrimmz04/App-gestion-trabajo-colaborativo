@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -13,6 +14,8 @@ import java.util.Set;
 /**
  * Entidad JPA para persismir tableros en la base de datos.
  * Mapea el agregado Tablero del dominio.
+ * 
+ * Anotada con @Audited para mantener historial automático de cambios.
  */
 @Entity
 @Table(name = "tableros")
@@ -20,6 +23,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Audited
 public class TableroJPA {
 
     @Id

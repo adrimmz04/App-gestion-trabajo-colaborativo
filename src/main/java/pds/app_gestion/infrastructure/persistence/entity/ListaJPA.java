@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.Set;
 /**
  * Entidad JPA para persistir listas en la base de datos.
  * Mapea la entidad Lista del dominio.
+ * Anotada con @Audited para mantener historial automático de cambios.
  */
 @Entity
 @Table(name = "listas")
@@ -19,6 +21,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Audited
 public class ListaJPA {
 
     @Id

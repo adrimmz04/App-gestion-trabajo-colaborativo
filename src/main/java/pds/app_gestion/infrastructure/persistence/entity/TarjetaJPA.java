@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.Set;
  * Entidad JPA para persistir tarjetas en la base de datos.
  * Mapea la entidad Tarjeta del dominio.
  * Soporta dos tipos: TAREA y CHECKLIST.
+ * Anotada con @Audited para mantener historial automático de cambios.
  */
 @Entity
 @Table(name = "tarjetas")
@@ -21,6 +23,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Audited
 public class TarjetaJPA {
 
     @Id
