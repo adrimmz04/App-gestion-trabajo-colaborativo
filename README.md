@@ -96,11 +96,17 @@ Ver [CREDITOS.md](CREDITOS.md) para información sobre participación y contribu
 - **Total Tests**: 64 tests pasando ✅
 - **Documentación**: [PHASE2_RESUMEN.md](PHASE2_RESUMEN.md)
 
-### Phase 3: Persistencia con JPA (PRÓXIMA)
-- [ ] Entidades JPA con anotaciones
-- [ ] RepositorioTableroJPA (Spring Data JPA)
-- [ ] Configuración PostgreSQL
-- [ ] Pruebas de integración
+### Phase 3: Persistencia con JPA ✅ COMPLETADA
+- **Entidades JPA**: 5 clases (Tablero, Lista, Tarjeta, Registro, Tipo)
+  - Mapeo objeto-relacional completo
+  - ElementCollections y MapKeyColumn
+  - CascadeType.ALL con orphanRemoval
+- **Repositorio JPA**: Spring Data JPA con adaptador
+  - Convertidor bidireccional (Dominio ↔ JPA)
+  - Implementa puerto del dominio
+- **Configuración**: PostgreSQL (producción), H2 (desarrollo)
+- **Tests**: 64/64 tests PASSING ✅ (47 domain + 17 application)
+- **Documentación**: [PHASE3_RESUMEN.md](PHASE3_RESUMEN.md)
 
 ## API REST (Phase 2)
 
@@ -126,7 +132,7 @@ POST   /api/v1/tableros/{id}/listas/{id}/tarjetas/{id}/etiquetas - Etiquetar
 
 - **Última actualización**: Abril 2026
 - **Versión**: 1.0.0-SNAPSHOT
-- **Fase Actual**: Phase 2 - Capa de Aplicación ✅ COMPLETADA
-- **Próximo**: Phase 3 - Persistencia con JPA
+- **Fase Actual**: Phase 3 - Persistencia con JPA ✅ COMPLETADA
+- **Arquitectura**: Hexagonal completa (Domain + App + Infrastructure)
 - **Tests**: 64/64 pasando ✅
 - **Compilación**: BUILD SUCCESS ✅
