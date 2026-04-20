@@ -10,6 +10,7 @@ import pds.app_gestion.application.exception.ErrorValidacionException;
 import pds.app_gestion.application.exception.PermisoNegadoException;
 import pds.app_gestion.application.exception.RecursoNoEncontradoException;
 import pds.app_gestion.domain.*;
+import pds.app_gestion.infrastructure.cache.CacheService;
 
 import java.util.Optional;
 
@@ -26,11 +27,14 @@ public class ServicioTableroTest {
     @Mock
     private RepositorioTablero repositorioTablero;
 
+    @Mock
+    private CacheService cacheService;
+
     private ServicioTablero servicioTablero;
 
     @BeforeEach
     void setUp() {
-        servicioTablero = new ServicioTablero(repositorioTablero);
+        servicioTablero = new ServicioTablero(repositorioTablero, cacheService);
     }
 
     @Test

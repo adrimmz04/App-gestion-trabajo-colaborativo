@@ -1,5 +1,7 @@
 package pds.app_gestion.application.service;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import pds.app_gestion.application.dto.*;
 import pds.app_gestion.application.exception.ErrorOperacionDominioException;
@@ -7,6 +9,7 @@ import pds.app_gestion.application.exception.ErrorValidacionException;
 import pds.app_gestion.application.exception.PermisoNegadoException;
 import pds.app_gestion.application.exception.RecursoNoEncontradoException;
 import pds.app_gestion.domain.*;
+import pds.app_gestion.infrastructure.cache.CacheService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,9 +30,11 @@ import java.util.stream.Collectors;
 public class ServicioTablero {
 
     private final RepositorioTablero repositorioTablero;
+    private final CacheService cacheService;
 
-    public ServicioTablero(RepositorioTablero repositorioTablero) {
+    public ServicioTablero(RepositorioTablero repositorioTablero, CacheService cacheService) {
         this.repositorioTablero = repositorioTablero;
+        this.cacheService = cacheService;
     }
 
     /**
@@ -38,6 +43,7 @@ public class ServicioTablero {
      * @param request datos para crear el tablero
      * @return DTO del tablero creado
      */
+    @CacheEvict(cacheNames = {"tablerosPropietario"}, allEntries = true)
     public TableroResponse crearTablero(CrearTableroRequest request) {
         validarCrearTablero(request);
         
@@ -59,6 +65,7 @@ public class ServicioTablero {
      * @param emailUsuario email del usuario que solicita (para verificar permisos)
      * @return DTO del tablero
      */
+    @Cacheable(cacheNames = "tableros", key = "#idTablero")
     public TableroResponse obtenerTablero(String idTablero, String emailUsuario) {
         Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
             .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
@@ -78,6 +85,7 @@ public class ServicioTablero {
      * @param request datos para actualizar
      * @return DTO del tablero actualizado
      */
+    @CacheEvict(cacheNames = {"tableros", "tablerosPropietario"}, allEntries = true)
     public TableroResponse actualizarTablero(String idTablero, String emailUsuario, ActualizarTableroRequest request) {
         Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
             .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
@@ -100,6 +108,7 @@ public class ServicioTablero {
      * @param emailPropietario email del propietario
      * @return lista de DTOs de tableros
      */
+    @Cacheable(cacheNames = "tablerosPropietario", key = "#emailPropietario")
     public List<TableroResponse> obtenerTablerosPropietario(String emailPropietario) {
         return repositorioTablero.obtenerPorPropietario(emailPropietario)
             .stream()
@@ -113,6 +122,7 @@ public class ServicioTablero {
      * @param emailUsuario email del usuario
      * @return lista de DTOs de tableros compartidos
      */
+    @Cacheable(cacheNames = "tablerosCompartidos", key = "#emailUsuario")
     public List<TableroResponse> obtenerTablerosCompartidos(String emailUsuario) {
         return repositorioTablero.obtenerCompartidos(emailUsuario)
             .stream()
@@ -127,6 +137,7 @@ public class ServicioTablero {
      * @param emailPropietario email del propietario
      * @param emailUsuario email del usuario con el que compartir
      */
+    @CacheEvict(cacheNames = {"tableros", "tablerosCompartidos"}, allEntries = true)
     public void compartirTablero(String idTablero, String emailPropietario, String emailUsuario) {
         Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
             .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
@@ -150,6 +161,7 @@ public class ServicioTablero {
      * @param emailPropietario email del propietario
      * @param request datos del bloqueo
      */
+    @CacheEvict(cacheNames = "tableros", allEntries = true)
     public void bloquearTablero(String idTablero, String emailPropietario, BloquearTableroRequest request) {
         Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
             .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
@@ -172,6 +184,7 @@ public class ServicioTablero {
      * @param idTablero ID del tablero
      * @param emailPropietario email del propietario
      */
+    @CacheEvict(cacheNames = "tableros", allEntries = true)
     public void desbloquearTablero(String idTablero, String emailPropietario) {
         Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
             .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
@@ -192,6 +205,7 @@ public class ServicioTablero {
      * @param request datos de la lista
      * @return DTO de la lista creada
      */
+    @CacheEvict(cacheNames = "tableros", allEntries = true)
     public ListaResponse agregarLista(String idTablero, String emailUsuario, CrearListaRequest request) {
         Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
             .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
