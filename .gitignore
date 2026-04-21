@@ -49,7 +49,7 @@ spring-boot-maven-plugin-requirements.txt
 .env
 .env.local
 
-# Test Results
+# Test Results - Archivos temporales de output de Maven/Tests
 test_results*.txt
 *_output.txt
 full_log.txt
@@ -57,3 +57,11 @@ output_*.txt
 direct_output.txt
 mvn_output_tmp.txt
 execution_output.txt
+maven_output_full.txt
+output.txt
+res.txt
+resultado.txt
+results.txt
+test-output.txt
+test_res.txt
+test_result_temp.txt
