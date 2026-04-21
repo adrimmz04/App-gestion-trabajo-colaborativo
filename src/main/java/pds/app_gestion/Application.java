@@ -3,6 +3,7 @@ package pds.app_gestion;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import pds.app_gestion.ui.javafx.VentanaPrincipal;
 
 /**
@@ -12,6 +13,7 @@ import pds.app_gestion.ui.javafx.VentanaPrincipal;
  * permitiendo que SpringBoot y JavaFX convivan en la misma aplicación.
  */
 @SpringBootApplication
+@EnableScheduling
 public class Application {
 
     private static ApplicationContext applicationContext;

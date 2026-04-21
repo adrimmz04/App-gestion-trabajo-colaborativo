@@ -28,6 +28,8 @@ public class Tarjeta {
     private final LocalDateTime fechaCreacion;
     private LocalDateTime fechaActualizacion;
     private LocalDateTime fechaCompletacion;
+    private boolean archivada;
+    private LocalDateTime fechaArchivado;
 
     /**
      * Crea una nueva tarjeta de tipo tarea.
@@ -45,6 +47,8 @@ public class Tarjeta {
         this.tipo = TipoTarjeta.TAREA;
         this.fechaCreacion = LocalDateTime.now();
         this.fechaActualizacion = LocalDateTime.now();
+        this.archivada = false;
+        this.fechaArchivado = null;
     }
 
     /**
@@ -64,6 +68,8 @@ public class Tarjeta {
         this.tipo = Objects.requireNonNull(tipo, "El tipo de tarjeta no puede ser nulo");
         this.fechaCreacion = LocalDateTime.now();
         this.fechaActualizacion = LocalDateTime.now();
+        this.archivada = false;
+        this.fechaArchivado = null;
     }
 
     /**
@@ -120,6 +126,37 @@ public class Tarjeta {
     public void actualizarDescripcion(String nuevaDescripcion) {
         this.descripcion = nuevaDescripcion != null ? nuevaDescripcion : "";
         this.fechaActualizacion = LocalDateTime.now();
+    }
+
+    /**
+     * Archiva la tarjeta.
+     */
+    public void archivar() {
+        if (!this.archivada) {
+            this.archivada = true;
+            this.fechaArchivado = LocalDateTime.now();
+            this.fechaActualizacion = LocalDateTime.now();
+        }
+    }
+
+    /**
+     * Desarchiva la tarjeta.
+     */
+    public void desarchivar() {
+        if (this.archivada) {
+            this.archivada = false;
+            this.fechaArchivado = null;
+            this.fechaActualizacion = LocalDateTime.now();
+        }
+    }
+
+    /**
+     * Comprueba si la tarjeta está archivada.
+     * 
+     * @return true si está archivada, false en caso contrario
+     */
+    public boolean estaArchivada() {
+        return this.archivada;
     }
 
     /**
