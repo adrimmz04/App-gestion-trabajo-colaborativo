@@ -1,6 +1,5 @@
 package pds.app_gestion.infrastructure.repository;
 
-import org.springframework.stereotype.Repository;
 import pds.app_gestion.domain.Tablero;
 import pds.app_gestion.domain.RepositorioTablero;
 
@@ -13,8 +12,9 @@ import java.util.stream.Collectors;
  * 
  * Esta es una implementación temporal para desarrollo y testing.
  * Será reemplazada por una implementación con JPA en la siguiente fase.
+ * 
+ * NO es un bean de Spring - se usa solo manualmente en pruebas específicas.
  */
-@Repository
 public class RepositorioTableroEnMemoria implements RepositorioTablero {
 
     private final Map<String, Tablero> tableros = new ConcurrentHashMap<>();

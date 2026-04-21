@@ -35,7 +35,7 @@ class ServicioCompactacionTest {
         
         // Crear tablero con una lista
         tablero = new Tablero("id-tablero-1", "Tablero Test", "usuario@test.com");
-        lista = new Lista("id-lista-1", "Lista Test", 5);
+        lista = new Lista("id-lista-1", "Lista Test");
         tablero.agregarLista(lista);
     }
 
@@ -74,13 +74,13 @@ class ServicioCompactacionTest {
         Tarjeta tarjeta = crearTarjetaCompletadaHaceDias(35);
         lista.agregarTarjeta(tarjeta);
 
-        assertThat(lista.obtenerTarjetas().size()).isEqualTo(1);
+        assertThat(lista.getTarjetas().size()).isEqualTo(1);
 
         servicioCompactacion.compactarTablero(tablero);
 
         // Debe ser eliminada porque fue completada hace > 30 días
         // (archivada después de 7 días, luego eliminada después de otros 30)
-        assertThat(lista.obtenerTarjetas().size())
+        assertThat(lista.getTarjetas().size())
             .as("La tarjeta debe ser eliminada después de estar archivada > 30 días")
             .isEqualTo(0);
     }
@@ -96,7 +96,7 @@ class ServicioCompactacionTest {
 
         // Debe estar archivada pero no eliminada
         assertThat(tarjeta.estaArchivada()).isTrue();
-        assertThat(lista.obtenerTarjetas().size()).isEqualTo(1);
+        assertThat(lista.getTarjetas().size()).isEqualTo(1);
     }
 
     @Test
