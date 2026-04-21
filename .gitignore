@@ -48,3 +48,12 @@ spring-boot-maven-plugin-requirements.txt
 # Environment
 .env
 .env.local
+
+# Test Results
+test_results*.txt
+*_output.txt
+full_log.txt
+output_*.txt
+direct_output.txt
+mvn_output_tmp.txt
+execution_output.txt
