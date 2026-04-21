@@ -1,6 +1,13 @@
 package pds.app_gestion.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +28,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Audited
 public class ListaJPA {
 
     @Id
@@ -38,9 +44,14 @@ public class ListaJPA {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tablero_id", nullable = false)
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private TableroJPA tablero;
 
     @Builder.Default
     @OneToMany(mappedBy = "lista", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<TarjetaJPA> tarjetas = new HashSet<>();
 }

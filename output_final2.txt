@@ -1,0 +1,1089 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------< pds:app-gestion-trabajo-colaborativo >----------------
+[INFO] Building App Gesti├│n de Trabajo Colaborativo 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ app-gestion-trabajo-colaborativo ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 6 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ app-gestion-trabajo-colaborativo ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 62 source files with javac [debug release 21] to target\classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ app-gestion-trabajo-colaborativo ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ app-gestion-trabajo-colaborativo ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 13 source files with javac [debug release 21] to target\test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- surefire:3.1.0:test (default-test) @ app-gestion-trabajo-colaborativo ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running pds.app_gestion.ui.controller.ControladorTableroIntegrationTest
+14:16:46.145 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [pds.app_gestion.ui.controller.ControladorTableroIntegrationTest]: ControladorTableroIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+14:16:46.335 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration pds.app_gestion.Application for test class pds.app_gestion.ui.controller.ControladorTableroIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.1.5)
+
+2026-04-21T14:16:47.279+02:00  INFO 31100 --- [           main] .a.u.c.ControladorTableroIntegrationTest : Starting ControladorTableroIntegrationTest using Java 21.0.6 with PID 31100 (started by adria in C:\Users\adria\Desktop\Proyecto PDS\app-gestion)
+2026-04-21T14:16:47.280+02:00 DEBUG 31100 --- [           main] .a.u.c.ControladorTableroIntegrationTest : Running with Spring Boot v3.1.5, Spring v6.0.13
+2026-04-21T14:16:47.281+02:00  INFO 31100 --- [           main] .a.u.c.ControladorTableroIntegrationTest : No active profile set, falling back to 1 default profile: "default"
+2026-04-21T14:16:47.325+02:00 DEBUG 31100 --- [           main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@271f18d3
+2026-04-21T14:16:50.887+02:00  WARN 31100 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-21T14:16:52.212+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists listas cascade 
+2026-04-21T14:16:52.215+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists registros_acciones cascade 
+2026-04-21T14:16:52.215+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists tablero_usuarios_compartidos cascade 
+2026-04-21T14:16:52.215+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists tableros cascade 
+2026-04-21T14:16:52.215+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists tarjeta_etiquetas cascade 
+2026-04-21T14:16:52.216+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists tarjeta_etiquetas_colores cascade 
+2026-04-21T14:16:52.216+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists tarjetas cascade 
+2026-04-21T14:16:52.221+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    create table listas (
+        limite_maximo integer,
+        id varchar(255) not null,
+        lista_prerequisito_id varchar(255),
+        nombre varchar(255) not null,
+        tablero_id varchar(255) not null,
+        primary key (id)
+    )
+2026-04-21T14:16:52.229+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    create table registros_acciones (
+        fecha timestamp(6) not null,
+        id bigint generated by default as identity,
+        tipo varchar(50) not null,
+        detalles varchar(500) not null,
+        tablero_id varchar(255) not null,
+        primary key (id)
+    )
+2026-04-21T14:16:52.235+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    create table tablero_usuarios_compartidos (
+        email_usuario varchar(255),
+        tablero_id varchar(255) not null
+    )
+2026-04-21T14:16:52.236+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    create table tableros (
+        bloqueado boolean not null,
+        duracion_bloqueo_minutos integer,
+        fecha_actualizacion timestamp(6) not null,
+        fecha_bloqueo timestamp(6),
+        fecha_creacion timestamp(6) not null,
+        descripcion varchar(1000) not null,
+        id varchar(255) not null,
+        propietario_email varchar(255) not null,
+        titulo varchar(255) not null,
+        primary key (id)
+    )
+2026-04-21T14:16:52.238+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    create table tarjeta_etiquetas (
+        etiqueta_nombre varchar(255),
+        tarjeta_id varchar(255) not null
+    )
+2026-04-21T14:16:52.239+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    create table tarjeta_etiquetas_colores (
+        color varchar(255),
+        etiqueta_nombre varchar(255) not null,
+        tarjeta_id varchar(255) not null,
+        primary key (etiqueta_nombre, tarjeta_id)
+    )
+2026-04-21T14:16:52.245+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    create table tarjetas (
+        completada boolean not null,
+        fecha_actualizacion timestamp(6) not null,
+        fecha_completacion timestamp(6),
+        fecha_creacion timestamp(6) not null,
+        tipo varchar(20) not null check (tipo in ('TAREA','CHECKLIST')),
+        descripcion varchar(1000) not null,
+        id varchar(255) not null,
+        lista_id varchar(255) not null,
+        titulo varchar(255) not null,
+        primary key (id)
+    )
+2026-04-21T14:16:52.253+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists listas 
+       add constraint FKovei9vnjx0e1c4vn3bkdl9unh 
+       foreign key (tablero_id) 
+       references tableros
+2026-04-21T14:16:52.268+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists registros_acciones 
+       add constraint FKa6o812bk534rrbrrncb6omcs6 
+       foreign key (tablero_id) 
+       references tableros
+2026-04-21T14:16:52.270+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists tablero_usuarios_compartidos 
+       add constraint FKftu6e7ctxxxdq9rfw6hq0kkyp 
+       foreign key (tablero_id) 
+       references tableros
+2026-04-21T14:16:52.272+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists tarjeta_etiquetas 
+       add constraint FK90sx5x9g15hj2xlj0pyjmrtl2 
+       foreign key (tarjeta_id) 
+       references tarjetas
+2026-04-21T14:16:52.275+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists tarjeta_etiquetas_colores 
+       add constraint FKaw3m0ny35il54qtjlbg9pyors 
+       foreign key (tarjeta_id) 
+       references tarjetas
+2026-04-21T14:16:52.278+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists tarjetas 
+       add constraint FKfxa10oxdb165h61m7s4toper8 
+       foreign key (lista_id) 
+       references listas
+2026-04-21T14:16:54.076+02:00  WARN 31100 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-21T14:16:54.339+02:00 DEBUG 31100 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-04-21T14:16:54.503+02:00 DEBUG 31100 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 16 mappings in 'requestMappingHandlerMapping'
+2026-04-21T14:16:54.539+02:00 DEBUG 31100 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2026-04-21T14:16:54.554+02:00 DEBUG 31100 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-04-21T14:16:54.811+02:00  INFO 31100 --- [           main] .a.u.c.ControladorTableroIntegrationTest : Started ControladorTableroIntegrationTest in 8.241 seconds (process running for 9.613)
+2026-04-21T14:16:55.599+02:00 DEBUG 31100 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:16:55.646+02:00 DEBUG 31100 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:16:55.781+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:16:55.843+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:16:55.878+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:16:55.886+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:16:55.892+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:16:55.922+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:16:55.928+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=b6d5b2b9-1042-4e92-97c4-bc64c2dfd038, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:16:55.959+02:00 DEBUG 31100 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#bloquearTablero(String, String, BloquearTableroRequest)
+2026-04-21T14:16:55.970+02:00 DEBUG 31100 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [BloquearTableroRequest(duracionMinutos=5)]
+2026-04-21T14:16:55.976+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:16:55.986+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:16:55.991+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:16:55.993+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:16:55.997+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo 
+    from
+        registros_acciones h1_0 
+    where
+        h1_0.tablero_id=?
+2026-04-21T14:16:55.999+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:16:56.010+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* update
+        for pds.app_gestion.infrastructure.persistence.entity.TableroJPA */update tableros 
+    set
+        bloqueado=?,
+        descripcion=?,
+        duracion_bloqueo_minutos=?,
+        fecha_actualizacion=?,
+        fecha_bloqueo=?,
+        propietario_email=?,
+        titulo=? 
+    where
+        id=?
+2026-04-21T14:16:56.032+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:16:56.035+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:16:56.040+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:16:56.040+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Nothing to write: null body
+2026-04-21T14:16:56.055+02:00 DEBUG 31100 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#agregarLista(String, String, CrearListaRequest)
+2026-04-21T14:16:56.062+02:00 DEBUG 31100 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearListaRequest(nombre=Nueva Lista, limiteMaximo=5)]
+2026-04-21T14:16:56.064+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:16:56.069+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:16:56.071+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:16:56.073+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:16:56.075+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        l1_0.tablero_id,
+        t2_0.lista_id,
+        t2_0.id,
+        t2_0.completada,
+        t2_0.descripcion,
+        t2_0.fecha_actualizacion,
+        t2_0.fecha_completacion,
+        t2_0.fecha_creacion,
+        t2_0.tipo,
+        t2_0.titulo 
+    from
+        listas l1_0 
+    left join
+        tarjetas t2_0 
+            on l1_0.id=t2_0.lista_id 
+    where
+        l1_0.id=?
+2026-04-21T14:16:56.077+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo 
+    from
+        registros_acciones h1_0 
+    where
+        h1_0.tablero_id=?
+2026-04-21T14:16:56.078+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:16:56.080+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.ListaJPA */insert 
+    into
+        listas (limite_maximo,lista_prerequisito_id,nombre,tablero_id,id) 
+    values
+        (?,?,?,?,?)
+2026-04-21T14:16:56.081+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* update
+        for pds.app_gestion.infrastructure.persistence.entity.TableroJPA */update tableros 
+    set
+        bloqueado=?,
+        descripcion=?,
+        duracion_bloqueo_minutos=?,
+        fecha_actualizacion=?,
+        fecha_bloqueo=?,
+        propietario_email=?,
+        titulo=? 
+    where
+        id=?
+2026-04-21T14:16:56.082+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:16:56.083+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:16:56.091+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:16:56.096+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ListaResponse(id=eb2aa9f8-acc4-49b4-bac2-598c5046c2cb, nombre=Nueva Lista, totalTarjetas=0, tarjetas (truncated)...]
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/v1/tableros
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"96"]
+             Body = {"titulo":"Tablero Test","descripcion":"Descripci├│n","propietarioEmail":"propietario@test.com"}
+    Session Attrs = {}
+
+Handler:
+             Type = pds.app_gestion.ui.controller.ControladorTablero
+           Method = pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"id":"b6d5b2b9-1042-4e92-97c4-bc64c2dfd038","titulo":"Tablero Test","descripcion":"Descripci├│n","propietarioEmail":"propietario@test.com","bloqueado":false,"fechaDesbloqueo":null,"totalTarjetas":0,"tarjetasCompletadas":0,"fechaCreacion":"2026-04-21T14:16:55.655459","fechaActualizacion":"2026-04-21T14:16:55.655459","usuariosCompartidos":[]}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/v1/tableros/b6d5b2b9-1042-4e92-97c4-bc64c2dfd038/bloquear
+       Parameters = {emailPropietario=[propietario@test.com]}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"21"]
+             Body = {"duracionMinutos":5}
+    Session Attrs = {}
+
+Handler:
+             Type = pds.app_gestion.ui.controller.ControladorTablero
+           Method = pds.app_gestion.ui.controller.ControladorTablero#bloquearTablero(String, String, BloquearTableroRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 204
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/v1/tableros/b6d5b2b9-1042-4e92-97c4-bc64c2dfd038/listas
+       Parameters = {emailUsuario=[propietario@test.com]}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"41"]
+             Body = {"nombre":"Nueva Lista","limiteMaximo":5}
+    Session Attrs = {}
+
+Handler:
+             Type = pds.app_gestion.ui.controller.ControladorTablero
+           Method = pds.app_gestion.ui.controller.ControladorTablero#agregarLista(String, String, CrearListaRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"id":"eb2aa9f8-acc4-49b4-bac2-598c5046c2cb","nombre":"Nueva Lista","totalTarjetas":0,"tarjetasCompletadas":0,"limiteMaximo":5,"fechaCreacion":"2026-04-21T14:16:56.0677268","fechaActualizacion":"2026-04-21T14:16:56.0677268","tarjetas":[]}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+2026-04-21T14:16:56.146+02:00 DEBUG 31100 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:16:56.147+02:00 DEBUG 31100 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:16:56.149+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:16:56.151+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:16:56.154+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:16:56.156+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:16:56.158+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:16:56.163+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:16:56.163+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=4ff8ab05-04dc-4fff-ac9a-91a4f9e564bc, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:16:56.165+02:00 DEBUG 31100 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#bloquearTablero(String, String, BloquearTableroRequest)
+2026-04-21T14:16:56.166+02:00 DEBUG 31100 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [BloquearTableroRequest(duracionMinutos=5)]
+2026-04-21T14:16:56.167+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:16:56.171+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:16:56.173+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:16:56.174+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:16:56.174+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo 
+    from
+        registros_acciones h1_0 
+    where
+        h1_0.tablero_id=?
+2026-04-21T14:16:56.175+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:16:56.177+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* update
+        for pds.app_gestion.infrastructure.persistence.entity.TableroJPA */update tableros 
+    set
+        bloqueado=?,
+        descripcion=?,
+        duracion_bloqueo_minutos=?,
+        fecha_actualizacion=?,
+        fecha_bloqueo=?,
+        propietario_email=?,
+        titulo=? 
+    where
+        id=?
+2026-04-21T14:16:56.179+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:16:56.179+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:16:56.180+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:16:56.180+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Nothing to write: null body
+2026-04-21T14:16:56.181+02:00 DEBUG 31100 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#obtenerTablero(String, String)
+2026-04-21T14:16:56.211+02:00 DEBUG 31100 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:16:56.214+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:16:56.214+02:00 DEBUG 31100 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=4ff8ab05-04dc-4fff-ac9a-91a4f9e564bc, titulo=Tablero Test, descripcion=, propieta (truncated)...]
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/v1/tableros
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"96"]
+             Body = {"titulo":"Tablero Test","descripcion":"Descripci├│n","propietarioEmail":"propietario@test.com"}
+    Session Attrs = {}
+
+Handler:
+             Type = pds.app_gestion.ui.controller.ControladorTablero
+           Method = pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"id":"4ff8ab05-04dc-4fff-ac9a-91a4f9e564bc","titulo":"Tablero Test","descripcion":"Descripci├│n","propietarioEmail":"propietario@test.com","bloqueado":false,"fechaDesbloqueo":null,"totalTarjetas":0,"tarjetasCompletadas":0,"fechaCreacion":"2026-04-21T14:16:56.1482502","fechaActualizacion":"2026-04-21T14:16:56.1482502","usuariosCompartidos":[]}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/v1/tableros/4ff8ab05-04dc-4fff-ac9a-91a4f9e564bc/bloquear
+       Parameters = {emailPropietario=[propietario@test.com]}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"21"]
+             Body = {"duracionMinutos":5}
+    Session Attrs = {}
+
+Handler:
+             Type = pds.app_gestion.ui.controller.ControladorTablero
+           Method = pds.app_gestion.ui.controller.ControladorTablero#bloquearTablero(String, String, BloquearTableroRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 204
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"]
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /api/v1/tableros/4ff8ab05-04dc-4fff-ac9a-91a4f9e564bc
+       Parameters = {emailUsuario=[propietario@test.com]}
+          Headers = []
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = pds.app_gestion.ui.controller.ControladorTablero
+           Method = pds.app_gestion.ui.controller.ControladorTablero#obtenerTablero(String, String)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/json"]
+     Content type = application/json
+             Body = {"id":"4ff8ab05-04dc-4fff-ac9a-91a4f9e564bc","titulo":"Tablero Test","descripcion":"","propietarioEmail":"propietario@test.com","bloqueado":false,"fechaDesbloqueo":null,"totalTarjetas":0,"tarjetasCompletadas":0,"fechaCreacion":"2026-04-21T14:16:56.2122568","fechaActualizacion":"2026-04-21T14:16:56.2122568","usuariosCompartidos":[]}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 10.35 s <<< FAILURE! - in pds.app_gestion.ui.controller.ControladorTableroIntegrationTest
+[ERROR] pds.app_gestion.ui.controller.ControladorTableroIntegrationTest.testAgregarListaEnTableroBloqurado  Time elapsed: 1.291 s  <<< FAILURE!
+java.lang.AssertionError: Status expected:<409> but was:<201>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at pds.app_gestion.ui.controller.ControladorTableroIntegrationTest.testAgregarListaEnTableroBloqurado(ControladorTableroIntegrationTest.java:300)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:50)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[ERROR] pds.app_gestion.ui.controller.ControladorTableroIntegrationTest.testBloquearTablero  Time elapsed: 0.118 s  <<< FAILURE!
+java.lang.AssertionError: JSON path "$.bloqueado" expected:<true> but was:<false>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:123)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$2(JsonPathResultMatchers.java:111)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at pds.app_gestion.ui.controller.ControladorTableroIntegrationTest.testBloquearTablero(ControladorTableroIntegrationTest.java:213)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:50)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   ControladorTableroIntegrationTest.testAgregarListaEnTableroBloqurado:300 Status expected:<409> but was:<201>
+[ERROR]   ControladorTableroIntegrationTest.testBloquearTablero:213 JSON path "$.bloqueado" expected:<true> but was:<false>
+[INFO] 
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  25.181 s
+[INFO] Finished at: 2026-04-21T14:16:56+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.1.0:test (default-test) on project app-gestion-trabajo-colaborativo: There are test failures.
+[ERROR] 
+[ERROR] Please refer to C:\Users\adria\Desktop\Proyecto PDS\app-gestion\target\surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -33,7 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.properties")
 @DisplayName("Integration Tests - ControladorTablero")
-@Disabled("Requiere investigación adicional - POST devuelve 500")
 class ControladorTableroIntegrationTest {
 
     @Autowired
@@ -61,10 +60,18 @@ class ControladorTableroIntegrationTest {
         MvcResult result = mockMvc.perform(post("/api/v1/tableros")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isCreated())
             .andReturn();
 
+        // Capturar respuesta sin importar el status
+        int status = result.getResponse().getStatus();
         String jsonResponse = result.getResponse().getContentAsString();
+        
+        if (status != 201) {
+            System.err.println("[TEST ERROR] POST /api/v1/tableros devolvió status: " + status);
+            System.err.println("[TEST ERROR] Response: " + jsonResponse);
+            throw new RuntimeException("Error en setUp: status " + status + " - " + jsonResponse);
+        }
+
         TableroResponse response = objectMapper.readValue(jsonResponse, TableroResponse.class);
         idTablero = response.getId();
     }

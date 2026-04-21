@@ -159,9 +159,9 @@ public class ServicioTablero {
      * 
      * @param idTablero ID del tablero
      * @param emailPropietario email del propietario
-     * @param request datos del bloqueo
+     * @param request datos para bloquear (duración en minutos)
      */
-    @CacheEvict(cacheNames = "tableros", allEntries = true)
+    @CacheEvict(cacheNames = {"tableros", "tablerosPropietario"}, allEntries = true, beforeInvocation = false)
     public void bloquearTablero(String idTablero, String emailPropietario, BloquearTableroRequest request) {
         Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
             .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
@@ -184,7 +184,7 @@ public class ServicioTablero {
      * @param idTablero ID del tablero
      * @param emailPropietario email del propietario
      */
-    @CacheEvict(cacheNames = "tableros", allEntries = true)
+    @CacheEvict(cacheNames = {"tableros", "tablerosPropietario"}, allEntries = true, beforeInvocation = false)
     public void desbloquearTablero(String idTablero, String emailPropietario) {
         Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
             .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));

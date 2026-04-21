@@ -1,0 +1,2648 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------< pds:app-gestion-trabajo-colaborativo >----------------
+[INFO] Building App Gesti├│n de Trabajo Colaborativo 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ app-gestion-trabajo-colaborativo ---
+[INFO] Deleting C:\Users\adria\Desktop\Proyecto PDS\app-gestion\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ app-gestion-trabajo-colaborativo ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 6 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ app-gestion-trabajo-colaborativo ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 62 source files with javac [debug release 21] to target\classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ app-gestion-trabajo-colaborativo ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 6 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ app-gestion-trabajo-colaborativo ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 62 source files with javac [debug release 21] to target\classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ app-gestion-trabajo-colaborativo ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ app-gestion-trabajo-colaborativo ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 13 source files with javac [debug release 21] to target\test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- surefire:3.1.0:test (default-test) @ app-gestion-trabajo-colaborativo ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running pds.app_gestion.application.service.ServicioCompactacionTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.052 s - in pds.app_gestion.application.service.ServicioCompactacionTest
+[INFO] Running pds.app_gestion.application.service.ServicioListaTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.329 s - in pds.app_gestion.application.service.ServicioListaTest
+[INFO] Running pds.app_gestion.application.service.ServicioPlantillasTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.192 s - in pds.app_gestion.application.service.ServicioPlantillasTest
+[INFO] Running pds.app_gestion.application.service.ServicioTableroTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.22 s - in pds.app_gestion.application.service.ServicioTableroTest
+[INFO] Running pds.app_gestion.application.service.ServicioTarjetaTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.075 s - in pds.app_gestion.application.service.ServicioTarjetaTest
+[INFO] Running pds.app_gestion.domain.EtiquetaTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.02 s - in pds.app_gestion.domain.EtiquetaTest
+[INFO] Running pds.app_gestion.domain.ListaTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s - in pds.app_gestion.domain.ListaTest
+[INFO] Running pds.app_gestion.domain.TableroTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.048 s - in pds.app_gestion.domain.TableroTest
+[INFO] Running pds.app_gestion.domain.TarjetaTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s - in pds.app_gestion.domain.TarjetaTest
+[INFO] Running pds.app_gestion.infrastructure.persistence.RepositorioTableroJPAIntegrationTest
+[WARNING] Tests run: 9, Failures: 0, Errors: 0, Skipped: 9, Time elapsed: 0.001 s - in pds.app_gestion.infrastructure.persistence.RepositorioTableroJPAIntegrationTest
+[INFO] Running pds.app_gestion.ui.controller.ControladorTableroIntegrationTest
+14:33:41.183 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [pds.app_gestion.ui.controller.ControladorTableroIntegrationTest]: ControladorTableroIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+14:33:41.792 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration pds.app_gestion.Application for test class pds.app_gestion.ui.controller.ControladorTableroIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.1.5)
+
+2026-04-21T14:33:42.776+02:00  INFO 46076 --- [           main] .a.u.c.ControladorTableroIntegrationTest : Starting ControladorTableroIntegrationTest using Java 21.0.6 with PID 46076 (started by adria in C:\Users\adria\Desktop\Proyecto PDS\app-gestion)
+2026-04-21T14:33:42.777+02:00 DEBUG 46076 --- [           main] .a.u.c.ControladorTableroIntegrationTest : Running with Spring Boot v3.1.5, Spring v6.0.13
+2026-04-21T14:33:42.778+02:00  INFO 46076 --- [           main] .a.u.c.ControladorTableroIntegrationTest : No active profile set, falling back to 1 default profile: "default"
+2026-04-21T14:33:42.800+02:00 DEBUG 46076 --- [           main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@49433c98
+2026-04-21T14:33:46.032+02:00  WARN 46076 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-21T14:33:47.426+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists listas cascade 
+2026-04-21T14:33:47.430+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists registros_acciones cascade 
+2026-04-21T14:33:47.430+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists tablero_usuarios_compartidos cascade 
+2026-04-21T14:33:47.431+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists tableros cascade 
+2026-04-21T14:33:47.431+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists tarjeta_etiquetas cascade 
+2026-04-21T14:33:47.431+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists tarjeta_etiquetas_colores cascade 
+2026-04-21T14:33:47.431+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    drop table if exists tarjetas cascade 
+2026-04-21T14:33:47.437+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    create table listas (
+        limite_maximo integer,
+        id varchar(255) not null,
+        lista_prerequisito_id varchar(255),
+        nombre varchar(255) not null,
+        tablero_id varchar(255) not null,
+        primary key (id)
+    )
+2026-04-21T14:33:47.443+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    create table registros_acciones (
+        fecha timestamp(6) not null,
+        id bigint generated by default as identity,
+        tipo varchar(50) not null,
+        detalles varchar(500) not null,
+        tablero_id varchar(255) not null,
+        primary key (id)
+    )
+2026-04-21T14:33:47.448+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    create table tablero_usuarios_compartidos (
+        email_usuario varchar(255),
+        tablero_id varchar(255) not null
+    )
+2026-04-21T14:33:47.449+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    create table tableros (
+        bloqueado boolean not null,
+        duracion_bloqueo_minutos integer,
+        fecha_actualizacion timestamp(6) not null,
+        fecha_bloqueo timestamp(6),
+        fecha_creacion timestamp(6) not null,
+        descripcion varchar(1000) not null,
+        id varchar(255) not null,
+        propietario_email varchar(255) not null,
+        titulo varchar(255) not null,
+        primary key (id)
+    )
+2026-04-21T14:33:47.449+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    create table tarjeta_etiquetas (
+        etiqueta_nombre varchar(255),
+        tarjeta_id varchar(255) not null
+    )
+2026-04-21T14:33:47.450+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    create table tarjeta_etiquetas_colores (
+        color varchar(255),
+        etiqueta_nombre varchar(255) not null,
+        tarjeta_id varchar(255) not null,
+        primary key (etiqueta_nombre, tarjeta_id)
+    )
+2026-04-21T14:33:47.451+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    create table tarjetas (
+        completada boolean not null,
+        fecha_actualizacion timestamp(6) not null,
+        fecha_completacion timestamp(6),
+        fecha_creacion timestamp(6) not null,
+        tipo varchar(20) not null check (tipo in ('TAREA','CHECKLIST')),
+        descripcion varchar(1000) not null,
+        id varchar(255) not null,
+        lista_id varchar(255) not null,
+        titulo varchar(255) not null,
+        primary key (id)
+    )
+2026-04-21T14:33:47.456+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists listas 
+       add constraint FKovei9vnjx0e1c4vn3bkdl9unh 
+       foreign key (tablero_id) 
+       references tableros
+2026-04-21T14:33:47.466+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists registros_acciones 
+       add constraint FKa6o812bk534rrbrrncb6omcs6 
+       foreign key (tablero_id) 
+       references tableros
+2026-04-21T14:33:47.467+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists tablero_usuarios_compartidos 
+       add constraint FKftu6e7ctxxxdq9rfw6hq0kkyp 
+       foreign key (tablero_id) 
+       references tableros
+2026-04-21T14:33:47.469+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists tarjeta_etiquetas 
+       add constraint FK90sx5x9g15hj2xlj0pyjmrtl2 
+       foreign key (tarjeta_id) 
+       references tarjetas
+2026-04-21T14:33:47.470+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists tarjeta_etiquetas_colores 
+       add constraint FKaw3m0ny35il54qtjlbg9pyors 
+       foreign key (tarjeta_id) 
+       references tarjetas
+2026-04-21T14:33:47.473+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    alter table if exists tarjetas 
+       add constraint FKfxa10oxdb165h61m7s4toper8 
+       foreign key (lista_id) 
+       references listas
+2026-04-21T14:33:49.255+02:00  WARN 46076 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-04-21T14:33:49.497+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-04-21T14:33:49.784+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 16 mappings in 'requestMappingHandlerMapping'
+2026-04-21T14:33:49.830+02:00 DEBUG 46076 --- [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2026-04-21T14:33:49.848+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-04-21T14:33:50.175+02:00  INFO 46076 --- [           main] .a.u.c.ControladorTableroIntegrationTest : Started ControladorTableroIntegrationTest in 7.974 seconds (process running for 13.742)
+2026-04-21T14:33:50.330+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:50.411+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:50.584+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:50.664+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:50.699+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:50.708+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:50.716+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:50.749+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:50.758+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=949827c5-6072-4659-a4d2-106015cbdfbd, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:50.788+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#obtenerTablerosPropietario(String)
+2026-04-21T14:33:50.851+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    where
+        t1_0.propietario_email=?
+2026-04-21T14:33:50.861+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t2_0.lista_id,
+        t2_0.id,
+        t2_0.completada,
+        t2_0.descripcion,
+        t2_0.fecha_actualizacion,
+        t2_0.fecha_completacion,
+        t2_0.fecha_creacion,
+        t2_0.tipo,
+        t2_0.titulo 
+    from
+        listas l1_0 
+    left join
+        tarjetas t2_0 
+            on l1_0.id=t2_0.lista_id 
+    where
+        l1_0.tablero_id=?
+2026-04-21T14:33:50.863+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:50.867+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:50.867+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[TableroResponse(id=949827c5-6072-4659-a4d2-106015cbdfbd, titulo=Tablero Test, descripcion=Descripci (truncated)...]
+2026-04-21T14:33:50.944+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:50.945+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:50.948+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:50.950+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:50.951+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:50.952+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:50.954+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:50.962+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:50.962+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=c4f5cc19-af58-4804-9495-b15ae9977ea5, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:50.965+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:50.966+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Nuevo Tablero, descripcion=Descripci├│n del tablero, propietarioEmail=nuev (truncated)...]
+2026-04-21T14:33:50.967+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:50.967+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:50.968+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:50.970+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:50.971+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:50.973+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:50.973+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=9208d920-b53f-4466-aaad-bb00619cba25, titulo=Nuevo Tablero, descripcion=Descripci (truncated)...]
+2026-04-21T14:33:50.981+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:50.981+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:50.982+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:50.983+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:50.984+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:50.986+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:50.988+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:50.990+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:50.991+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=a6f7dbe8-7645-4014-bce8-b36de91d5eb1, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:50.994+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#obtenerTablero(String, String)
+2026-04-21T14:33:51.000+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.003+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal#manejarRecursoNoEncontrado(RecursoNoEncontradoException)
+2026-04-21T14:33:51.006+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.006+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal$ErrorResponse@49ce89ec]
+2026-04-21T14:33:51.008+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [pds.app_gestion.application.exception.RecursoNoEncontradoException: Tablero no encontrado: id-inexistente]
+2026-04-21T14:33:51.017+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.017+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.020+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.022+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.023+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.024+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.026+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.031+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.031+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=24659e8e-04a2-4aaf-9369-63cfdef6e841, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.037+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#actualizarTablero(String, String, ActualizarTableroRequest)
+2026-04-21T14:33:51.040+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [ActualizarTableroRequest(titulo=Tablero Test, descripcion=Nueva descripci├│n)]
+2026-04-21T14:33:51.043+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.048+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.050+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.054+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.056+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.058+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo 
+    from
+        registros_acciones h1_0 
+    where
+        h1_0.tablero_id=?
+2026-04-21T14:33:51.074+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* update
+        for pds.app_gestion.infrastructure.persistence.entity.TableroJPA */update tableros 
+    set
+        bloqueado=?,
+        descripcion=?,
+        duracion_bloqueo_minutos=?,
+        fecha_actualizacion=?,
+        fecha_bloqueo=?,
+        propietario_email=?,
+        titulo=? 
+    where
+        id=?
+2026-04-21T14:33:51.083+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.089+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.090+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.090+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=24659e8e-04a2-4aaf-9369-63cfdef6e841, titulo=Tablero Test, descripcion=Nueva desc (truncated)...]
+2026-04-21T14:33:51.099+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.099+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.101+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.104+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.106+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.108+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.110+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.113+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.114+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=4ba1523c-d178-439a-a5c9-45df1dd32a49, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.116+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#obtenerTablero(String, String)
+2026-04-21T14:33:51.118+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.125+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.126+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal#manejarPermisoNegado(PermisoNegadoException)
+2026-04-21T14:33:51.127+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.127+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal$ErrorResponse@5981b51]
+2026-04-21T14:33:51.128+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [pds.app_gestion.application.exception.PermisoNegadoException: Usuario otro@test.com no tiene permisos para acceder a tablero 4ba1523c-d178-439a-a5c9-45df1dd32a49]
+2026-04-21T14:33:51.134+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.136+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.140+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.142+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.144+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.145+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.148+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.150+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.151+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=adb98f40-418c-441c-82ff-ed01a137432a, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.156+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#bloquearTablero(String, String, BloquearTableroRequest)
+2026-04-21T14:33:51.159+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [BloquearTableroRequest(duracionMinutos=5)]
+2026-04-21T14:33:51.162+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.164+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.166+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.167+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.170+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.172+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo 
+    from
+        registros_acciones h1_0 
+    where
+        h1_0.tablero_id=?
+2026-04-21T14:33:51.175+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* update
+        for pds.app_gestion.infrastructure.persistence.entity.TableroJPA */update tableros 
+    set
+        bloqueado=?,
+        descripcion=?,
+        duracion_bloqueo_minutos=?,
+        fecha_actualizacion=?,
+        fecha_bloqueo=?,
+        propietario_email=?,
+        titulo=? 
+    where
+        id=?
+2026-04-21T14:33:51.177+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.177+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.179+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.180+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Nothing to write: null body
+2026-04-21T14:33:51.181+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#desbloquearTablero(String, String)
+2026-04-21T14:33:51.188+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.191+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.194+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.197+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.200+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.204+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo 
+    from
+        registros_acciones h1_0 
+    where
+        h1_0.tablero_id=?
+2026-04-21T14:33:51.208+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* update
+        for pds.app_gestion.infrastructure.persistence.entity.TableroJPA */update tableros 
+    set
+        bloqueado=?,
+        descripcion=?,
+        duracion_bloqueo_minutos=?,
+        fecha_actualizacion=?,
+        fecha_bloqueo=?,
+        propietario_email=?,
+        titulo=? 
+    where
+        id=?
+2026-04-21T14:33:51.209+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.210+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.212+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.213+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Nothing to write: null body
+2026-04-21T14:33:51.215+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#obtenerTablero(String, String)
+2026-04-21T14:33:51.217+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.221+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.223+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.224+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=adb98f40-418c-441c-82ff-ed01a137432a, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.240+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.243+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.247+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.250+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.254+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.257+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.259+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.264+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.265+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=7932ebab-4031-49b1-b6ff-5f2cf65765cf, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.269+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#agregarLista(String, String, CrearListaRequest)
+2026-04-21T14:33:51.276+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearListaRequest(nombre=Nueva Lista, limiteMaximo=5)]
+2026-04-21T14:33:51.280+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.284+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.289+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.293+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.295+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.301+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        l1_0.tablero_id,
+        t2_0.lista_id,
+        t2_0.id,
+        t2_0.completada,
+        t2_0.descripcion,
+        t2_0.fecha_actualizacion,
+        t2_0.fecha_completacion,
+        t2_0.fecha_creacion,
+        t2_0.tipo,
+        t2_0.titulo 
+    from
+        listas l1_0 
+    left join
+        tarjetas t2_0 
+            on l1_0.id=t2_0.lista_id 
+    where
+        l1_0.id=?
+2026-04-21T14:33:51.307+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo 
+    from
+        registros_acciones h1_0 
+    where
+        h1_0.tablero_id=?
+2026-04-21T14:33:51.314+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.ListaJPA */insert 
+    into
+        listas (limite_maximo,lista_prerequisito_id,nombre,tablero_id,id) 
+    values
+        (?,?,?,?,?)
+2026-04-21T14:33:51.315+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* update
+        for pds.app_gestion.infrastructure.persistence.entity.TableroJPA */update tableros 
+    set
+        bloqueado=?,
+        descripcion=?,
+        duracion_bloqueo_minutos=?,
+        fecha_actualizacion=?,
+        fecha_bloqueo=?,
+        propietario_email=?,
+        titulo=? 
+    where
+        id=?
+2026-04-21T14:33:51.318+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.318+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.327+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.333+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ListaResponse(id=4b0a3ae9-2455-4c98-ab7e-67d3f2ad1fdf, nombre=Nueva Lista, totalTarjetas=0, tarjetas (truncated)...]
+2026-04-21T14:33:51.363+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.366+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.368+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.371+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.374+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.375+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.378+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.381+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.382+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=b4d2ae0c-f4f4-4c93-913e-04c86eff0819, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.384+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#obtenerTablero(String, String)
+2026-04-21T14:33:51.388+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.392+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.395+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.396+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=b4d2ae0c-f4f4-4c93-913e-04c86eff0819, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.410+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.413+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.415+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.417+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.422+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.424+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.426+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.432+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.432+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=2effe228-33f0-4956-b14f-d4747a9e9074, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.437+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#obtenerTablerosCompartidos(String)
+2026-04-21T14:33:51.449+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* SELECT
+        t 
+    FROM
+        TableroJPA t 
+    WHERE
+        :email MEMBER OF t.usuariosCompartidos */ select
+            t1_0.id,
+            t1_0.bloqueado,
+            t1_0.descripcion,
+            t1_0.duracion_bloqueo_minutos,
+            t1_0.fecha_actualizacion,
+            t1_0.fecha_bloqueo,
+            t1_0.fecha_creacion,
+            t1_0.propietario_email,
+            t1_0.titulo 
+        from
+            tableros t1_0 
+        where
+            ? in(select
+                u1_0.email_usuario 
+            from
+                tablero_usuarios_compartidos u1_0 
+            where
+                t1_0.id=u1_0.tablero_id)
+2026-04-21T14:33:51.455+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.456+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[]]
+2026-04-21T14:33:51.467+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.471+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.473+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.475+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.478+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.480+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.482+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.485+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.486+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=4fcd6eaf-204d-4b33-b96a-1e916e6008ed, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.490+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#bloquearTablero(String, String, BloquearTableroRequest)
+2026-04-21T14:33:51.491+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [BloquearTableroRequest(duracionMinutos=5)]
+2026-04-21T14:33:51.492+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.495+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.499+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.502+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.505+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.506+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo 
+    from
+        registros_acciones h1_0 
+    where
+        h1_0.tablero_id=?
+2026-04-21T14:33:51.510+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* update
+        for pds.app_gestion.infrastructure.persistence.entity.TableroJPA */update tableros 
+    set
+        bloqueado=?,
+        descripcion=?,
+        duracion_bloqueo_minutos=?,
+        fecha_actualizacion=?,
+        fecha_bloqueo=?,
+        propietario_email=?,
+        titulo=? 
+    where
+        id=?
+2026-04-21T14:33:51.512+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.514+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.517+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.517+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Nothing to write: null body
+2026-04-21T14:33:51.520+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#agregarLista(String, String, CrearListaRequest)
+2026-04-21T14:33:51.521+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearListaRequest(nombre=Nueva Lista, limiteMaximo=5)]
+2026-04-21T14:33:51.524+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.527+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.528+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal#manejarErrorOperacionDominio(ErrorOperacionDominioException)
+2026-04-21T14:33:51.529+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.530+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal$ErrorResponse@6ac9b6d]
+2026-04-21T14:33:51.531+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [pds.app_gestion.application.exception.ErrorOperacionDominioException: Error en operaci├│n de dominio: No se pueden a├▒adir listas a un tablero bloqueado]
+2026-04-21T14:33:51.541+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.542+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.544+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.547+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.550+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.552+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.556+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.561+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.561+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=d24fc57c-5d6c-4272-9da1-22be1bd2a748, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.565+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#agregarLista(String, String, CrearListaRequest)
+2026-04-21T14:33:51.566+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearListaRequest(nombre=Nueva Lista, limiteMaximo=5)]
+2026-04-21T14:33:51.567+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.570+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.571+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal#manejarPermisoNegado(PermisoNegadoException)
+2026-04-21T14:33:51.571+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.572+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal$ErrorResponse@e75a138]
+2026-04-21T14:33:51.572+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [pds.app_gestion.application.exception.PermisoNegadoException: Usuario otro@test.com no tiene permisos para acceder a a├▒adir lista]
+2026-04-21T14:33:51.597+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.599+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.604+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.605+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.607+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.610+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.613+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.619+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.619+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=ed423f8e-cd75-41ae-93e5-ec0e004e042c, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.633+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#compartirTablero(String, String, CompartirTableroRequest)
+2026-04-21T14:33:51.638+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CompartirTableroRequest(emailUsuario=usuario2@test.com)]
+2026-04-21T14:33:51.649+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.658+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.659+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal#manejarPermisoNegado(PermisoNegadoException)
+2026-04-21T14:33:51.660+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.660+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal$ErrorResponse@4e683bb8]
+2026-04-21T14:33:51.661+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [pds.app_gestion.application.exception.PermisoNegadoException: Usuario otro@test.com no tiene permisos para acceder a compartir tablero]
+2026-04-21T14:33:51.666+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.671+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.675+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.677+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.678+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.680+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.682+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.690+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.690+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=128f7a27-5fe8-4dbf-9fcc-99b3cdaf7328, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.693+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#bloquearTablero(String, String, BloquearTableroRequest)
+2026-04-21T14:33:51.695+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [BloquearTableroRequest(duracionMinutos=5)]
+2026-04-21T14:33:51.697+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.699+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.700+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.706+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.714+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.716+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo 
+    from
+        registros_acciones h1_0 
+    where
+        h1_0.tablero_id=?
+2026-04-21T14:33:51.719+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* update
+        for pds.app_gestion.infrastructure.persistence.entity.TableroJPA */update tableros 
+    set
+        bloqueado=?,
+        descripcion=?,
+        duracion_bloqueo_minutos=?,
+        fecha_actualizacion=?,
+        fecha_bloqueo=?,
+        propietario_email=?,
+        titulo=? 
+    where
+        id=?
+2026-04-21T14:33:51.722+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.723+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.724+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.724+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Nothing to write: null body
+2026-04-21T14:33:51.726+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#obtenerTablero(String, String)
+2026-04-21T14:33:51.729+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.731+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.732+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.732+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=128f7a27-5fe8-4dbf-9fcc-99b3cdaf7328, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.740+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.743+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.745+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.748+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.750+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.758+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.761+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.765+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.765+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=aed38ec4-8b93-4bca-a91c-79af1b42ecbc, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.770+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#actualizarTablero(String, String, ActualizarTableroRequest)
+2026-04-21T14:33:51.771+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [ActualizarTableroRequest(titulo=Tablero Test, descripcion=Nueva descripci├│n)]
+2026-04-21T14:33:51.772+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.774+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.775+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal#manejarPermisoNegado(PermisoNegadoException)
+2026-04-21T14:33:51.775+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.776+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal$ErrorResponse@32c3102]
+2026-04-21T14:33:51.776+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [pds.app_gestion.application.exception.PermisoNegadoException: Usuario otro@test.com no tiene permisos para acceder a editar tablero]
+2026-04-21T14:33:51.784+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.787+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.794+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.799+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.803+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.805+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.806+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.808+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.808+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=c33bb25f-ba70-43d4-b8c3-37772eed6186, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.811+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#bloquearTablero(String, String, BloquearTableroRequest)
+2026-04-21T14:33:51.812+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [BloquearTableroRequest(duracionMinutos=5)]
+2026-04-21T14:33:51.814+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.816+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.817+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal#manejarPermisoNegado(PermisoNegadoException)
+2026-04-21T14:33:51.820+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.820+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [pds.app_gestion.ui.exception.ManejadorExcepcionesGlobal$ErrorResponse@5cfc283d]
+2026-04-21T14:33:51.821+02:00 DEBUG 46076 --- [           main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [pds.app_gestion.application.exception.PermisoNegadoException: Usuario otro@test.com no tiene permisos para acceder a bloquear tablero]
+2026-04-21T14:33:51.830+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#crearTablero(CrearTableroRequest)
+2026-04-21T14:33:51.831+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CrearTableroRequest(titulo=Tablero Test, descripcion=Descripci├│n, propietarioEmail=propietario@test. (truncated)...]
+2026-04-21T14:33:51.833+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.837+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        registros_acciones h1_0 
+            on t1_0.id=h1_0.tablero_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.838+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA */insert 
+    into
+        tableros (bloqueado,descripcion,duracion_bloqueo_minutos,fecha_actualizacion,fecha_bloqueo,fecha_creacion,propietario_email,titulo,id) 
+    values
+        (?,?,?,?,?,?,?,?,?)
+2026-04-21T14:33:51.840+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.842+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.846+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.847+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [TableroResponse(id=9a6d18d9-b320-4cf4-8629-7aa68f484254, titulo=Tablero Test, descripcion=Descripci├│ (truncated)...]
+2026-04-21T14:33:51.849+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#compartirTablero(String, String, CompartirTableroRequest)
+2026-04-21T14:33:51.850+02:00 DEBUG 46076 --- [           main] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CompartirTableroRequest(emailUsuario=usuario2@test.com)]
+2026-04-21T14:33:51.852+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.bloqueado,
+        t1_0.descripcion,
+        t1_0.duracion_bloqueo_minutos,
+        t1_0.fecha_actualizacion,
+        t1_0.fecha_bloqueo,
+        t1_0.fecha_creacion,
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t3_0.lista_id,
+        t3_0.id,
+        t3_0.completada,
+        t3_0.descripcion,
+        t3_0.fecha_actualizacion,
+        t3_0.fecha_completacion,
+        t3_0.fecha_creacion,
+        t3_0.tipo,
+        t3_0.titulo,
+        t1_0.propietario_email,
+        t1_0.titulo 
+    from
+        tableros t1_0 
+    left join
+        listas l1_0 
+            on t1_0.id=l1_0.tablero_id 
+    left join
+        tarjetas t3_0 
+            on l1_0.id=t3_0.lista_id 
+    where
+        t1_0.id=?
+2026-04-21T14:33:51.854+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.856+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* select
+        count(*) 
+    from
+        TableroJPA x 
+    WHERE
+        x.id = :id */ select
+            count(*) 
+        from
+            tableros t1_0 
+        where
+            t1_0.id=?
+2026-04-21T14:33:51.858+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.860+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */insert 
+    into
+        registros_acciones (detalles,fecha,tablero_id,tipo,id) 
+    values
+        (?,?,?,?,default)
+2026-04-21T14:33:51.863+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        h1_0.tablero_id,
+        h1_0.id,
+        h1_0.detalles,
+        h1_0.fecha,
+        h1_0.tipo 
+    from
+        registros_acciones h1_0 
+    where
+        h1_0.tablero_id=?
+2026-04-21T14:33:51.866+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* update
+        for pds.app_gestion.infrastructure.persistence.entity.TableroJPA */update tableros 
+    set
+        bloqueado=?,
+        descripcion=?,
+        duracion_bloqueo_minutos=?,
+        fecha_actualizacion=?,
+        fecha_bloqueo=?,
+        propietario_email=?,
+        titulo=? 
+    where
+        id=?
+2026-04-21T14:33:51.871+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* insert for
+        pds.app_gestion.infrastructure.persistence.entity.TableroJPA.usuariosCompartidos */insert 
+    into
+        tablero_usuarios_compartidos (tablero_id,email_usuario) 
+    values
+        (?,?)
+2026-04-21T14:33:51.872+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.873+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* delete for pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA */delete 
+    from
+        registros_acciones 
+    where
+        id=?
+2026-04-21T14:33:51.874+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.874+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Nothing to write: null body
+2026-04-21T14:33:51.876+02:00 DEBUG 46076 --- [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to pds.app_gestion.ui.controller.ControladorTablero#obtenerTablerosCompartidos(String)
+2026-04-21T14:33:51.881+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    /* SELECT
+        t 
+    FROM
+        TableroJPA t 
+    WHERE
+        :email MEMBER OF t.usuariosCompartidos */ select
+            t1_0.id,
+            t1_0.bloqueado,
+            t1_0.descripcion,
+            t1_0.duracion_bloqueo_minutos,
+            t1_0.fecha_actualizacion,
+            t1_0.fecha_bloqueo,
+            t1_0.fecha_creacion,
+            t1_0.propietario_email,
+            t1_0.titulo 
+        from
+            tableros t1_0 
+        where
+            ? in(select
+                u1_0.email_usuario 
+            from
+                tablero_usuarios_compartidos u1_0 
+            where
+                t1_0.id=u1_0.tablero_id)
+2026-04-21T14:33:51.883+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        l1_0.tablero_id,
+        l1_0.id,
+        l1_0.limite_maximo,
+        l1_0.lista_prerequisito_id,
+        l1_0.nombre,
+        t2_0.lista_id,
+        t2_0.id,
+        t2_0.completada,
+        t2_0.descripcion,
+        t2_0.fecha_actualizacion,
+        t2_0.fecha_completacion,
+        t2_0.fecha_creacion,
+        t2_0.tipo,
+        t2_0.titulo 
+    from
+        listas l1_0 
+    left join
+        tarjetas t2_0 
+            on l1_0.id=t2_0.lista_id 
+    where
+        l1_0.tablero_id=?
+2026-04-21T14:33:51.885+02:00 DEBUG 46076 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.tablero_id,
+        u1_0.email_usuario 
+    from
+        tablero_usuarios_compartidos u1_0 
+    where
+        u1_0.tablero_id=?
+2026-04-21T14:33:51.887+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-04-21T14:33:51.887+02:00 DEBUG 46076 --- [           main] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[TableroResponse(id=9a6d18d9-b320-4cf4-8629-7aa68f484254, titulo=Tablero Test, descripcion=Descripci (truncated)...]
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.236 s - in pds.app_gestion.ui.controller.ControladorTableroIntegrationTest
+[INFO] Running pds.app_gestion.ui.controller.ControladorTarjetaIntegrationTest
+[WARNING] Tests run: 8, Failures: 0, Errors: 0, Skipped: 8, Time elapsed: 0.001 s - in pds.app_gestion.ui.controller.ControladorTarjetaIntegrationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[WARNING] Tests run: 128, Failures: 0, Errors: 0, Skipped: 17
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  37.666 s
+[INFO] Finished at: 2026-04-21T14:33:52+02:00
+[INFO] ------------------------------------------------------------------------

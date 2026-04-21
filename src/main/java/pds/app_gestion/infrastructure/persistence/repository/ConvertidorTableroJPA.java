@@ -6,6 +6,8 @@ import pds.app_gestion.infrastructure.persistence.entity.ListaJPA;
 import pds.app_gestion.infrastructure.persistence.entity.TableroJPA;
 import pds.app_gestion.infrastructure.persistence.entity.TarjetaJPA;
 
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -21,8 +23,7 @@ public class ConvertidorTableroJPA {
 
     /**
      * Convierte un TableroJPA a un Tablero de dominio.
-     * Nota: Por limitaciones de DDD, solo se convierten los datos básicos.
-     * Las listas y tarjetas se cargan de forma lazy.
+     * Restaura el estado del tablero incluyendo estado de bloqueo.
      */
     public Tablero convertirADominio(TableroJPA jpa) {
         if (jpa == null) return null;
@@ -30,11 +31,34 @@ public class ConvertidorTableroJPA {
         // Crear tablero nuevo con constructor básico
         Tablero tablero = new Tablero(jpa.getId(), jpa.getTitulo(), jpa.getPropietarioEmail());
         
-        // No podemos usar setters en DDD, así que retornamos tablero básico
-        // La lógica de negocio debería reconstruir el tablero desde sus estados previos
-        // Por ahora, simplemente copiamos datos inmutables desde JPA
+        // Usar reflection para establecer campos privados (DDD no permite setters)
+        try {
+            // Establecer descripción
+            setFieldValue(tablero, "descripcion", jpa.getDescripcion() != null ? jpa.getDescripcion() : "");
+            
+            // Establecer estado de bloqueo
+            setFieldValue(tablero, "bloqueado", jpa.isBloqueado());
+            setFieldValue(tablero, "fechaDesbloqueo", 
+                jpa.getFechaBloqueo() != null ? Optional.of(jpa.getFechaBloqueo()) : Optional.empty());
+            
+            // Establecer fechas
+            setFieldValue(tablero, "fechaActualizacion", jpa.getFechaActualizacion());
+            
+            // Establecer usuarios compartidos
+            if (jpa.getUsuariosCompartidos() != null) {
+                setFieldValue(tablero, "usuariosCompartidos", new HashSet<>(jpa.getUsuariosCompartidos()));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir TableroJPA a Tablero", e);
+        }
         
         return tablero;
+    }
+    
+    private void setFieldValue(Object obj, String fieldName, Object value) throws Exception {
+        Field field = obj.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(obj, value);
     }
 
     /**
