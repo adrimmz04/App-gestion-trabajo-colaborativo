@@ -98,11 +98,7 @@ public class ServicioLista {
     public void moverTarjeta(String idTablero, String idListaOrigen, String idListaDestino, 
                             String idTarjeta, String emailUsuario) {
         Tablero tablero = obtenerTablero(idTablero, emailUsuario);
-        
-        if (tablero.isBloqueado()) {
-            throw new ErrorOperacionDominioException("No se pueden mover tarjetas en un tablero bloqueado");
-        }
-        
+
         Lista listaOrigen = obtenerLista(tablero, idListaOrigen);
         Lista listaDestino = obtenerLista(tablero, idListaDestino);
         Tarjeta tarjeta = obtenerTarjeta(listaOrigen, idTarjeta);

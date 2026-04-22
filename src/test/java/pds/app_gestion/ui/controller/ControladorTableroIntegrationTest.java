@@ -113,6 +113,19 @@ class ControladorTableroIntegrationTest {
     }
 
     @Test
+    @DisplayName("No debe reutilizar respuesta cacheada entre usuarios con distinto permiso")
+    void testObtenerTableroNoDebeCompartirCacheEntreUsuarios() throws Exception {
+        mockMvc.perform(get("/api/v1/tableros/{id}", idTablero)
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(idTablero));
+
+        mockMvc.perform(get("/api/v1/tableros/{id}", idTablero)
+            .param("emailUsuario", "otro@test.com"))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
     @DisplayName("Obtener tablero inexistente")
     void testObtenerTableroInexistente() throws Exception {
         mockMvc.perform(get("/api/v1/tableros/{id}", "id-inexistente")
@@ -266,6 +279,24 @@ class ControladorTableroIntegrationTest {
         
         assertThat(response.getId()).isNotEmpty();
         assertThat(response.getNombre()).isEqualTo("Nueva Lista");
+    }
+
+    @Test
+    @DisplayName("El repositorio debe reconstruir listas persistidas al leer un tablero")
+    void testRepositorioReconstruyeListasPersistidas() throws Exception {
+        CrearListaRequest request = new CrearListaRequest("Nueva Lista", 5);
+
+        mockMvc.perform(post("/api/v1/tableros/{id}/listas", idTablero)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated());
+
+        var tableroPersistido = repositorioTablero.obtenerPorId(idTablero);
+
+        assertThat(tableroPersistido).isPresent();
+        assertThat(tableroPersistido.get().getListas()).hasSize(1);
+        assertThat(tableroPersistido.get().getListas().get(0).getNombre()).isEqualTo("Nueva Lista");
     }
 
     @Test

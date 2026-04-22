@@ -164,7 +164,7 @@ public class ServicioListaTest {
     }
 
     @Test
-    void moverTarjetaEnTableroBloquedoThrows() {
+    void moverTarjetaEnTableroBloquedoExitosamente() {
         Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
         Lista listaOrigen = new Lista("lista-origen", "Origen");
         Lista listaDestino = new Lista("lista-destino", "Destino");
@@ -178,9 +178,11 @@ public class ServicioListaTest {
         
         when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
 
-        assertThrows(ErrorOperacionDominioException.class, () -> {
-            servicioLista.moverTarjeta("1", "lista-origen", "lista-destino", "tarjeta-1", "adrian@example.com");
-        });
+        servicioLista.moverTarjeta("1", "lista-origen", "lista-destino", "tarjeta-1", "adrian@example.com");
+
+        assertTrue(listaDestino.obtenerTarjeta("tarjeta-1").isPresent());
+        assertTrue(listaOrigen.obtenerTarjeta("tarjeta-1").isEmpty());
+        verify(repositorioTablero, times(1)).guardar(tablero);
     }
 
     @Test

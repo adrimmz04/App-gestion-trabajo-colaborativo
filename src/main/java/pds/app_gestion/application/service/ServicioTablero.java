@@ -65,7 +65,7 @@ public class ServicioTablero {
      * @param emailUsuario email del usuario que solicita (para verificar permisos)
      * @return DTO del tablero
      */
-    @Cacheable(cacheNames = "tableros", key = "#idTablero")
+    @Cacheable(cacheNames = "tableros", key = "#idTablero + ':' + #emailUsuario")
     public TableroResponse obtenerTablero(String idTablero, String emailUsuario) {
         Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
             .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));

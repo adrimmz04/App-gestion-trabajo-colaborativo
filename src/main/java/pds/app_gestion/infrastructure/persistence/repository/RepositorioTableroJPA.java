@@ -1,6 +1,7 @@
 package pds.app_gestion.infrastructure.persistence.repository;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import pds.app_gestion.domain.RepositorioTablero;
 import pds.app_gestion.domain.Tablero;
 import pds.app_gestion.infrastructure.persistence.entity.TableroJPA;
@@ -44,12 +45,14 @@ public class RepositorioTableroJPA implements RepositorioTablero {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Tablero> obtenerPorId(String id) {
         return jpaRepository.findById(id)
             .map(convertidor::convertirADominio);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Tablero> obtenerPorPropietario(String email) {
         return jpaRepository.findByPropietarioEmail(email).stream()
             .map(convertidor::convertirADominio)
@@ -57,6 +60,7 @@ public class RepositorioTableroJPA implements RepositorioTablero {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Tablero> obtenerCompartidos(String email) {
         return jpaRepository.findTablerosCompartidosCon(email).stream()
             .map(convertidor::convertirADominio)

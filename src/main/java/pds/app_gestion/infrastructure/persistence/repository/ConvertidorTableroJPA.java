@@ -3,12 +3,14 @@ package pds.app_gestion.infrastructure.persistence.repository;
 import org.springframework.stereotype.Component;
 import pds.app_gestion.domain.*;
 import pds.app_gestion.infrastructure.persistence.entity.ListaJPA;
+import pds.app_gestion.infrastructure.persistence.entity.RegistroAccionJPA;
 import pds.app_gestion.infrastructure.persistence.entity.TableroJPA;
 import pds.app_gestion.infrastructure.persistence.entity.TarjetaJPA;
 
 import java.lang.reflect.Field;
-import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,32 +28,44 @@ public class ConvertidorTableroJPA {
      * Restaura el estado del tablero incluyendo estado de bloqueo.
      */
     public Tablero convertirADominio(TableroJPA jpa) {
-        if (jpa == null) return null;
+        if (jpa == null) {
+            return null;
+        }
 
-        // Crear tablero nuevo con constructor básico
         Tablero tablero = new Tablero(jpa.getId(), jpa.getTitulo(), jpa.getPropietarioEmail());
-        
-        // Usar reflection para establecer campos privados (DDD no permite setters)
+
         try {
-            // Establecer descripción
             setFieldValue(tablero, "descripcion", jpa.getDescripcion() != null ? jpa.getDescripcion() : "");
-            
-            // Establecer estado de bloqueo
             setFieldValue(tablero, "bloqueado", jpa.isBloqueado());
             setFieldValue(tablero, "fechaDesbloqueo", 
                 jpa.getFechaBloqueo() != null ? Optional.of(jpa.getFechaBloqueo()) : Optional.empty());
-            
-            // Establecer fechas
+            setFieldValue(tablero, "fechaCreacion", jpa.getFechaCreacion());
             setFieldValue(tablero, "fechaActualizacion", jpa.getFechaActualizacion());
-            
-            // Establecer usuarios compartidos
+
+            tablero.getUsuariosCompartidos().clear();
             if (jpa.getUsuariosCompartidos() != null) {
-                setFieldValue(tablero, "usuariosCompartidos", new HashSet<>(jpa.getUsuariosCompartidos()));
+                tablero.getUsuariosCompartidos().addAll(jpa.getUsuariosCompartidos());
+            }
+
+            tablero.getListas().clear();
+            if (jpa.getListas() != null) {
+                tablero.getListas().addAll(jpa.getListas().stream()
+                    .sorted(Comparator.comparing(ListaJPA::getId))
+                    .map(this::convertirListaADominio)
+                    .toList());
+            }
+
+            tablero.getHistorial().clear();
+            if (jpa.getHistorialAcciones() != null) {
+                tablero.getHistorial().addAll(jpa.getHistorialAcciones().stream()
+                    .sorted(Comparator.comparing(RegistroAccionJPA::getFecha))
+                    .map(this::convertirRegistroADominio)
+                    .toList());
             }
         } catch (Exception e) {
             throw new RuntimeException("Error al convertir TableroJPA a Tablero", e);
         }
-        
+
         return tablero;
     }
     
@@ -65,7 +79,9 @@ public class ConvertidorTableroJPA {
      * Convierte un Tablero de dominio a un TableroJPA para persistencia.
      */
     public TableroJPA convertirAJPA(Tablero tablero) {
-        if (tablero == null) return null;
+        if (tablero == null) {
+            return null;
+        }
 
         TableroJPA jpa = TableroJPA.builder()
             .id(tablero.getId())
@@ -73,6 +89,9 @@ public class ConvertidorTableroJPA {
             .descripcion(tablero.getDescripcion() != null ? tablero.getDescripcion() : "")
             .propietarioEmail(tablero.getPropietarioEmail())
             .bloqueado(tablero.isBloqueado())
+            .fechaBloqueo(tablero.getFechaDesbloqueo().orElse(null))
+            .fechaCreacion(tablero.getFechaCreacion())
+            .fechaActualizacion(tablero.getFechaActualizacion())
             .usuariosCompartidos(new HashSet<>(tablero.getUsuariosCompartidos()))
             .build();
 
@@ -99,6 +118,7 @@ public class ConvertidorTableroJPA {
             .id(lista.getId())
             .nombre(lista.getNombre())
             .limiteMaximo(lista.getLimiteMaximo().orElse(null))
+            .listaPrerrequisitoId(lista.obtenerListasPrevias().isEmpty() ? null : lista.obtenerListasPrevias().get(0))
             .build();
 
         Set<TarjetaJPA> tarjetasJPA = lista.getTarjetas().stream()
@@ -118,6 +138,8 @@ public class ConvertidorTableroJPA {
             .tipo(pds.app_gestion.infrastructure.persistence.entity.TipoTarjetaJPA.valueOf(tarjeta.getTipo().name()))
             .completada(tarjeta.isCompletada())
             .fechaCompletacion(tarjeta.getFechaCompletacion())
+            .fechaCreacion(tarjeta.getFechaCreacion())
+            .fechaActualizacion(tarjeta.getFechaActualizacion())
             .build();
 
         jpa.setEtiquetasNombres(tarjeta.getEtiquetas().stream()
@@ -137,5 +159,60 @@ public class ConvertidorTableroJPA {
             .detalles(registro.getDetalles())
             .fecha(registro.getFecha())
             .build();
+    }
+
+    private Lista convertirListaADominio(ListaJPA jpa) {
+        Lista lista = new Lista(jpa.getId(), jpa.getNombre());
+
+        if (jpa.getLimiteMaximo() != null) {
+            lista.establecerLimiteMaximo(jpa.getLimiteMaximo());
+        }
+
+        if (jpa.getListaPrerrequisitoId() != null && !jpa.getListaPrerrequisitoId().isBlank()) {
+            lista.agregarListaPrevia(jpa.getListaPrerrequisitoId());
+        }
+
+        if (jpa.getTarjetas() != null) {
+            List<Tarjeta> tarjetas = jpa.getTarjetas().stream()
+                .sorted(Comparator.comparing(TarjetaJPA::getId))
+                .map(this::convertirTarjetaADominio)
+                .toList();
+            lista.getTarjetas().addAll(tarjetas);
+        }
+
+        return lista;
+    }
+
+    private Tarjeta convertirTarjetaADominio(TarjetaJPA jpa) {
+        Tarjeta tarjeta = new Tarjeta(
+            jpa.getId(),
+            jpa.getTitulo(),
+            jpa.getDescripcion(),
+            Tarjeta.TipoTarjeta.valueOf(jpa.getTipo().name())
+        );
+
+        try {
+            setFieldValue(tarjeta, "completada", jpa.isCompletada());
+            setFieldValue(tarjeta, "fechaCompletacion", jpa.getFechaCompletacion());
+            setFieldValue(tarjeta, "fechaCreacion", jpa.getFechaCreacion());
+            setFieldValue(tarjeta, "fechaActualizacion", jpa.getFechaActualizacion());
+
+            if (jpa.getEtiquetasNombres() != null) {
+                for (String nombreEtiqueta : jpa.getEtiquetasNombres()) {
+                    String color = jpa.getEtiquetasColores() != null
+                        ? jpa.getEtiquetasColores().getOrDefault(nombreEtiqueta, "#808080")
+                        : "#808080";
+                    tarjeta.getEtiquetas().add(new Etiqueta(nombreEtiqueta, color));
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir TarjetaJPA a Tarjeta", e);
+        }
+
+        return tarjeta;
+    }
+
+    private RegistroAccion convertirRegistroADominio(RegistroAccionJPA jpa) {
+        return new RegistroAccion(jpa.getTipo(), jpa.getDetalles(), jpa.getFecha());
     }
 }
