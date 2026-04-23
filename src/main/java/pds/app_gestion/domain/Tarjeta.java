@@ -24,6 +24,7 @@ public class Tarjeta {
     private String descripcion;
     private boolean completada;
     private final Set<Etiqueta> etiquetas;
+    private final Set<String> listasVisitadas;
     private final TipoTarjeta tipo;
     private final LocalDateTime fechaCreacion;
     private LocalDateTime fechaActualizacion;
@@ -44,6 +45,7 @@ public class Tarjeta {
         this.descripcion = descripcion != null ? descripcion : "";
         this.completada = false;
         this.etiquetas = new HashSet<>();
+        this.listasVisitadas = new HashSet<>();
         this.tipo = TipoTarjeta.TAREA;
         this.fechaCreacion = LocalDateTime.now();
         this.fechaActualizacion = LocalDateTime.now();
@@ -65,6 +67,7 @@ public class Tarjeta {
         this.descripcion = descripcion != null ? descripcion : "";
         this.completada = false;
         this.etiquetas = new HashSet<>();
+        this.listasVisitadas = new HashSet<>();
         this.tipo = Objects.requireNonNull(tipo, "El tipo de tarjeta no puede ser nulo");
         this.fechaCreacion = LocalDateTime.now();
         this.fechaActualizacion = LocalDateTime.now();
@@ -126,6 +129,30 @@ public class Tarjeta {
     public void actualizarDescripcion(String nuevaDescripcion) {
         this.descripcion = nuevaDescripcion != null ? nuevaDescripcion : "";
         this.fechaActualizacion = LocalDateTime.now();
+    }
+
+    /**
+     * Registra que la tarjeta ha pasado por una lista del tablero.
+     *
+     * @param idLista identificador de la lista
+     */
+    public void registrarPasoPorLista(String idLista) {
+        if (idLista == null || idLista.isBlank()) {
+            throw new IllegalArgumentException("El ID de la lista no puede estar vacío");
+        }
+
+        listasVisitadas.add(idLista);
+        fechaActualizacion = LocalDateTime.now();
+    }
+
+    /**
+     * Indica si la tarjeta ha pasado por una lista concreta.
+     *
+     * @param idLista identificador de la lista
+     * @return true si ya pasó por la lista
+     */
+    public boolean haPasadoPorLista(String idLista) {
+        return listasVisitadas.contains(idLista);
     }
 
     /**

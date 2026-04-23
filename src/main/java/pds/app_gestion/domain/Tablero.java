@@ -20,7 +20,7 @@ public class Tablero {
     @EqualsAndHashCode.Include
     private final String id;
     
-    private final String titulo;
+    private String titulo;
     private String descripcion;
     private final String propietarioEmail;
     private final List<Lista> listas;
@@ -199,6 +199,17 @@ public class Tablero {
         this.descripcion = nuevaDescripcion != null ? nuevaDescripcion : "";
         fechaActualizacion = LocalDateTime.now();
         registrarAccion("DESCRIPCION_ACTUALIZADA", "Descripción del tablero actualizada");
+    }
+
+    /**
+     * Actualiza el titulo del tablero.
+     * 
+     * @param nuevoTitulo nuevo titulo
+     */
+    public void actualizarTitulo(String nuevoTitulo) {
+        this.titulo = Objects.requireNonNull(nuevoTitulo, "El título del tablero no puede ser nulo");
+        fechaActualizacion = LocalDateTime.now();
+        registrarAccion("TITULO_ACTUALIZADO", "Título del tablero actualizado");
     }
 
     /**

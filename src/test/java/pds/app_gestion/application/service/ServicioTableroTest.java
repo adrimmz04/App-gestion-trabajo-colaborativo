@@ -30,11 +30,14 @@ public class ServicioTableroTest {
     @Mock
     private CacheService cacheService;
 
+    @Mock
+    private ServicioPlantillas servicioPlantillas;
+
     private ServicioTablero servicioTablero;
 
     @BeforeEach
     void setUp() {
-        servicioTablero = new ServicioTablero(repositorioTablero, cacheService);
+        servicioTablero = new ServicioTablero(repositorioTablero, cacheService, servicioPlantillas);
     }
 
     @Test
@@ -54,6 +57,21 @@ public class ServicioTableroTest {
         assertFalse(response.isBloqueado());
         
         verify(repositorioTablero, times(1)).guardar(any(Tablero.class));
+    }
+
+    @Test
+    void importarTableroDesdePlantillaExitosamente() {
+        Tablero tablero = new Tablero("1", "Tablero plantilla", "adrian@example.com");
+        Lista lista = new Lista("lista-1", "Por hacer");
+        lista.agregarTarjeta(new Tarjeta("tarjeta-1", "Tarea importada", ""));
+        tablero.agregarLista(lista);
+
+        TableroResponse response = servicioTablero.importarTableroDesdePlantilla(tablero, "adrian@example.com");
+
+        assertEquals("Tablero plantilla", response.getTitulo());
+        assertEquals("adrian@example.com", response.getPropietarioEmail());
+        assertEquals(1, response.getTotalTarjetas());
+        verify(repositorioTablero).guardar(tablero);
     }
 
     @Test
@@ -111,6 +129,67 @@ public class ServicioTableroTest {
         assertNotNull(response);
         assertEquals("1", response.getId());
         assertEquals("Tablero", response.getTitulo());
+    }
+
+    @Test
+    void exportarTableroComoPlantillaExitosamente() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+        when(servicioPlantillas.exportarTableroComoYAML(tablero)).thenReturn("titulo: Tablero");
+
+        String yaml = servicioTablero.exportarTableroComoPlantilla("1", "adrian@example.com");
+
+        assertEquals("titulo: Tablero", yaml);
+        verify(servicioPlantillas).exportarTableroComoYAML(tablero);
+    }
+
+    @Test
+    void exportarTableroComoPlantillaSinPermisoThrows() {
+        Tablero tablero = new Tablero("1", "Tablero", "propietario@example.com");
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        assertThrows(PermisoNegadoException.class, () ->
+            servicioTablero.exportarTableroComoPlantilla("1", "otro@example.com")
+        );
+    }
+
+    @Test
+    void obtenerListasExitosamente() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        tablero.agregarLista(new Lista("lista-1", "Pendientes"));
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        var listas = servicioTablero.obtenerListas("1", "adrian@example.com");
+
+        assertEquals(1, listas.size());
+        assertEquals("Pendientes", listas.get(0).getNombre());
+    }
+
+    @Test
+    void actualizarTableroTituloYDescripcionExitosamente() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        ActualizarTableroRequest request = ActualizarTableroRequest.builder()
+            .titulo("Tablero actualizado")
+            .descripcion("Nueva descripción")
+            .build();
+
+        TableroResponse response = servicioTablero.actualizarTablero("1", "adrian@example.com", request);
+
+        assertEquals("Tablero actualizado", response.getTitulo());
+        assertEquals("Nueva descripción", response.getDescripcion());
+        verify(repositorioTablero).guardar(tablero);
+    }
+
+    @Test
+    void eliminarTableroExitosamente() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        servicioTablero.eliminarTablero("1", "adrian@example.com");
+
+        verify(repositorioTablero).eliminar("1");
     }
 
     @Test
@@ -177,5 +256,18 @@ public class ServicioTableroTest {
         assertThrows(Exception.class, () -> {
             servicioTablero.agregarLista("1", "adrian@example.com", request);
         });
+    }
+
+    @Test
+    void eliminarListaExitosamente() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        Lista lista = new Lista("lista-1", "Mi lista");
+        tablero.agregarLista(lista);
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        servicioTablero.eliminarLista("1", "lista-1", "adrian@example.com");
+
+        assertTrue(tablero.getListas().isEmpty());
+        verify(repositorioTablero).guardar(tablero);
     }
 }

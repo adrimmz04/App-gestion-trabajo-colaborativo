@@ -44,6 +44,11 @@ public class RepositorioTableroEnMemoria implements RepositorioTablero {
     }
 
     @Override
+    public List<Tablero> obtenerTodos() {
+        return new ArrayList<>(tableros.values());
+    }
+
+    @Override
     public void eliminar(String id) {
         tableros.remove(id);
     }

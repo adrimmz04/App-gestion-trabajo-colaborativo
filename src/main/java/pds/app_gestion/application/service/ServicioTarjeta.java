@@ -12,6 +12,9 @@ import pds.app_gestion.application.exception.PermisoNegadoException;
 import pds.app_gestion.application.exception.RecursoNoEncontradoException;
 import pds.app_gestion.domain.*;
 
+import java.text.Normalizer;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -48,6 +51,12 @@ public class ServicioTarjeta {
         
         Tablero tablero = obtenerTablero(idTablero, emailUsuario);
         Lista lista = obtenerLista(tablero, idLista);
+
+        if (lista.tienePrerequisitos()) {
+            throw new ErrorOperacionDominioException(
+                String.format("No se pueden crear tarjetas directamente en '%s' porque tiene prerequisitos", lista.getNombre())
+            );
+        }
         
         if (tablero.isBloqueado()) {
             throw new ErrorOperacionDominioException("No se pueden crear tarjetas en un tablero bloqueado");
@@ -61,6 +70,8 @@ public class ServicioTarjeta {
             
             Tarjeta tarjeta = new Tarjeta(idTarjeta, request.getTitulo(), request.getDescripcion(), tipo);
             lista.agregarTarjeta(tarjeta);
+            tablero.registrarAccion("TARJETA_CREADA",
+                String.format("Tarjeta '%s' creada en '%s'", tarjeta.getTitulo(), lista.getNombre()));
             
             repositorioTablero.guardar(tablero);
             return convertirATarjetaResponse(tarjeta);
@@ -87,6 +98,8 @@ public class ServicioTarjeta {
         
         if (request.getDescripcion() != null) {
             tarjeta.actualizarDescripcion(request.getDescripcion());
+            tablero.registrarAccion("TARJETA_ACTUALIZADA",
+                String.format("Descripción actualizada para '%s'", tarjeta.getTitulo()));
         }
         
         repositorioTablero.guardar(tablero);
@@ -106,8 +119,16 @@ public class ServicioTarjeta {
         Tablero tablero = obtenerTablero(idTablero, emailUsuario);
         Lista lista = obtenerLista(tablero, idLista);
         Tarjeta tarjeta = obtenerTarjeta(lista, idTarjeta);
-        
+
+        boolean estabaCompletada = tarjeta.isCompletada();
         tarjeta.marcarComoCompletada();
+
+        if (!estabaCompletada) {
+            tablero.registrarAccion("TARJETA_COMPLETADA",
+                String.format("Tarjeta '%s' marcada como completada", tarjeta.getTitulo()));
+        }
+
+        moverATarjetasCompletadasSiExiste(tablero, lista, tarjeta);
         repositorioTablero.guardar(tablero);
         
         return convertirATarjetaResponse(tarjeta);
@@ -126,11 +147,37 @@ public class ServicioTarjeta {
         Tablero tablero = obtenerTablero(idTablero, emailUsuario);
         Lista lista = obtenerLista(tablero, idLista);
         Tarjeta tarjeta = obtenerTarjeta(lista, idTarjeta);
-        
+
+        boolean estabaCompletada = tarjeta.isCompletada();
         tarjeta.marcarComoNoCompletada();
+
+        if (estabaCompletada) {
+            tablero.registrarAccion("TARJETA_REABIERTA",
+                String.format("Tarjeta '%s' marcada como pendiente", tarjeta.getTitulo()));
+        }
+
         repositorioTablero.guardar(tablero);
         
         return convertirATarjetaResponse(tarjeta);
+    }
+
+    /**
+     * Caso de uso: Eliminar una tarjeta.
+     *
+     * @param idTablero ID del tablero
+     * @param idLista ID de la lista
+     * @param idTarjeta ID de la tarjeta
+     * @param emailUsuario email del usuario que solicita
+     */
+    public void eliminarTarjeta(String idTablero, String idLista, String idTarjeta, String emailUsuario) {
+        Tablero tablero = obtenerTablero(idTablero, emailUsuario);
+        Lista lista = obtenerLista(tablero, idLista);
+        Tarjeta tarjeta = obtenerTarjeta(lista, idTarjeta);
+
+        tablero.registrarAccion("TARJETA_ELIMINADA",
+            String.format("Tarjeta '%s' eliminada de '%s'", tarjeta.getTitulo(), lista.getNombre()));
+        lista.eliminarTarjeta(tarjeta);
+        repositorioTablero.guardar(tablero);
     }
 
     /**
@@ -152,6 +199,8 @@ public class ServicioTarjeta {
         try {
             Etiqueta etiqueta = new Etiqueta(request.getNombre(), request.getColor());
             tarjeta.agregarEtiqueta(etiqueta);
+            tablero.registrarAccion("ETIQUETA_AGREGADA",
+                String.format("Etiqueta '%s' agregada a '%s'", etiqueta.getNombre(), tarjeta.getTitulo()));
             repositorioTablero.guardar(tablero);
             return convertirATarjetaResponse(tarjeta);
         } catch (IllegalArgumentException e) {
@@ -228,6 +277,54 @@ public class ServicioTarjeta {
         return nombreEtiquetas.stream()
             .allMatch(nombre -> tarjeta.getEtiquetas().stream()
                 .anyMatch(etiqueta -> etiqueta.getNombre().equalsIgnoreCase(nombre)));
+    }
+
+    private void moverATarjetasCompletadasSiExiste(Tablero tablero, Lista listaActual, Tarjeta tarjeta) {
+        Optional<Lista> listaCompletadas = tablero.obtenerListas().stream()
+            .filter(lista -> !lista.getId().equals(listaActual.getId()))
+            .filter(lista -> esListaDeCompletadas(lista.getNombre()))
+            .findFirst();
+
+        if (listaCompletadas.isEmpty()) {
+            return;
+        }
+
+        Lista listaDestino = listaCompletadas.get();
+        if (listaDestino.getLimiteMaximo().isPresent()
+            && listaDestino.obtenerCantidadTarjetas() >= listaDestino.getLimiteMaximo().get()) {
+            return;
+        }
+
+        if (listaDestino.tienePrerequisitos() && !listaDestino.cumpleRequisitos(tarjeta)) {
+            return;
+        }
+
+        listaActual.eliminarTarjeta(tarjeta);
+        try {
+            listaDestino.agregarTarjeta(tarjeta);
+        } catch (IllegalStateException ex) {
+            listaActual.agregarTarjeta(tarjeta);
+            return;
+        }
+
+        tablero.registrarAccion("TARJETA_MOVIDA",
+            String.format("Tarjeta '%s' movida de '%s' a '%s'",
+                tarjeta.getTitulo(), listaActual.getNombre(), listaDestino.getNombre()));
+    }
+
+    private boolean esListaDeCompletadas(String nombreLista) {
+        if (nombreLista == null || nombreLista.isBlank()) {
+            return false;
+        }
+
+        String normalizado = Normalizer.normalize(nombreLista, Normalizer.Form.NFD)
+            .replaceAll("\\p{M}", "")
+            .toLowerCase(Locale.ROOT);
+
+        return normalizado.contains("hecho")
+            || normalizado.contains("done")
+            || normalizado.contains("completad")
+            || normalizado.contains("finalizad");
     }
 
     /**

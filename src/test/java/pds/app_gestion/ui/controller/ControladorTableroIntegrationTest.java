@@ -1,5 +1,7 @@
 package pds.app_gestion.ui.controller;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -134,17 +136,35 @@ class ControladorTableroIntegrationTest {
     }
 
     @Test
+    @DisplayName("Obtener historial del tablero")
+    void testObtenerHistorialTablero() throws Exception {
+        mockMvc.perform(post("/api/v1/tableros/{id}/listas", idTablero)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new CrearListaRequest("Nueva Lista", null))))
+            .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/v1/tableros/{id}/historial", idTablero)
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[*].tipo", hasItem("TABLERO_CREADO")))
+            .andExpect(jsonPath("$[*].tipo", hasItem("LISTA_AÑADIDA")));
+    }
+
+    @Test
     @DisplayName("Actualizar descripción del tablero")
     void testActualizarTablero() throws Exception {
         ActualizarTableroRequest request = new ActualizarTableroRequest();
-        request.setTitulo("Tablero Test");
+        request.setTitulo("Tablero Actualizado");
         request.setDescripcion("Nueva descripción");
 
         mockMvc.perform(put("/api/v1/tableros/{id}", idTablero)
             .param("emailUsuario", emailPropietario)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.titulo").value("Tablero Actualizado"))
+            .andExpect(jsonPath("$.descripcion").value("Nueva descripción"));
     }
 
     @Test
@@ -159,6 +179,16 @@ class ControladorTableroIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Eliminar tablero")
+    void testEliminarTablero() throws Exception {
+        mockMvc.perform(delete("/api/v1/tableros/{id}", idTablero)
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isNoContent());
+
+        assertThat(repositorioTablero.obtenerPorId(idTablero)).isEmpty();
     }
 
     @Test
@@ -329,5 +359,103 @@ class ControladorTableroIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isConflict());
+    }
+
+    @Test
+    @DisplayName("Eliminar lista de tablero")
+    void testEliminarLista() throws Exception {
+        CrearListaRequest request = new CrearListaRequest("Nueva Lista", 5);
+
+        MvcResult result = mockMvc.perform(post("/api/v1/tableros/{id}/listas", idTablero)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        ListaResponse listaResponse = objectMapper.readValue(result.getResponse().getContentAsString(), ListaResponse.class);
+
+        mockMvc.perform(delete("/api/v1/tableros/{idTablero}/listas/{idLista}", idTablero, listaResponse.getId())
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isNoContent());
+
+        var tableroPersistido = repositorioTablero.obtenerPorId(idTablero);
+        assertThat(tableroPersistido).isPresent();
+        assertThat(tableroPersistido.get().getListas()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Configurar reglas de una lista")
+    void testConfigurarReglasLista() throws Exception {
+        MvcResult listaOrigenResult = mockMvc.perform(post("/api/v1/tableros/{id}/listas", idTablero)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new CrearListaRequest("Origen", null))))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        MvcResult listaDestinoResult = mockMvc.perform(post("/api/v1/tableros/{id}/listas", idTablero)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new CrearListaRequest("Destino", null))))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        ListaResponse listaOrigen = objectMapper.readValue(listaOrigenResult.getResponse().getContentAsString(), ListaResponse.class);
+        ListaResponse listaDestino = objectMapper.readValue(listaDestinoResult.getResponse().getContentAsString(), ListaResponse.class);
+
+        ConfigurarReglasListaRequest request = ConfigurarReglasListaRequest.builder()
+            .limiteMaximo(3)
+            .listasPrevias(List.of(listaOrigen.getId()))
+            .build();
+
+        mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/reglas", idTablero, listaDestino.getId())
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.limiteMaximo").value(3))
+            .andExpect(jsonPath("$.listasPrevias", hasSize(1)))
+            .andExpect(jsonPath("$.listasPrevias[0]").value(listaOrigen.getId()));
+    }
+
+    @Test
+    @DisplayName("Obtener reglas de una lista")
+    void testObtenerReglasLista() throws Exception {
+        MvcResult listaOrigenResult = mockMvc.perform(post("/api/v1/tableros/{id}/listas", idTablero)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new CrearListaRequest("Origen", null))))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        MvcResult listaDestinoResult = mockMvc.perform(post("/api/v1/tableros/{id}/listas", idTablero)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new CrearListaRequest("Destino", null))))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        ListaResponse listaOrigen = objectMapper.readValue(listaOrigenResult.getResponse().getContentAsString(), ListaResponse.class);
+        ListaResponse listaDestino = objectMapper.readValue(listaDestinoResult.getResponse().getContentAsString(), ListaResponse.class);
+
+        mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/reglas", idTablero, listaDestino.getId())
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(
+                ConfigurarReglasListaRequest.builder()
+                    .limiteMaximo(2)
+                    .listasPrevias(List.of(listaOrigen.getId()))
+                    .build()
+            )))
+            .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/v1/tableros/{idTablero}/listas/{idLista}/reglas", idTablero, listaDestino.getId())
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.nombre").value("Destino"))
+            .andExpect(jsonPath("$.limiteMaximo").value(2))
+            .andExpect(jsonPath("$.listasPrevias", hasSize(1)))
+            .andExpect(jsonPath("$.listasPrevias[0]").value(listaOrigen.getId()));
     }
 }

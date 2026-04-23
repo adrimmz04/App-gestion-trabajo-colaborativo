@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pds.app_gestion.application.dto.*;
+import pds.app_gestion.application.service.ServicioLista;
 import pds.app_gestion.application.service.ServicioTarjeta;
 
 /**
@@ -19,9 +20,11 @@ import pds.app_gestion.application.service.ServicioTarjeta;
 public class ControladorTarjeta {
 
     private final ServicioTarjeta servicioTarjeta;
+    private final ServicioLista servicioLista;
 
-    public ControladorTarjeta(ServicioTarjeta servicioTarjeta) {
+    public ControladorTarjeta(ServicioTarjeta servicioTarjeta, ServicioLista servicioLista) {
         this.servicioTarjeta = servicioTarjeta;
+        this.servicioLista = servicioLista;
     }
 
     /**
@@ -51,6 +54,20 @@ public class ControladorTarjeta {
             @RequestBody ActualizarTarjetaRequest request) {
         TarjetaResponse response = servicioTarjeta.actualizarTarjeta(idTablero, idLista, idTarjeta, emailUsuario, request);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * DELETE /api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}
+     * Eliminar una tarjeta.
+     */
+    @DeleteMapping("/{idTarjeta}")
+    public ResponseEntity<Void> eliminarTarjeta(
+            @PathVariable String idTablero,
+            @PathVariable String idLista,
+            @PathVariable String idTarjeta,
+            @RequestParam String emailUsuario) {
+        servicioTarjeta.eliminarTarjeta(idTablero, idLista, idTarjeta, emailUsuario);
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -94,5 +111,20 @@ public class ControladorTarjeta {
             @RequestBody CrearEtiquetaRequest request) {
         TarjetaResponse response = servicioTarjeta.agregarEtiqueta(idTablero, idLista, idTarjeta, emailUsuario, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    /**
+     * POST /api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/mover
+     * Mover una tarjeta a otra lista del tablero.
+     */
+    @PostMapping("/{idTarjeta}/mover")
+    public ResponseEntity<Void> moverTarjeta(
+            @PathVariable String idTablero,
+            @PathVariable String idLista,
+            @PathVariable String idTarjeta,
+            @RequestParam String idListaDestino,
+            @RequestParam String emailUsuario) {
+        servicioLista.moverTarjeta(idTablero, idLista, idListaDestino, idTarjeta, emailUsuario);
+        return ResponseEntity.noContent().build();
     }
 }

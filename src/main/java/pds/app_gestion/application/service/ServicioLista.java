@@ -106,9 +106,8 @@ public class ServicioLista {
         // Validar requisitos de la lista destino
         if (listaDestino.tienePrerequisitos()) {
             if (!listaDestino.cumpleRequisitos(tarjeta)) {
-                String listasRequeridas = String.join(", ", listaDestino.obtenerListasPrevias());
                 throw new ErrorOperacionDominioException(
-                    String.format("La tarjeta debe estar completada para poder moverla a '%s'",
+                    String.format("La tarjeta debe haber pasado por las listas requeridas para poder moverla a '%s'",
                         listaDestino.getNombre())
                 );
             }
@@ -129,11 +128,11 @@ public class ServicioLista {
         // Realizar el movimiento
         listaOrigen.eliminarTarjeta(tarjeta);
         listaDestino.agregarTarjeta(tarjeta);
-        
-        repositorioTablero.guardar(tablero);
+
         tablero.registrarAccion("TARJETA_MOVIDA", 
             String.format("Tarjeta '%s' movida de '%s' a '%s'", 
                 tarjeta.getTitulo(), listaOrigen.getNombre(), listaDestino.getNombre()));
+        repositorioTablero.guardar(tablero);
     }
 
     /**

@@ -2,7 +2,6 @@ package pds.app_gestion;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import pds.app_gestion.ui.javafx.VentanaPrincipal;
 
@@ -16,28 +15,7 @@ import pds.app_gestion.ui.javafx.VentanaPrincipal;
 @EnableScheduling
 public class Application {
 
-    private static ApplicationContext applicationContext;
-
     public static void main(String[] args) {
-        // Iniciar Spring Boot context en un hilo separado
-        Thread springThread = new Thread(() -> {
-            applicationContext = SpringApplication.run(Application.class, args);
-        });
-        springThread.setDaemon(true);
-        springThread.start();
-
-        // Dar tiempo a Spring para inicializar
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        // Lanzar JavaFX
-        javafx.application.Application.launch(VentanaPrincipal.class);
-    }
-
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
+        javafx.application.Application.launch(VentanaPrincipal.class, args);
     }
 }

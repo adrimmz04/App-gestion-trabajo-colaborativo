@@ -190,6 +190,25 @@ class ServicioCompactacionTest {
     }
 
     @Test
+    @DisplayName("La compactación automática debe consultar todos los tableros")
+    void testCompactacionAutomaticaConsultaTodosLosTableros() {
+        Tablero tableroUno = new Tablero("tablero-1", "Tablero 1", "usuario1@test.com");
+        tableroUno.agregarLista(new Lista("lista-1", "Lista 1"));
+
+        Tablero tableroDos = new Tablero("tablero-2", "Tablero 2", "usuario2@test.com");
+        tableroDos.agregarLista(new Lista("lista-2", "Lista 2"));
+
+        when(repositorioMock.obtenerTodos()).thenReturn(List.of(tableroUno, tableroDos));
+
+        servicioCompactacion.ejecutarCompactacionAutomatica();
+
+        verify(repositorioMock, times(1)).obtenerTodos();
+        verify(repositorioMock, times(1)).guardar(tableroUno);
+        verify(repositorioMock, times(1)).guardar(tableroDos);
+        verify(repositorioMock, never()).obtenerCompartidos("");
+    }
+
+    @Test
     @DisplayName("No debe procesar tablero nulo")
     void testNoDebeProcesoTableroNulo() {
         assertThatNoException().isThrownBy(() -> 

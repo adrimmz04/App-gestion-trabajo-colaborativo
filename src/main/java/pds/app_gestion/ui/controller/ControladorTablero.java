@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pds.app_gestion.application.dto.*;
+import pds.app_gestion.application.service.ServicioLista;
 import pds.app_gestion.application.service.ServicioTablero;
 
 import java.util.List;
@@ -22,9 +23,11 @@ import java.util.List;
 public class ControladorTablero {
 
     private final ServicioTablero servicioTablero;
+    private final ServicioLista servicioLista;
 
-    public ControladorTablero(ServicioTablero servicioTablero) {
+    public ControladorTablero(ServicioTablero servicioTablero, ServicioLista servicioLista) {
         this.servicioTablero = servicioTablero;
+        this.servicioLista = servicioLista;
     }
 
     /**
@@ -53,6 +56,18 @@ public class ControladorTablero {
     }
 
     /**
+     * GET /api/v1/tableros/{idTablero}/historial
+     * Obtener el historial de acciones del tablero.
+     */
+    @GetMapping("/{idTablero}/historial")
+    public ResponseEntity<List<RegistroAccionResponse>> obtenerHistorialTablero(
+            @PathVariable String idTablero,
+            @RequestParam String emailUsuario) {
+        List<RegistroAccionResponse> response = servicioTablero.obtenerHistorialTablero(idTablero, emailUsuario);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * PUT /api/v1/tableros/{idTablero}
      * Actualizar un tablero.
      */
@@ -63,6 +78,18 @@ public class ControladorTablero {
             @RequestBody ActualizarTableroRequest request) {
         TableroResponse response = servicioTablero.actualizarTablero(idTablero, emailUsuario, request);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * DELETE /api/v1/tableros/{idTablero}
+     * Eliminar un tablero.
+     */
+    @DeleteMapping("/{idTablero}")
+    public ResponseEntity<Void> eliminarTablero(
+            @PathVariable String idTablero,
+            @RequestParam String emailUsuario) {
+        servicioTablero.eliminarTablero(idTablero, emailUsuario);
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -136,5 +163,45 @@ public class ControladorTablero {
             @RequestBody CrearListaRequest request) {
         ListaResponse response = servicioTablero.agregarLista(idTablero, emailUsuario, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    /**
+     * DELETE /api/v1/tableros/{idTablero}/listas/{idLista}
+     * Eliminar una lista de un tablero.
+     */
+    @DeleteMapping("/{idTablero}/listas/{idLista}")
+    public ResponseEntity<Void> eliminarLista(
+            @PathVariable String idTablero,
+            @PathVariable String idLista,
+            @RequestParam String emailUsuario) {
+        servicioTablero.eliminarLista(idTablero, idLista, emailUsuario);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * GET /api/v1/tableros/{idTablero}/listas/{idLista}/reglas
+     * Obtener las reglas configuradas de una lista.
+     */
+    @GetMapping("/{idTablero}/listas/{idLista}/reglas")
+    public ResponseEntity<ReglasListaResponse> obtenerReglasLista(
+            @PathVariable String idTablero,
+            @PathVariable String idLista,
+            @RequestParam String emailUsuario) {
+        ReglasListaResponse response = servicioLista.obtenerReglas(idTablero, idLista, emailUsuario);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * POST /api/v1/tableros/{idTablero}/listas/{idLista}/reglas
+     * Configurar reglas para una lista.
+     */
+    @PostMapping("/{idTablero}/listas/{idLista}/reglas")
+    public ResponseEntity<ReglasListaResponse> configurarReglasLista(
+            @PathVariable String idTablero,
+            @PathVariable String idLista,
+            @RequestParam String emailUsuario,
+            @RequestBody ConfigurarReglasListaRequest request) {
+        ReglasListaResponse response = servicioLista.configurarReglas(idTablero, idLista, emailUsuario, request);
+        return ResponseEntity.ok(response);
     }
 }

@@ -95,36 +95,62 @@ public class ServicioListaTest {
     }
 
     @Test
-    void moverTarjetaQueNoaCumpleRequisitosThrows() {
+    void moverTarjetaGuardaHistorialDeMovimientoAntesDePersistir() {
         Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        Lista listaOrigen = new Lista("lista-origen", "Origen");
+        Lista listaDestino = new Lista("lista-destino", "Destino");
+
+        Tarjeta tarjeta = new Tarjeta("tarjeta-1", "Tarea 1", "");
+        listaOrigen.agregarTarjeta(tarjeta);
+
+        tablero.agregarLista(listaOrigen);
+        tablero.agregarLista(listaDestino);
+
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        servicioLista.moverTarjeta("1", "lista-origen", "lista-destino", "tarjeta-1", "adrian@example.com");
+
+        verify(repositorioTablero).guardar(argThat(tableroGuardado ->
+            tableroGuardado.obtenerHistorial().stream().anyMatch(registro ->
+                "TARJETA_MOVIDA".equals(registro.getTipo())
+                    && registro.getDetalles().contains("Tarea 1")
+                    && registro.getDetalles().contains("Origen")
+                    && registro.getDetalles().contains("Destino")
+            )
+        ));
+    }
+
+    @Test
+    void moverTarjetaSinHaberPasadoPorListaRequeridaThrows() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        Lista listaOrigen = new Lista("lista-origen", "Origen");
         Lista listaPrevia = new Lista("lista-previa", "Prerrequisito");
         Lista listaDestino = new Lista("lista-destino", "Destino");
         listaDestino.agregarListaPrevia("lista-previa");
         
         Tarjeta tarjeta = new Tarjeta("tarjeta-1", "Tarea 1", "");
-        // La tarjeta NO está completada
-        listaPrevia.agregarTarjeta(tarjeta);
+        tarjeta.marcarComoCompletada();
+        listaOrigen.agregarTarjeta(tarjeta);
         
+        tablero.agregarLista(listaOrigen);
         tablero.agregarLista(listaPrevia);
         tablero.agregarLista(listaDestino);
         
         when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
 
-        // Debe lanzar excepción porque la tarjeta no está completada
         assertThrows(ErrorOperacionDominioException.class, () -> {
-            servicioLista.moverTarjeta("1", "lista-previa", "lista-destino", "tarjeta-1", "adrian@example.com");
+            servicioLista.moverTarjeta("1", "lista-origen", "lista-destino", "tarjeta-1", "adrian@example.com");
         });
     }
 
     @Test
-    void moverTarjetaCompletadaConRequisitosExitosamente() {
+    void moverTarjetaTrasPasarPorListaRequeridaExitosamente() {
         Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
         Lista listaPrevia = new Lista("lista-previa", "Prerrequisito");
         Lista listaDestino = new Lista("lista-destino", "Destino");
         listaDestino.agregarListaPrevia("lista-previa");
         
         Tarjeta tarjeta = new Tarjeta("tarjeta-1", "Tarea 1", "");
-        tarjeta.marcarComoCompletada();  // Completar la tarjeta
         listaPrevia.agregarTarjeta(tarjeta);
         
         tablero.agregarLista(listaPrevia);
@@ -132,7 +158,6 @@ public class ServicioListaTest {
         
         when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
 
-        // Debe permitir el movimiento porque la tarjeta está completada
         servicioLista.moverTarjeta("1", "lista-previa", "lista-destino", "tarjeta-1", "adrian@example.com");
 
         assertTrue(listaDestino.obtenerTarjeta("tarjeta-1").isPresent());

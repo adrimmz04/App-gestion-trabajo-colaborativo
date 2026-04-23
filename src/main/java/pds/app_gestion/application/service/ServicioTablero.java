@@ -31,10 +31,13 @@ public class ServicioTablero {
 
     private final RepositorioTablero repositorioTablero;
     private final CacheService cacheService;
+    private final ServicioPlantillas servicioPlantillas;
 
-    public ServicioTablero(RepositorioTablero repositorioTablero, CacheService cacheService) {
+    public ServicioTablero(RepositorioTablero repositorioTablero, CacheService cacheService,
+                           ServicioPlantillas servicioPlantillas) {
         this.repositorioTablero = repositorioTablero;
         this.cacheService = cacheService;
+        this.servicioPlantillas = servicioPlantillas;
     }
 
     /**
@@ -59,6 +62,33 @@ public class ServicioTablero {
     }
 
     /**
+     * Caso de uso: Persistir un tablero creado desde una plantilla.
+     *
+     * @param tablero tablero generado desde plantilla
+     * @param emailUsuario email del usuario propietario
+     * @return DTO del tablero persistido
+     */
+    @CacheEvict(cacheNames = {"tablerosPropietario"}, allEntries = true)
+    public TableroResponse importarTableroDesdePlantilla(Tablero tablero, String emailUsuario) {
+        if (tablero == null) {
+            throw new ErrorValidacionException("El tablero importado no puede ser nulo");
+        }
+
+        if (!tablero.getPropietarioEmail().equals(emailUsuario)) {
+            throw new PermisoNegadoException(emailUsuario, "importar tablero desde plantilla");
+        }
+
+        validarCrearTablero(CrearTableroRequest.builder()
+            .titulo(tablero.getTitulo())
+            .propietarioEmail(tablero.getPropietarioEmail())
+            .descripcion(tablero.getDescripcion())
+            .build());
+
+        repositorioTablero.guardar(tablero);
+        return convertirATableroResponse(tablero);
+    }
+
+    /**
      * Caso de uso: Obtener un tablero por su ID.
      * 
      * @param idTablero ID del tablero
@@ -78,6 +108,44 @@ public class ServicioTablero {
     }
 
     /**
+     * Caso de uso: Exportar un tablero accesible por el usuario a plantilla YAML.
+     *
+     * @param idTablero ID del tablero
+     * @param emailUsuario email del usuario que exporta
+     * @return contenido YAML de la plantilla
+     */
+    public String exportarTableroComoPlantilla(String idTablero, String emailUsuario) {
+        Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
+
+        if (!tablero.tieneAcceso(emailUsuario)) {
+            throw new PermisoNegadoException(emailUsuario, "exportar tablero como plantilla");
+        }
+
+        return servicioPlantillas.exportarTableroComoYAML(tablero);
+    }
+
+    /**
+     * Caso de uso: Obtener el historial de acciones de un tablero.
+     *
+     * @param idTablero ID del tablero
+     * @param emailUsuario email del usuario que solicita
+     * @return lista de acciones registradas
+     */
+    public List<RegistroAccionResponse> obtenerHistorialTablero(String idTablero, String emailUsuario) {
+        Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
+
+        if (!tablero.tieneAcceso(emailUsuario)) {
+            throw new PermisoNegadoException(emailUsuario, "historial del tablero " + idTablero);
+        }
+
+        return tablero.obtenerHistorial().stream()
+            .map(this::convertirARegistroAccionResponse)
+            .collect(Collectors.toList());
+    }
+
+    /**
      * Caso de uso: Actualizar un tablero.
      * 
      * @param idTablero ID del tablero
@@ -93,6 +161,13 @@ public class ServicioTablero {
         if (!tablero.getPropietarioEmail().equals(emailUsuario)) {
             throw new PermisoNegadoException(emailUsuario, "editar tablero");
         }
+
+        if (request.getTitulo() != null) {
+            if (request.getTitulo().trim().isEmpty()) {
+                throw new ErrorValidacionException("El título del tablero no puede estar vacío");
+            }
+            tablero.actualizarTitulo(request.getTitulo());
+        }
         
         if (request.getDescripcion() != null) {
             tablero.actualizarDescripcion(request.getDescripcion());
@@ -100,6 +175,24 @@ public class ServicioTablero {
         
         repositorioTablero.guardar(tablero);
         return convertirATableroResponse(tablero);
+    }
+
+    /**
+     * Caso de uso: Eliminar un tablero.
+     *
+     * @param idTablero ID del tablero
+     * @param emailUsuario email del usuario que solicita
+     */
+    @CacheEvict(cacheNames = {"tableros", "tablerosPropietario", "tablerosCompartidos"}, allEntries = true)
+    public void eliminarTablero(String idTablero, String emailUsuario) {
+        Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
+
+        if (!tablero.getPropietarioEmail().equals(emailUsuario)) {
+            throw new PermisoNegadoException(emailUsuario, "eliminar tablero");
+        }
+
+        repositorioTablero.eliminar(idTablero);
     }
 
     /**
@@ -127,6 +220,26 @@ public class ServicioTablero {
         return repositorioTablero.obtenerCompartidos(emailUsuario)
             .stream()
             .map(this::convertirATableroResponse)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Caso de uso: Obtener las listas de un tablero.
+     * 
+     * @param idTablero ID del tablero
+     * @param emailUsuario email del usuario que solicita
+     * @return lista de DTOs de listas del tablero
+     */
+    public List<ListaResponse> obtenerListas(String idTablero, String emailUsuario) {
+        Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
+
+        if (!tablero.tieneAcceso(emailUsuario)) {
+            throw new PermisoNegadoException(emailUsuario, "consultar listas del tablero " + idTablero);
+        }
+
+        return tablero.obtenerListas().stream()
+            .map(this::convertirAListaResponse)
             .collect(Collectors.toList());
     }
 
@@ -236,6 +349,29 @@ public class ServicioTablero {
     }
 
     /**
+     * Caso de uso: Eliminar una lista de un tablero.
+     *
+     * @param idTablero ID del tablero
+     * @param idLista ID de la lista
+     * @param emailUsuario email del usuario que solicita
+     */
+    @CacheEvict(cacheNames = "tableros", allEntries = true)
+    public void eliminarLista(String idTablero, String idLista, String emailUsuario) {
+        Tablero tablero = repositorioTablero.obtenerPorId(idTablero)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Tablero", idTablero));
+
+        if (!tablero.tieneAcceso(emailUsuario)) {
+            throw new PermisoNegadoException(emailUsuario, "eliminar lista");
+        }
+
+        tablero.obtenerLista(idLista)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Lista", idLista));
+
+        tablero.eliminarLista(idLista);
+        repositorioTablero.guardar(tablero);
+    }
+
+    /**
      * Convierte un Tablero de dominio a TableroResponse.
      */
     private TableroResponse convertirATableroResponse(Tablero tablero) {
@@ -291,6 +427,17 @@ public class ServicioTablero {
             .fechaCreacion(tarjeta.getFechaCreacion())
             .fechaActualizacion(tarjeta.getFechaActualizacion())
             .fechaCompletacion(tarjeta.getFechaCompletacion())
+            .build();
+    }
+
+    /**
+     * Convierte un registro de acción a su DTO de respuesta.
+     */
+    private RegistroAccionResponse convertirARegistroAccionResponse(RegistroAccion registroAccion) {
+        return RegistroAccionResponse.builder()
+            .tipo(registroAccion.getTipo())
+            .detalles(registroAccion.getDetalles())
+            .fecha(registroAccion.getFecha())
             .build();
     }
 

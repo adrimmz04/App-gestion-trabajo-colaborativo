@@ -9,8 +9,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import pds.app_gestion.application.service.ServicioPlantillas;
-import pds.app_gestion.domain.Tablero;
+import pds.app_gestion.application.dto.TableroResponse;
+import pds.app_gestion.application.service.ServicioTablero;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -21,14 +21,19 @@ import java.io.IOException;
  */
 public class DialogoExportarPlantilla extends Stage {
 
-    private final ServicioPlantillas servicioPlantillas;
-    private final Tablero tablero;
+    private final ServicioTablero servicioTablero;
+    private final TableroResponse tablero;
+    private final String emailUsuario;
+    private final int cantidadListas;
     private Label labelEstado;
     private boolean exportado;
 
-    public DialogoExportarPlantilla(Tablero tablero) {
+    public DialogoExportarPlantilla(TableroResponse tablero, String emailUsuario,
+                                    int cantidadListas, ServicioTablero servicioTablero) {
         this.tablero = tablero;
-        this.servicioPlantillas = new ServicioPlantillas();
+        this.emailUsuario = emailUsuario;
+        this.cantidadListas = cantidadListas;
+        this.servicioTablero = servicioTablero;
         this.exportado = false;
         
         initUI();
@@ -86,11 +91,7 @@ public class DialogoExportarPlantilla extends Stage {
 
         Label labelPropietario = new Label("Propietario: " + tablero.getPropietarioEmail());
 
-        int cantidadListas = tablero.obtenerListas().size();
-        int cantidadTarjetas = tablero.obtenerListas().stream()
-            .mapToInt(l -> l.getTarjetas().size())
-            .sum();
-        Label labelCantidad = new Label(String.format("Listas: %d | Tarjetas: %d", cantidadListas, cantidadTarjetas));
+        Label labelCantidad = new Label(String.format("Listas: %d | Tarjetas: %d", cantidadListas, tablero.getTotalTarjetas()));
 
         box.getChildren().addAll(labelTitulo, labelPropietario, labelCantidad);
         return box;
@@ -128,7 +129,7 @@ public class DialogoExportarPlantilla extends Stage {
         File file = fileChooser.showSaveDialog(this);
         if (file != null) {
             try {
-                String yamlContent = servicioPlantillas.exportarTableroComoYAML(tablero);
+                String yamlContent = servicioTablero.exportarTableroComoPlantilla(tablero.getId(), emailUsuario);
                 FileWriter writer = new FileWriter(file);
                 writer.write(yamlContent);
                 writer.close();

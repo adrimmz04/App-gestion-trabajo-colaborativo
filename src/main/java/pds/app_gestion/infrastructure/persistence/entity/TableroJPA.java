@@ -42,11 +42,8 @@ public class TableroJPA {
     @Column(nullable = false)
     private boolean bloqueado;
 
-    @Column(name = "fecha_bloqueo")
-    private LocalDateTime fechaBloqueo;
-
-    @Column(name = "duracion_bloqueo_minutos")
-    private Integer duracionBloqueominutos;
+    @Column(name = "fecha_desbloqueo")
+    private LocalDateTime fechaDesbloqueo;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
@@ -56,8 +53,8 @@ public class TableroJPA {
 
     @Builder.Default
     @ElementCollection
-    @CollectionTable(name = "tablero_usuarios_compartidos", joinColumns = @JoinColumn(name = "tablero_id"))
-    @Column(name = "email_usuario")
+    @CollectionTable(name = "tableros_usuarios_compartidos", joinColumns = @JoinColumn(name = "tablero_id"))
+    @Column(name = "usuarios_compartidos")
     private Set<String> usuariosCompartidos = new HashSet<>();
 
     @Builder.Default
@@ -74,8 +71,12 @@ public class TableroJPA {
 
     @PrePersist
     protected void onCreate() {
-        fechaCreacion = LocalDateTime.now();
-        fechaActualizacion = LocalDateTime.now();
+        if (fechaCreacion == null) {
+            fechaCreacion = LocalDateTime.now();
+        }
+        if (fechaActualizacion == null) {
+            fechaActualizacion = fechaCreacion;
+        }
     }
 
     @PreUpdate

@@ -2,74 +2,58 @@
 
 ## Adrian Martinez Zamora
 
-### Contribuciones
+El estado actual del repositorio refleja trabajo individual sobre análisis, implementación, persistencia, pruebas y documentación. La evidencia principal de participación está en el historial de commits del proyecto.
 
-#### Fase 1: Configuración y Estructura Inicial
-- **Descripción**: Creación de la estructura base del proyecto con arquitectura hexagonal y DDD
-- **Commits**:
-  - Configuración inicial del pom.xml con dependencias
-  - Creación de estructura de carpetas hexagonal
-  - Documentación inicial (README.md, CREDITOS.md)
+### Áreas de contribución
 
-#### Fase 2: Modelo de Dominio (En progreso)
-- **Descripción**: Implementación de las entidades y agregados del dominio
-- **Componentes**:
-  - Agregado Tablero con sus raíces
-  - Agregado Lista
-  - Agregado Tarjeta con polimorfismo
-  - Value Objects (Etiqueta, Posición, etc.)
-- **Commits**:
-  - Creación de entidades del dominio
-  - Implementación de Repositorios de dominio
-  - Pruebas unitarias del modelo
+#### Arquitectura y dominio
+- Definición de la estructura hexagonal del proyecto.
+- Modelado de agregados y reglas principales de tableros, listas y tarjetas.
+- Separación en capas `domain`, `application`, `infrastructure` y `ui`.
 
-#### Fase 3: Casos de Uso (Por iniciar)
-- **Descripción**: Implementación de servicios de aplicación
-- **Casos de uso a implementar**:
-  - Crear/modificar tablero
-  - Crear/mover tarjeta
-  - Completar tarjeta
-  - Agregar etiquetas
+#### Casos de uso y API REST
+- Implementación de servicios de aplicación para tableros, listas, tarjetas, plantillas y compactación.
+- Exposición de endpoints REST para operaciones principales del sistema.
+- Manejo de errores y DTOs de entrada y salida.
 
-#### Fase 4: Persistencia (Por iniciar)
-- **Descripción**: Implementación de repositorios con JPA
-- **Componentes a desarrollar**:
-  - Entidades JPA
-  - Repositorios de datos
-  - Migraciones de base de datos
+#### Persistencia y base de datos
+- Implementación del adaptador JPA del agregado `Tablero`.
+- Mapeo de entidades JPA y migraciones Flyway.
+- Ajustes posteriores de consistencia para prerequisitos múltiples, archivado de tarjetas, actualización completa de tablero y preservación de fechas.
 
-#### Fase 5: API REST (Por iniciar)
-- **Descripción**: Controladores REST para exponer funcionalidad
-- **Endpoints a implementar**:
-  - Gestión de tableros
-  - Gestión de listas
-  - Gestión de tarjetas
+#### Testing e integración
+- Suite unitaria de dominio y servicios.
+- Tests de integración de controladores y repositorio.
+- Revisión y reactivación de pruebas que habían quedado omitidas en fases anteriores.
 
-#### Fase 6: Interfaz JavaFX (Por iniciar)
-- **Descripción**: Interfaz gráfica de escritorio
-- **Vistas a desarrollar**:
-  - Pantalla principal
-  - Edición de tableros
-  - Vista de tarjetas
+#### Documentación
+- Redacción y actualización de README, guía de inicio rápido y documentación técnica.
+- Mantenimiento del plan interno de correcciones para continuar el trabajo sin perder contexto.
 
-### Decisiones de diseño
+### Evidencias representativas en commits
 
-#### Arquitectura Hexagonal
-La aplicación sigue el patrón de arquitectura hexagonal (puertos y adaptadores), permitiendo:
-- Independencia de frameworks
-- Facilidad para testing
-- Separación clara de responsabilidades
-- Facilidad para cambiar bases de datos o interfaces
+Algunos commits relevantes para valorar la participación:
 
-#### Domain-Driven Design (DDD)
-Implementación de DDD con:
-- **Agregados**: Tablero, Lista, Tarjeta
-- **Value Objects**: Etiqueta, Posición, Color
-- **Repositorios de dominio**: Interfaces sin detalles de persistencia
-- **Servicios de dominio**: Lógica de negocio compleja
+- `5919607`: correcciones de persistencia JPA y tests de integración.
+- `d3e1107`: correcciones relacionadas con persistencia del estado de bloqueo.
+- `1ed2463`: compactación automática con archivado y eliminación.
+- `630e7ad`: consolidación de suite de tests en verde.
+- `a3b9425`: arreglos de integración.
+- `5821a45`: ampliación de documentación.
+- `afab88c`: actualización del README.
 
-### Referencias
+### Nota sobre evidencias de colaboración
 
-- Proyecto base inspirado en ejemplos hexagonales de la asignatura
-- Patrón de estructura Maven estándar
-- Principios de Clean Code y SOLID
+En el estado actual del repositorio, la evidencia más clara y verificable son los commits. No se documentan aquí PRs, issues o discusiones porque no aportan más señal que el propio historial disponible en local.
+
+### Decisiones de diseño relevantes
+
+#### Arquitectura hexagonal
+- El dominio no depende de Spring ni de JPA.
+- La persistencia y la interfaz se conectan mediante puertos y adaptadores.
+- Esta separación facilita pruebas, mantenimiento y sustitución de infraestructura.
+
+#### Enfoque DDD
+- `Tablero` actúa como agregado raíz principal.
+- `Lista` y `Tarjeta` quedan protegidas por las invariantes del agregado.
+- El modelo intenta concentrar reglas de negocio en dominio y usar servicios de aplicación para orquestación.

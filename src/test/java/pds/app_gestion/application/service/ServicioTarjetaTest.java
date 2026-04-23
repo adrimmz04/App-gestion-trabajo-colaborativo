@@ -78,6 +78,28 @@ public class ServicioTarjetaTest {
     }
 
     @Test
+    void crearTarjetaEnListaConPrerequisitosThrows() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        Lista listaPrevia = new Lista("lista-0", "Analisis");
+        Lista listaDestino = new Lista("lista-1", "Validacion");
+        listaDestino.agregarListaPrevia(listaPrevia.getId());
+        tablero.agregarLista(listaPrevia);
+        tablero.agregarLista(listaDestino);
+
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        CrearTarjetaRequest request = CrearTarjetaRequest.builder()
+            .titulo("Nueva tarea")
+            .descripcion("Descripción")
+            .tipo("TAREA")
+            .build();
+
+        assertThrows(ErrorOperacionDominioException.class, () ->
+            servicioTarjeta.crearTarjeta("1", "lista-1", "adrian@example.com", request)
+        );
+    }
+
+    @Test
     void marcarTarjetaComoCompletadaExitosamente() {
         Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
         Lista lista = new Lista("lista-1", "Por hacer");
@@ -93,6 +115,28 @@ public class ServicioTarjetaTest {
         assertTrue(response.isCompletada());
         assertNotNull(response.getFechaCompletacion());
         verify(repositorioTablero, times(1)).guardar(tablero);
+    }
+
+    @Test
+    void marcarTarjetaComoCompletadaLaMueveAListaEspecialSiExiste() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        Lista listaOrigen = new Lista("lista-1", "Por hacer");
+        Lista listaHecho = new Lista("lista-2", "Hecho");
+        Tarjeta tarjeta = new Tarjeta("tarjeta-1", "Tarea", "Descripción");
+        listaOrigen.agregarTarjeta(tarjeta);
+        tablero.agregarLista(listaOrigen);
+        tablero.agregarLista(listaHecho);
+
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        TarjetaResponse response = servicioTarjeta.marcarComoCompletada("1", "lista-1", "tarjeta-1", "adrian@example.com");
+
+        assertTrue(response.isCompletada());
+        assertTrue(listaOrigen.obtenerTarjeta("tarjeta-1").isEmpty());
+        assertTrue(listaHecho.obtenerTarjeta("tarjeta-1").isPresent());
+        assertTrue(tablero.obtenerHistorial().stream().anyMatch(r -> r.getTipo().equals("TARJETA_COMPLETADA")));
+        assertTrue(tablero.obtenerHistorial().stream().anyMatch(r -> r.getTipo().equals("TARJETA_MOVIDA")));
+        verify(repositorioTablero).guardar(tablero);
     }
 
     @Test
@@ -250,5 +294,21 @@ public class ServicioTarjetaTest {
         assertEquals(2, response.size());
         assertTrue(response.stream().anyMatch(e -> e.getNombre().equals("Urgente")));
         assertTrue(response.stream().anyMatch(e -> e.getNombre().equals("Backend")));
+    }
+
+    @Test
+    void eliminarTarjetaExitosamente() {
+        Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
+        Lista lista = new Lista("lista-1", "Por hacer");
+        Tarjeta tarjeta = new Tarjeta("t1", "Tarea 1", "");
+        lista.agregarTarjeta(tarjeta);
+        tablero.agregarLista(lista);
+
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        servicioTarjeta.eliminarTarjeta("1", "lista-1", "t1", "adrian@example.com");
+
+        assertTrue(lista.getTarjetas().isEmpty());
+        verify(repositorioTablero).guardar(tablero);
     }
 }

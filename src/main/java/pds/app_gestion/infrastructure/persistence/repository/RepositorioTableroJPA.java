@@ -68,6 +68,14 @@ public class RepositorioTableroJPA implements RepositorioTablero {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Tablero> obtenerTodos() {
+        return jpaRepository.findAll().stream()
+            .map(convertidor::convertirADominio)
+            .collect(Collectors.toList());
+    }
+
+    @Override
     public void eliminar(String id) {
         jpaRepository.deleteById(id);
     }

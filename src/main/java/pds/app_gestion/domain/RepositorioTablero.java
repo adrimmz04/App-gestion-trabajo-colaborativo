@@ -44,6 +44,13 @@ public interface RepositorioTablero {
     java.util.List<Tablero> obtenerCompartidos(String emailUsuario);
 
     /**
+     * Obtiene todos los tableros almacenados.
+     *
+     * @return lista de todos los tableros
+     */
+    java.util.List<Tablero> obtenerTodos();
+
+    /**
      * Elimina un tablero del repositorio.
      * 
      * @param id ID del tablero a eliminar

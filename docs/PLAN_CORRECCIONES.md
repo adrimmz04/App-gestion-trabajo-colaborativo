@@ -22,11 +22,11 @@ El proyecto tiene una base buena en arquitectura y modelado, pero no esta comple
 
 - Arquitectura: bien encaminada y bastante coherente con DDD + hexagonal.
 - Dominio: razonablemente solido.
-- Servicios: funcionales en muchos casos; ya se han corregido la caché insegura y la semantica del bloqueo al mover tarjetas.
-- Persistencia: sigue siendo la zona mas delicada, pero ya se ha corregido la reconstruccion JPA suficiente para reactivar la integracion de tarjetas.
-- JavaFX: existe, pero la UI principal parece mas prototipo que interfaz operativa completa.
-- Testing: la capa unitaria esta bien; ya se ha reactivado la integracion de tarjetas y solo quedan omitidos los tests de repositorio con Testcontainers.
-- Documentacion: claramente desactualizada y en algunos casos contradice el estado real del proyecto.
+- Servicios: funcionales en muchos casos; ya se han corregido la cache insegura, la semantica del bloqueo al mover tarjetas y la seleccion de tableros para compactacion automatica.
+- Persistencia: sigue siendo la zona mas delicada, pero ya quedan cubiertos el round-trip principal del agregado, los prerequisitos multiples de listas, el archivado de tarjetas y la preservacion de fechas de creacion.
+- JavaFX: ya dispone de una integracion minima funcional para crear y cargar tableros por email, pero todavia no cubre el producto completo.
+- Testing: la capa unitaria e integracion relevante estan en verde; ya se han reactivado tanto la integracion de tarjetas como la del repositorio JPA y no quedan tests omitidos tras `mvn clean test`.
+- Documentacion: la documentacion publica principal ya esta alineada con el estado real; queda pendiente el cierre final segun el alcance definitivo de JavaFX y autenticacion.
 
 ---
 
@@ -49,12 +49,12 @@ Ya se ha contrastado el enunciado con:
 
 ### 2. Estado de pruebas ya verificado
 
-Se ha ejecutado `mvn test` y el estado actual verificado es:
+Se ha ejecutado `mvn clean test` y el estado actual verificado es:
 
-- 130 tests ejecutados
+- 134 tests ejecutados
 - 0 fallos
 - 0 errores
-- 9 omitidos
+- 0 omitidos
 - BUILD SUCCESS
 
 Antes de estas correcciones el estado verificado era:
@@ -67,7 +67,7 @@ Antes de estas correcciones el estado verificado era:
 
 Tests omitidos actualmente:
 
-- `RepositorioTableroJPAIntegrationTest`
+- ninguno
 
 ### 3. Correcciones ya aplicadas y validadas
 
@@ -98,17 +98,16 @@ Cambios aplicados:
 - metodos de lectura del repositorio JPA marcados como `@Transactional(readOnly = true)`
 - reconstruccion de listas, tarjetas, etiquetas e historial en `ConvertidorTableroJPA`
 - reactivacion de `ControladorTarjetaIntegrationTest`
+- reactivacion de `RepositorioTableroJPAIntegrationTest` sobre H2 para validar el round-trip del agregado sin depender de Docker
+- preservacion de `fechaCreacion` al persistir por primera vez en `TableroJPA` y `TarjetaJPA`
 
 Resultado:
 
 - la integracion de tarjetas ya no falla con 500
 - la suite de tarjetas vuelve a ejecutarse y pasa
+- la suite de repositorio vuelve a ejecutarse y pasa
 
-Estado: corregido parcialmente y validado.
-
-Nota:
-
-- sigue pendiente cerrar por completo la persistencia de prerequisitos multiples y archivado de tarjetas
+Estado: corregido y validado en las rutas actualmente cubiertas.
 
 #### 3.3. Semantica del bloqueo corregida
 
@@ -123,6 +122,144 @@ Resultado:
 - `ServicioListaTest` actualizado y pasando
 
 Estado: corregido y validado.
+
+#### 3.4. Persistencia de `listasPrevias` corregida
+
+Se cerro la divergencia entre dominio y JPA para prerequisitos multiples de listas.
+
+Cambio aplicado:
+
+- `ListaJPA` ahora persiste `listasPrevias` mediante coleccion dedicada
+- se anadio migracion Flyway para `lista_prerequisitos`
+- el convertidor JPA ya reconstruye todos los prerequisitos al volver a dominio
+
+Resultado:
+
+- el round-trip JPA conserva multiples prerequisitos
+- `ServicioListaPersistenceIntegrationTest` cubre el caso y pasa
+
+Estado: corregido y validado.
+
+#### 3.5. Persistencia de archivado de tarjetas corregida
+
+Se alineo el modelo JPA de tarjetas con el estado real del dominio.
+
+Cambio aplicado:
+
+- `TarjetaJPA` ahora persiste `archivada` y `fechaArchivado`
+- se anadio migracion Flyway para las columnas nuevas
+- el convertidor JPA ya reconstruye ese estado al volver a dominio
+
+Resultado:
+
+- el round-trip de tarjetas archivadas deja de perder informacion
+- `ServicioListaPersistenceIntegrationTest` cubre el caso y pasa
+
+Estado: corregido y validado.
+
+#### 3.6. Compactacion automatica corregida
+
+Se elimino el atajo incorrecto que intentaba descubrir todos los tableros usando `obtenerCompartidos("")`.
+
+Cambio aplicado:
+
+- el puerto `RepositorioTablero` expone `obtenerTodos()`
+- las implementaciones JPA y en memoria lo soportan
+- `ServicioCompactacion` usa ya esa via explicita
+
+Resultado:
+
+- la compactacion automatica opera sobre el conjunto correcto de tableros
+- `ServicioCompactacionTest` cubre el caso y pasa
+
+Estado: corregido y validado.
+
+#### 3.7. Actualizacion completa de tablero corregida
+
+Se cerro la divergencia entre el DTO de actualizacion y la mutacion real del agregado.
+
+Cambio aplicado:
+
+- `ServicioTablero.actualizarTablero(...)` ya aplica tanto `titulo` como `descripcion`
+- el agregado `Tablero` expone mutacion explicita de titulo
+- se reforzaron tests de servicio, controlador e integracion JPA para exigir el cambio de titulo
+
+Resultado:
+
+- la actualizacion de tablero deja de ignorar silenciosamente el titulo
+- el cambio queda cubierto a nivel de servicio, API e infraestructura
+
+Estado: corregido y validado.
+
+#### 3.8. Configuracion de compilacion Java alineada
+
+Se elimino la discrepancia entre la version declarada del proyecto y la del compilador Maven.
+
+Cambio aplicado:
+
+- `maven-compiler-plugin` usa ya las propiedades globales de Java 21 en lugar de fijar 17 manualmente
+
+Resultado:
+
+- la compilacion queda alineada con el `java.version` declarado por el proyecto
+- la validacion sigue pasando tras la alineacion
+
+Estado: corregido y validado.
+
+#### 3.9. Documentacion publica alineada
+
+Se actualizo la documentacion visible del proyecto para que deje de describir fases y cifras obsoletas.
+
+Cambio aplicado:
+
+- `README.md` ahora refleja Java 21, las caracteristicas realmente implementadas y el estado actual de la suite
+- `docs/INICIO_RAPIDO.md` documenta la ejecucion real con PostgreSQL por defecto y H2 para tests
+- `CREDITOS.md` deja evidencia de participacion basada en commits representativos
+
+Resultado:
+
+- desaparecen referencias antiguas a Java 17, fases por iniciar y recuentos de tests obsoletos
+- la documentacion publica vuelve a ser defendible frente al estado real del repositorio
+
+Estado: corregido y validado.
+
+#### 3.10. Integracion Spring + JavaFX estabilizada
+
+Se elimino la dependencia temporal fragil del arranque conjunto.
+
+Cambio aplicado:
+
+- `Application.main(...)` deja de arrancar Spring en un hilo con `Thread.sleep(1000)`
+- `VentanaPrincipal` inicializa el contexto Spring en `init()` y lo cierra en `stop()`
+
+Resultado:
+
+- el arranque deja de depender de una espera fija
+- la integracion entre ciclo de vida JavaFX y contexto Spring queda mas limpia y compilable
+
+Estado: corregido y validado.
+
+#### 3.11. JavaFX minima conectada a casos de uso reales
+
+Se redujo la parte mas artificial de la ventana principal sin intentar cerrar aun toda la experiencia de escritorio.
+
+Cambio aplicado:
+
+- `VentanaPrincipal` deja de mostrar listados fijos por defecto
+- se puede cargar el contexto de un usuario por email y recuperar tableros reales
+- el dialogo de creacion usa ya `ServicioTablero` para persistir tableros reales
+- la UI permite abrir un detalle real del tablero, listar sus listas y anadir nuevas listas
+- desde el detalle se puede navegar al panel real de tarjetas por lista
+- `PanelDetallesTablero` permite ya crear tarjetas desde la propia vista de lista
+
+Resultado:
+
+- la UI JavaFX deja de ser una demo puramente estatica
+- queda un cliente minimo funcional para alta y consulta de tableros, listas y tarjetas
+
+Estado: corregido en el alcance minimo actual y validado por compilacion.
+
+Estado: corregido parcialmente y validado por compilacion.
 
 ### 4. Hallazgos tecnicos ya confirmados
 
@@ -148,7 +285,7 @@ Estado: corregido y validado.
 
 Esto debilita la consistencia real del agregado una vez se lee desde BD.
 
-Estado: corregido parcialmente y validado.
+Estado: corregido y validado en las rutas actualmente cubiertas.
 
 #### 4.3. Semantica del bloqueo contradice el enunciado
 
@@ -168,7 +305,7 @@ Problemas:
 - es un atajo incorrecto
 - la funcionalidad automatica puede no procesar realmente lo esperado
 
-Estado: confirmado.
+Estado: corregido y validado.
 
 #### 4.5. Persistencia incompleta de estados de tarjeta
 
@@ -179,7 +316,7 @@ Consecuencia:
 - la compactacion puede funcionar en tests unitarios
 - pero no queda correctamente persistida en una ejecucion real con JPA
 
-Estado: confirmado.
+Estado: corregido y validado.
 
 #### 4.6. Persistencia incompleta de reglas de listas previas
 
@@ -190,33 +327,33 @@ Consecuencia:
 - el modelo persistente no representa bien la capacidad del dominio
 - las reglas de flujo pueden perderse o simplificarse indebidamente al persistir
 
-Estado: confirmado.
+Estado: corregido y validado.
 
 #### 4.7. UI JavaFX principal no esta cerrada funcionalmente
 
 La ventana principal contiene:
 
-- datos estaticos en listados
-- llamada comentada al servicio para crear tablero
-- poca integracion visible con Spring
+- integracion minima con Spring para cargar y crear tableros por email
+- flujos reales para abrir detalle de tablero, listar listas, anadir listas y navegar al detalle de tarjetas por lista
+- y la experiencia general sigue lejos de una interfaz de producto completa
 
 Consecuencia:
 
 - la existencia de JavaFX es real
-- pero la UI principal no parece una implementacion funcional completa del producto
+- pero la UI principal aun no parece una implementacion funcional completa del producto
 
-Estado: confirmado.
+Estado: corregido parcialmente; queda deuda de cierre de producto.
 
 #### 4.8. Arranque Spring + JavaFX fragil
 
-La aplicacion arranca Spring en hilo separado y luego espera con `Thread.sleep(1000)` antes de lanzar JavaFX.
+La aplicacion arrancaba Spring en hilo separado y luego esperaba con `Thread.sleep(1000)` antes de lanzar JavaFX.
 
 Consecuencia:
 
 - dependencia temporal fragil
 - riesgo de race condition
 
-Estado: confirmado.
+Estado: corregido y validado.
 
 #### 4.9. Seguridad/autenticacion del enunciado no implementada
 
@@ -230,7 +367,7 @@ Estado: confirmado.
 
 El DTO de actualizacion acepta `titulo` y `descripcion`, pero el servicio solo actualiza la descripcion.
 
-Estado: confirmado.
+Estado: corregido y validado.
 
 #### 4.11. Documentacion desactualizada o inconsistente
 
@@ -242,11 +379,11 @@ Se han detectado inconsistencias entre codigo y documentacion en:
 - fases ya completadas
 - JavaFX marcada como opcional cuando el enunciado la exige
 
-Estado: confirmado.
+Estado: corregido y validado en README, inicio rapido y creditos.
 
 ---
 
-## Lo que todavia NO esta hecho
+## Estado por bloques para continuar
 
 Esto es la parte importante para continuar sin perder el hilo.
 
@@ -280,7 +417,7 @@ Validacion necesaria:
 - reactivar o arreglar tests de integracion de tarjetas
 - ampliar test de repositorio para verificar round-trip completo
 
-Estado: corregido parcialmente y validado.
+Estado: corregido y validado en las rutas actualmente cubiertas.
 
 #### 3. Corregir comportamiento del bloqueo
 
@@ -316,7 +453,7 @@ Validacion necesaria:
 - leerla desde JPA
 - verificar que se reconstruye igual en dominio
 
-Estado: pendiente de implementar.
+Estado: corregido y validado.
 
 #### 5. Persistir correctamente `archivada` y `fechaArchivado`
 
@@ -331,7 +468,7 @@ Validacion necesaria:
 - test de compactacion con persistencia real
 - round-trip JPA de tarjeta archivada
 
-Estado: pendiente de implementar.
+Estado: corregido y validado.
 
 #### 6. Corregir estrategia de seleccion de tableros para compactacion automatica
 
@@ -345,7 +482,7 @@ Validacion necesaria:
 - test del scheduler o del metodo de ejecucion automatica
 - comprobar que procesa tableros reales guardados
 
-Estado: pendiente de implementar.
+Estado: corregido y validado.
 
 ### Bloque 3. Reactivar pruebas de integracion relevantes
 
@@ -375,183 +512,93 @@ Nota:
 
 - si Docker no esta disponible, se puede adaptar el alcance a H2 para no depender de Testcontainers en esta fase
 
-Estado: pendiente de decidir estrategia.
+Estado: corregido y validado.
 
-### Bloque 4. Cerrar JavaFX de forma defendible
+Resultado actual:
 
-#### 9. Decidir alcance real de JavaFX
+- la suite se ha adaptado a H2 para no depender de Docker en este entorno
+- `mvn clean test` ya no deja pruebas omitidas
 
-Hay que tomar una decision tecnica antes de invertir mas tiempo:
-
-Opcion A:
-
-- dejar JavaFX como UI minima pero funcional
-- conectada a servicios reales
-- suficiente para defender el requisito del enunciado
-
-Opcion B:
-
-- asumir que la API REST es la interfaz principal
-- y convertir JavaFX en una shell ligera realmente integrada
-
-Ahora mismo la ventana principal parece demasiado estatica para venderla como UI completa.
-
-Estado: pendiente de decision.
-
-#### 10. Arreglar integracion Spring + JavaFX
-
-Accion esperada:
-
-- eliminar dependencia de `Thread.sleep(1000)`
-- usar una estrategia de integracion mas limpia entre contexto Spring y JavaFX
-
-Estado: pendiente.
-
-#### 11. Conectar la UI principal a casos de uso reales
-
-Minimo recomendable:
-
-- cargar tableros reales
-- crear tableros realmente
-- visualizar algun detalle real
-- evitar datos de ejemplo hardcodeados en la ventana principal
-
-Estado: pendiente.
-
-### Bloque 5. Documentacion y cierre academico
+### Bloque 5. Cierre academico y entrega
 
 #### 12. Actualizar README
 
-Debe reflejar:
+Objetivo:
 
-- estado real del proyecto
-- arquitectura real
-- tecnologias realmente usadas
-- numero actual de tests
-- limitaciones conocidas si no se llegan a corregir todas
+- reflejar el estado real del proyecto, las tecnologias usadas, el estado de pruebas y las limitaciones actuales
 
-Estado: pendiente.
+Estado: corregido y validado.
 
 #### 13. Actualizar `docs/INICIO_RAPIDO.md`
 
-Debe corregir:
+Objetivo:
 
-- version de Java
-- numero de pruebas
-- estado real de las fases
-- JavaFX ya no como opcional si se quiere alinear con el enunciado
+- dejar instrucciones coherentes con Java 21, PostgreSQL por defecto y H2 para tests
 
-Estado: pendiente.
+Estado: corregido y validado.
 
 #### 14. Actualizar `CREDITOS.md`
 
-Ahora mismo el documento esta anclado en fases antiguas y no refleja el estado real del proyecto.
+Objetivo:
 
-Estado: pendiente.
+- reflejar la participacion real y apoyarla en commits representativos
+
+Estado: corregido y validado.
 
 #### 15. Preparar memoria de defensa del proyecto
 
-Si el objetivo es la entrega academica, conviene dejar claro:
+Objetivo:
 
-- que requisitos obligatorios se cumplen
-- cuales opcionales estan implementados realmente
-- que limitaciones quedan si no se resuelven todos los defectos
+- dejar una narrativa de entrega con requisitos, opcionales, evidencias y limitaciones
 
-Estado: pendiente.
+Estado: corregido y validado.
 
 ---
 
-## Priorizacion recomendada
+## Priorizacion final recomendada
 
-### Prioridad P0 - hacer primero
+### Cierre ya completado
 
-1. Cache/autorizacion. Completado.
-2. Convertidor JPA -> dominio. Corregido parcialmente.
-3. Semantica del bloqueo. Completado.
-4. Reactivar integracion de tarjetas. Completado.
+1. Cache/autorizacion.
+2. Persistencia JPA critica y round-trip principal del agregado.
+3. Semantica del bloqueo.
+4. Persistencia de prerequisitos multiples.
+5. Persistencia de archivado de tarjetas.
+6. Compactacion automatica real.
+7. Tests de repositorio.
+8. JavaFX minima funcional.
+9. Documentacion publica.
 
-### Prioridad P1 - hacer despues
+### Siguiente paso con mejor retorno
 
-5. Persistencia de `listasPrevias`.
-6. Persistencia de archivado/fechaArchivado.
-7. Compactacion automatica real.
-8. Tests de repositorio.
+10. repaso final contra el enunciado y preparacion de commit de entrega.
 
-### Prioridad P2 - cierre y presentacion
+### Desarrollo adicional solo si compensa
 
-9. JavaFX funcional minima.
-10. Arranque Spring + JavaFX.
-11. README.
-12. INICIO_RAPIDO.
-13. CREDITOS.
-
----
-
-## Estrategia de trabajo recomendada
-
-### Fase A. Arreglar lo que cambia el comportamiento real
-
-Orden sugerido:
-
-1. `ServicioTablero` cache/autorizacion.
-2. `ConvertidorTableroJPA` y entidades JPA relacionadas.
-3. `ServicioLista` bloqueo.
-4. `ControladorTarjetaIntegrationTest`.
-
-### Fase B. Cerrar persistencia y automatismos
-
-Orden sugerido:
-
-5. prerequisitos de listas.
-6. archivado de tarjetas.
-7. compactacion automatica.
-8. pruebas de repositorio.
-
-### Fase C. Cierre de producto y entrega
-
-Orden sugerido:
-
-9. JavaFX minima funcional.
-10. documentacion.
-11. repaso final contra enunciado.
+11. autenticacion basada en codigo por correo.
+12. ampliaciones extra de JavaFX o permisos finos.
 
 ---
 
-## Riesgos importantes a vigilar durante las correcciones
+## Riesgos residuales
 
-### Riesgo 1. Cambios en persistencia que rompan tests existentes
-
-Al corregir el convertidor y el modelo JPA pueden caer tests de controladores o servicios que hasta ahora pasaban porque trabajaban con un agregado reconstruido de forma simplificada.
+### Riesgo 1. Sobreprometer el alcance de JavaFX
 
 Mitigacion:
 
-- hacer cambios pequenos
-- validar tras cada bloque
+- defender JavaFX como interfaz minima funcional, no como cliente completo de producto.
 
-### Riesgo 2. Migraciones Flyway inconsistentes con entidades JPA
-
-Si se anaden campos o relaciones nuevas, hay que revisar tambien los scripts SQL.
+### Riesgo 2. Confundir opcionales implementadas con opcionales pendientes
 
 Mitigacion:
 
-- no tocar JPA sin revisar `db/migration/`
+- basar la defensa en evidencia observable en codigo, pruebas y documentacion actualizada.
 
-### Riesgo 3. JavaFX absorba tiempo sin mejorar la nota real
-
-La UI puede consumir mucho esfuerzo si se intenta cerrar demasiado.
+### Riesgo 3. Abrir ahora una feature grande y desestabilizar la entrega
 
 Mitigacion:
 
-- apuntar a una interfaz minima pero real
-- no intentar rehacer todo el frontend
-
-### Riesgo 4. Corregir demasiado sin actualizar la narrativa del proyecto
-
-Si el codigo mejora pero README, docs y creditos siguen mal, la entrega pierde fuerza.
-
-Mitigacion:
-
-- reservar una fase final solo para documentacion
+- priorizar cierre academico y commit antes de tocar autenticacion por correo.
 
 ---
 
@@ -561,25 +608,18 @@ Si se pierde el contexto, continuar desde aqui:
 
 ### Siguiente objetivo recomendado
 
-Empezar por cerrar la persistencia que sigue incompleta en JPA.
+Usar `docs/MEMORIA_DEFENSA.md` como base del repaso final de entrega y del commit de cierre.
 
 ### Motivo
 
-Las correcciones mas urgentes ya estan aplicadas. El siguiente bloque con mayor retorno tecnico es terminar la persistencia de reglas y archivado, porque es donde sigue habiendo desajuste real entre dominio y base de datos.
+El proyecto ya esta en estado defendible. Lo que mas retorno da ahora es consolidar la narrativa academica y evitar contradicciones entre codigo, documentacion y demostracion.
 
 ### Despues de eso
 
-Ir a documentacion y JavaFX solo despues de cerrar esas dos persistencias.
-
-### Orden exacto para retomar
-
-1. Revisar modelo JPA de `ListaJPA` y migraciones asociadas para soportar multiples `listasPrevias`.
-2. Ajustar `ConvertidorTableroJPA` para persistir y reconstruir correctamente esos prerequisitos.
-3. Ampliar tests de integracion o repositorio para verificar round-trip de prerequisitos.
-4. Revisar `TarjetaJPA` y migraciones para anadir `archivada` y `fechaArchivado`.
-5. Ajustar `ServicioCompactacion` y su lectura/escritura real con persistencia.
-6. Ejecutar `mvn test`.
-7. Solo despues, pasar a README, INICIO_RAPIDO y JavaFX.
+1. revisar el diff final,
+2. ejecutar una validacion final si hace falta,
+3. preparar commit,
+4. solo si queda margen, decidir si compensa abrir autenticacion por correo.
 
 ---
 
@@ -589,21 +629,20 @@ Ir a documentacion y JavaFX solo despues de cerrar esas dos persistencias.
 
 - auditoria del proyecto completada
 - comparacion contra enunciado completada
-- zonas de riesgo identificadas
-- bug de cache/autorizacion corregido y validado
-- reconstruccion JPA suficiente para listas/tarjetas corregida y validada
-- integracion de tarjetas reactivada y validada
-- semantica del bloqueo corregida y validada
-- estado de tests actual verificado
-- prioridades definidas
+- defectos criticos de cache, bloqueo y persistencia corregidos
+- integraciones relevantes activas y en verde
+- JavaFX minima funcional cerrada en el alcance elegido
+- documentacion publica alineada con el estado real
+- build limpio con `mvn clean test`
 
-### Pendiente de implementar
+### Pendiente inmediata
 
-- persistencia de prerequisitos multiples
-- persistencia de archivado
-- compactacion automatica real
-- decidir y cerrar alcance JavaFX
-- actualizar documentacion
+- repaso final de cierre y commit
+
+### Pendiente solo si se quiere seguir ampliando
+
+- autenticacion del enunciado
+- ampliaciones de interfaz y permisos avanzados
 
 ---
 
@@ -612,6 +651,6 @@ Ir a documentacion y JavaFX solo despues de cerrar esas dos persistencias.
 Se podra considerar este plan cerrado cuando se cumpla lo siguiente:
 
 1. No haya defectos funcionales criticos abiertos en cache, bloqueo y persistencia.
-2. Los tests de integracion importantes no esten desactivados sin justificacion fuerte.
-3. La documentacion refleje el estado real del proyecto.
+2. Los tests relevantes sigan activos y en verde.
+3. La documentacion publica y la memoria de defensa reflejen el estado real del proyecto.
 4. La defensa del proyecto frente al enunciado sea consistente y sin contradicciones obvias.

@@ -7,6 +7,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pds.app_gestion.application.dto.ConfigurarReglasListaRequest;
+import pds.app_gestion.application.dto.ListaResponse;
+import pds.app_gestion.application.dto.ReglasListaResponse;
 import pds.app_gestion.application.service.ServicioLista;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +27,10 @@ public class DialogoConfigurarReglas extends Stage {
     private final String nombreLista;
     private final String emailUsuario;
     private final ServicioLista servicioLista;
-    private final List<String> listasDisponibles;
+    private final List<ListaResponse> listasDisponibles;
     
     private Spinner<Integer> spinnerLimite;
-    private ListView<String> listaViewListasPrevias;
+    private ListView<ListaResponse> listaViewListasPrevias;
     private List<String> listasSeleccionadas;
 
     /**
@@ -39,11 +41,11 @@ public class DialogoConfigurarReglas extends Stage {
      * @param nombreLista nombre de la lista
      * @param emailUsuario email del usuario
      * @param servicioLista servicio para guardar reglas
-     * @param listasDisponibles lista de IDs de listas disponibles (excluyendo la actual)
+    * @param listasDisponibles listas disponibles en el tablero (excluyendo la actual)
      */
     public DialogoConfigurarReglas(String idTablero, String idLista, String nombreLista,
                                   String emailUsuario, ServicioLista servicioLista,
-                                  List<String> listasDisponibles) {
+                            List<ListaResponse> listasDisponibles) {
         super();
         this.idTablero = idTablero;
         this.idLista = idLista;
@@ -54,6 +56,7 @@ public class DialogoConfigurarReglas extends Stage {
         this.listasSeleccionadas = new ArrayList<>();
         
         inicializarUI();
+        cargarReglasActuales();
         this.setTitle("Configurar Reglas: " + nombreLista);
         this.setWidth(450);
         this.setHeight(400);
@@ -131,6 +134,13 @@ public class DialogoConfigurarReglas extends Stage {
         listaViewListasPrevias.getItems().addAll(listasDisponibles);
         listaViewListasPrevias.setMaxHeight(Double.MAX_VALUE);
         listaViewListasPrevias.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        listaViewListasPrevias.setCellFactory(listView -> new ListCell<>() {
+            @Override
+            protected void updateItem(ListaResponse lista, boolean empty) {
+                super.updateItem(lista, empty);
+                setText(empty || lista == null ? null : lista.getNombre());
+            }
+        });
         
         VBox.setVgrow(listaViewListasPrevias, javafx.scene.layout.Priority.ALWAYS);
         
@@ -171,9 +181,9 @@ public class DialogoConfigurarReglas extends Stage {
             }
             
             // Obtener listas seleccionadas
-            listasSeleccionadas = new ArrayList<>(
-                listaViewListasPrevias.getSelectionModel().getSelectedItems()
-            );
+            listasSeleccionadas = listaViewListasPrevias.getSelectionModel().getSelectedItems().stream()
+                .map(ListaResponse::getId)
+                .toList();
             
             // Crear request
             ConfigurarReglasListaRequest request = ConfigurarReglasListaRequest.builder()
@@ -211,5 +221,24 @@ public class DialogoConfigurarReglas extends Stage {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    private void cargarReglasActuales() {
+        try {
+            ReglasListaResponse reglas = servicioLista.obtenerReglas(idTablero, idLista, emailUsuario);
+            spinnerLimite.getValueFactory().setValue(reglas.getLimiteMaximo() != null ? reglas.getLimiteMaximo() : 0);
+
+            if (reglas.getListasPrevias() == null || reglas.getListasPrevias().isEmpty()) {
+                return;
+            }
+
+            for (ListaResponse listaDisponible : listasDisponibles) {
+                if (reglas.getListasPrevias().contains(listaDisponible.getId())) {
+                    listaViewListasPrevias.getSelectionModel().select(listaDisponible);
+                }
+            }
+        } catch (Exception e) {
+            mostrarError("Error al cargar reglas actuales: " + e.getMessage());
+        }
     }
 }

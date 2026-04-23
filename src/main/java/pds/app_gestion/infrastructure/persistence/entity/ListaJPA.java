@@ -8,11 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.envers.Audited;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,8 +34,11 @@ public class ListaJPA {
     @Column(name = "limite_maximo")
     private Integer limiteMaximo;
 
-    @Column(name = "lista_prerequisito_id")
-    private String listaPrerrequisitoId;
+    @Builder.Default
+    @ElementCollection
+    @CollectionTable(name = "lista_prerequisitos", joinColumns = @JoinColumn(name = "lista_id"))
+    @Column(name = "lista_prerequisito_id", nullable = false)
+    private Set<String> listasPrevias = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tablero_id", nullable = false)

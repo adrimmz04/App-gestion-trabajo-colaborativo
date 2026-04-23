@@ -43,8 +43,7 @@ public class ServicioCompactacion {
     public void ejecutarCompactacionAutomatica() {
         System.out.println("[CompactacionAutomatica] Iniciando proceso de compactación a las " + LocalDateTime.now());
         
-        // Obtener todos los tableros
-        List<Tablero> tableros = repositorioTablero.obtenerCompartidos(""); // TODO: Considerar mejor estrategia
+        List<Tablero> tableros = repositorioTablero.obtenerTodos();
         
         for (Tablero tablero : tableros) {
             compactarTablero(tablero);

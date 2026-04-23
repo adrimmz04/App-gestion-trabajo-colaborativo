@@ -206,6 +206,57 @@ class ControladorTarjetaIntegrationTest {
     }
 
     @Test
+    @DisplayName("Marcar tarjeta como completada la mueve a una lista Hecho si existe")
+    void testMarcarComoCompletadaYMoverAListaHecho() throws Exception {
+        CrearListaRequest listaHechoRequest = new CrearListaRequest("Hecho", null);
+        MvcResult listaHechoResult = mockMvc.perform(post("/api/v1/tableros/{id}/listas", idTablero)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(listaHechoRequest)))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        ListaResponse listaHecho = objectMapper.readValue(
+            listaHechoResult.getResponse().getContentAsString(),
+            ListaResponse.class
+        );
+
+        CrearTarjetaRequest crearRequest = new CrearTarjetaRequest();
+        crearRequest.setTitulo("Tarjeta Test");
+        crearRequest.setDescripcion("Descripción");
+        crearRequest.setTipo("TAREA");
+
+        MvcResult crearResult = mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas", idTablero, idLista)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(crearRequest)))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        TarjetaResponse tarjetaResponse = objectMapper.readValue(
+            crearResult.getResponse().getContentAsString(),
+            TarjetaResponse.class
+        );
+
+        mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/completar",
+                idTablero, idLista, tarjetaResponse.getId())
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.completada").value(true));
+
+        mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/descompletar",
+                idTablero, idLista, tarjetaResponse.getId())
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isNotFound());
+
+        mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/descompletar",
+                idTablero, listaHecho.getId(), tarjetaResponse.getId())
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.completada").value(false));
+    }
+
+    @Test
     @DisplayName("Agregar etiqueta a tarjeta")
     void testAgregarEtiqueta() throws Exception {
         // Crear tarjeta
@@ -282,6 +333,127 @@ class ControladorTarjetaIntegrationTest {
             .content(objectMapper.writeValueAsString(etiquetaRequest2)))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.etiquetas", hasSize(2)));
+    }
+
+    @Test
+    @DisplayName("Eliminar tarjeta")
+    void testEliminarTarjeta() throws Exception {
+        CrearTarjetaRequest crearRequest = new CrearTarjetaRequest();
+        crearRequest.setTitulo("Tarjeta Test");
+        crearRequest.setDescripcion("Descripción");
+        crearRequest.setTipo("TAREA");
+
+        MvcResult crearResult = mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas", idTablero, idLista)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(crearRequest)))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        TarjetaResponse tarjetaResponse = objectMapper.readValue(
+            crearResult.getResponse().getContentAsString(),
+            TarjetaResponse.class
+        );
+
+        mockMvc.perform(delete("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}",
+                idTablero, idLista, tarjetaResponse.getId())
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isNoContent());
+
+        mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/completar",
+                idTablero, idLista, tarjetaResponse.getId())
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Mover tarjeta a otra lista")
+    void testMoverTarjeta() throws Exception {
+        CrearListaRequest listaRequest = new CrearListaRequest("Lista Destino", null);
+        MvcResult listaResult = mockMvc.perform(post("/api/v1/tableros/{id}/listas", idTablero)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(listaRequest)))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        ListaResponse listaDestino = objectMapper.readValue(
+            listaResult.getResponse().getContentAsString(),
+            ListaResponse.class
+        );
+
+        CrearTarjetaRequest crearRequest = new CrearTarjetaRequest();
+        crearRequest.setTitulo("Tarjeta Test");
+        crearRequest.setDescripcion("Descripción");
+        crearRequest.setTipo("TAREA");
+
+        MvcResult crearResult = mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas", idTablero, idLista)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(crearRequest)))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        TarjetaResponse tarjetaResponse = objectMapper.readValue(
+            crearResult.getResponse().getContentAsString(),
+            TarjetaResponse.class
+        );
+
+        mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/mover",
+                idTablero, idLista, tarjetaResponse.getId())
+            .param("idListaDestino", listaDestino.getId())
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isNoContent());
+
+        mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/completar",
+                idTablero, idLista, tarjetaResponse.getId())
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isNotFound());
+
+        mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/completar",
+                idTablero, listaDestino.getId(), tarjetaResponse.getId())
+            .param("emailUsuario", emailPropietario))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.completada").value(true));
+    }
+
+    @Test
+    @DisplayName("Crear tarjeta directamente en una lista con prerequisitos devuelve error")
+    void testCrearTarjetaEnListaConPrerequisitos() throws Exception {
+        CrearListaRequest listaPreviaRequest = new CrearListaRequest("Analisis", null);
+        MvcResult listaPreviaResult = mockMvc.perform(post("/api/v1/tableros/{id}/listas", idTablero)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(listaPreviaRequest)))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        ListaResponse listaPrevia = objectMapper.readValue(
+            listaPreviaResult.getResponse().getContentAsString(),
+            ListaResponse.class
+        );
+
+        ConfigurarReglasListaRequest reglasRequest = ConfigurarReglasListaRequest.builder()
+            .listasPrevias(java.util.List.of(listaPrevia.getId()))
+            .build();
+
+        mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/reglas", idTablero, idLista)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(reglasRequest)))
+            .andExpect(status().isOk());
+
+        CrearTarjetaRequest crearRequest = new CrearTarjetaRequest();
+        crearRequest.setTitulo("Tarjeta bloqueada");
+        crearRequest.setDescripcion("No debería crearse aquí");
+        crearRequest.setTipo("TAREA");
+
+        mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas", idTablero, idLista)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(crearRequest)))
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.mensaje", containsString("prerequisitos")));
     }
 
     @Test

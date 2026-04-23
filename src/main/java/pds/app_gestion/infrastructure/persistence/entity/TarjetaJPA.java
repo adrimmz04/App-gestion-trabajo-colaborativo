@@ -8,11 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.envers.Audited;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -51,6 +46,12 @@ public class TarjetaJPA {
     @Column(name = "fecha_completacion")
     private LocalDateTime fechaCompletacion;
 
+    @Column(nullable = false)
+    private boolean archivada;
+
+    @Column(name = "fecha_archivado")
+    private LocalDateTime fechaArchivado;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
@@ -66,21 +67,31 @@ public class TarjetaJPA {
 
     @Builder.Default
     @ElementCollection
-    @CollectionTable(name = "tarjeta_etiquetas", joinColumns = @JoinColumn(name = "tarjeta_id"))
-    @Column(name = "etiqueta_nombre")
+    @CollectionTable(name = "tarjetas_etiquetas_nombres", joinColumns = @JoinColumn(name = "tarjeta_id"))
+    @Column(name = "etiquetas_nombres")
     private Set<String> etiquetasNombres = new HashSet<>();
 
     @Builder.Default
     @ElementCollection
-    @CollectionTable(name = "tarjeta_etiquetas_colores", joinColumns = @JoinColumn(name = "tarjeta_id"))
-    @MapKeyColumn(name = "etiqueta_nombre")
-    @Column(name = "color")
+    @CollectionTable(name = "tarjetas_etiquetas_colores", joinColumns = @JoinColumn(name = "tarjeta_id"))
+    @MapKeyColumn(name = "etiquetas_colores_key")
+    @Column(name = "etiquetas_colores_value")
     private java.util.Map<String, String> etiquetasColores = new java.util.HashMap<>();
+
+    @Builder.Default
+    @ElementCollection
+    @CollectionTable(name = "tarjetas_listas_visitadas", joinColumns = @JoinColumn(name = "tarjeta_id"))
+    @Column(name = "listas_visitadas")
+    private Set<String> listasVisitadas = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {
-        fechaCreacion = LocalDateTime.now();
-        fechaActualizacion = LocalDateTime.now();
+        if (fechaCreacion == null) {
+            fechaCreacion = LocalDateTime.now();
+        }
+        if (fechaActualizacion == null) {
+            fechaActualizacion = fechaCreacion;
+        }
     }
 
     @PreUpdate

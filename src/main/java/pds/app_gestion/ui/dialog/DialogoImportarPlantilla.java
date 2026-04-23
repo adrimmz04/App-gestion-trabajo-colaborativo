@@ -23,6 +23,7 @@ public class DialogoImportarPlantilla extends Stage {
 
     private final ServicioPlantillas servicioPlantillas;
     private final String emailUsuario;
+    private PlantillaTableroYAML plantillaSeleccionada;
     
     private TextField txtRuta;
     private TextField txtNombreTablero;
@@ -34,6 +35,7 @@ public class DialogoImportarPlantilla extends Stage {
         this.emailUsuario = emailUsuario;
         this.servicioPlantillas = new ServicioPlantillas();
         this.tableroCreado = null;
+        this.plantillaSeleccionada = null;
         
         initUI();
     }
@@ -164,14 +166,14 @@ public class DialogoImportarPlantilla extends Stage {
     }
 
     private void handleSeleccionarPlantilla(PlantillaTableroYAML plantilla) {
+        plantillaSeleccionada = plantilla;
+        tableroCreado = null;
         txtRuta.clear();
         if (txtNombreTablero.getText().isEmpty()) {
             txtNombreTablero.setText(plantilla.getTitulo());
         }
         labelEstado.setText("Plantilla seleccionada: " + plantilla.getTitulo());
         labelEstado.setStyle("-fx-text-fill: #0066cc;");
-        
-        crearTableroDesdePlantilla(plantilla);
     }
 
     private void handleExaminarArchivo() {
@@ -186,6 +188,8 @@ public class DialogoImportarPlantilla extends Stage {
             try {
                 String yamlContent = new String(Files.readAllBytes(file.toPath()));
                 PlantillaTableroYAML plantilla = servicioPlantillas.importarPlantillaYAML(yamlContent);
+                plantillaSeleccionada = plantilla;
+                tableroCreado = null;
                 
                 txtRuta.setText(file.getAbsolutePath());
                 if (txtNombreTablero.getText().isEmpty()) {
@@ -194,8 +198,6 @@ public class DialogoImportarPlantilla extends Stage {
                 
                 labelEstado.setText("Archivo cargado: " + file.getName());
                 labelEstado.setStyle("-fx-text-fill: #0066cc;");
-                
-                crearTableroDesdePlantilla(plantilla);
             } catch (IOException ex) {
                 labelEstado.setText("✗ Error al cargar archivo: " + ex.getMessage());
                 labelEstado.setStyle("-fx-text-fill: #cc0000;");
@@ -223,9 +225,20 @@ public class DialogoImportarPlantilla extends Stage {
     }
 
     private void handleCrearTablero() {
-        if (tableroCreado == null) {
+        if (plantillaSeleccionada == null) {
             labelEstado.setText("✗ Selecciona una plantilla primero");
             labelEstado.setStyle("-fx-text-fill: #cc0000;");
+            return;
+        }
+
+        if (txtNombreTablero.getText() == null || txtNombreTablero.getText().trim().isEmpty()) {
+            labelEstado.setText("✗ Debes indicar un nombre para el tablero");
+            labelEstado.setStyle("-fx-text-fill: #cc0000;");
+            return;
+        }
+
+        crearTableroDesdePlantilla(plantillaSeleccionada);
+        if (tableroCreado == null) {
             return;
         }
 

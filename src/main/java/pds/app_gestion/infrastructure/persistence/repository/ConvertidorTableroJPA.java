@@ -38,7 +38,7 @@ public class ConvertidorTableroJPA {
             setFieldValue(tablero, "descripcion", jpa.getDescripcion() != null ? jpa.getDescripcion() : "");
             setFieldValue(tablero, "bloqueado", jpa.isBloqueado());
             setFieldValue(tablero, "fechaDesbloqueo", 
-                jpa.getFechaBloqueo() != null ? Optional.of(jpa.getFechaBloqueo()) : Optional.empty());
+                jpa.getFechaDesbloqueo() != null ? Optional.of(jpa.getFechaDesbloqueo()) : Optional.empty());
             setFieldValue(tablero, "fechaCreacion", jpa.getFechaCreacion());
             setFieldValue(tablero, "fechaActualizacion", jpa.getFechaActualizacion());
 
@@ -89,7 +89,7 @@ public class ConvertidorTableroJPA {
             .descripcion(tablero.getDescripcion() != null ? tablero.getDescripcion() : "")
             .propietarioEmail(tablero.getPropietarioEmail())
             .bloqueado(tablero.isBloqueado())
-            .fechaBloqueo(tablero.getFechaDesbloqueo().orElse(null))
+            .fechaDesbloqueo(tablero.getFechaDesbloqueo().orElse(null))
             .fechaCreacion(tablero.getFechaCreacion())
             .fechaActualizacion(tablero.getFechaActualizacion())
             .usuariosCompartidos(new HashSet<>(tablero.getUsuariosCompartidos()))
@@ -118,7 +118,7 @@ public class ConvertidorTableroJPA {
             .id(lista.getId())
             .nombre(lista.getNombre())
             .limiteMaximo(lista.getLimiteMaximo().orElse(null))
-            .listaPrerrequisitoId(lista.obtenerListasPrevias().isEmpty() ? null : lista.obtenerListasPrevias().get(0))
+            .listasPrevias(new HashSet<>(lista.obtenerListasPrevias()))
             .build();
 
         Set<TarjetaJPA> tarjetasJPA = lista.getTarjetas().stream()
@@ -138,6 +138,8 @@ public class ConvertidorTableroJPA {
             .tipo(pds.app_gestion.infrastructure.persistence.entity.TipoTarjetaJPA.valueOf(tarjeta.getTipo().name()))
             .completada(tarjeta.isCompletada())
             .fechaCompletacion(tarjeta.getFechaCompletacion())
+            .archivada(tarjeta.estaArchivada())
+            .fechaArchivado(tarjeta.getFechaArchivado())
             .fechaCreacion(tarjeta.getFechaCreacion())
             .fechaActualizacion(tarjeta.getFechaActualizacion())
             .build();
@@ -149,6 +151,7 @@ public class ConvertidorTableroJPA {
         java.util.Map<String, String> colores = new java.util.HashMap<>();
         tarjeta.getEtiquetas().forEach(e -> colores.put(e.getNombre(), e.getColor()));
         jpa.setEtiquetasColores(colores);
+        jpa.setListasVisitadas(new HashSet<>(tarjeta.getListasVisitadas()));
 
         return jpa;
     }
@@ -168,8 +171,10 @@ public class ConvertidorTableroJPA {
             lista.establecerLimiteMaximo(jpa.getLimiteMaximo());
         }
 
-        if (jpa.getListaPrerrequisitoId() != null && !jpa.getListaPrerrequisitoId().isBlank()) {
-            lista.agregarListaPrevia(jpa.getListaPrerrequisitoId());
+        if (jpa.getListasPrevias() != null) {
+            jpa.getListasPrevias().stream()
+                .sorted()
+                .forEach(lista::agregarListaPrevia);
         }
 
         if (jpa.getTarjetas() != null) {
@@ -177,6 +182,11 @@ public class ConvertidorTableroJPA {
                 .sorted(Comparator.comparing(TarjetaJPA::getId))
                 .map(this::convertirTarjetaADominio)
                 .toList();
+            tarjetas.forEach(tarjeta -> {
+                if (!tarjeta.haPasadoPorLista(lista.getId())) {
+                    tarjeta.getListasVisitadas().add(lista.getId());
+                }
+            });
             lista.getTarjetas().addAll(tarjetas);
         }
 
@@ -194,6 +204,8 @@ public class ConvertidorTableroJPA {
         try {
             setFieldValue(tarjeta, "completada", jpa.isCompletada());
             setFieldValue(tarjeta, "fechaCompletacion", jpa.getFechaCompletacion());
+            setFieldValue(tarjeta, "archivada", jpa.isArchivada());
+            setFieldValue(tarjeta, "fechaArchivado", jpa.getFechaArchivado());
             setFieldValue(tarjeta, "fechaCreacion", jpa.getFechaCreacion());
             setFieldValue(tarjeta, "fechaActualizacion", jpa.getFechaActualizacion());
 
@@ -204,6 +216,10 @@ public class ConvertidorTableroJPA {
                         : "#808080";
                     tarjeta.getEtiquetas().add(new Etiqueta(nombreEtiqueta, color));
                 }
+            }
+
+            if (jpa.getListasVisitadas() != null) {
+                tarjeta.getListasVisitadas().addAll(jpa.getListasVisitadas());
             }
         } catch (Exception e) {
             throw new RuntimeException("Error al convertir TarjetaJPA a Tarjeta", e);

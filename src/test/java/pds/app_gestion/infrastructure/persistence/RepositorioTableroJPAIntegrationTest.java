@@ -1,12 +1,13 @@
 package pds.app_gestion.infrastructure.persistence;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
 import pds.app_gestion.domain.Lista;
 import pds.app_gestion.domain.Tablero;
-import pds.app_gestion.infrastructure.persistence.entity.TableroJPA;
 import pds.app_gestion.infrastructure.persistence.repository.ConvertidorTableroJPA;
 import pds.app_gestion.infrastructure.persistence.repository.RepositorioTableroJPA;
 import pds.app_gestion.infrastructure.persistence.repository.RepositorioTableroJpaSpring;
@@ -18,15 +19,13 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Pruebas de integración para el RepositorioTableroJPA.
  * 
- * Utiliza TestContainers + PostgreSQL para probar la persistencia
- * en una base de datos real.
- * 
- * NOTA: Actualmente desactivadas (@Disabled) debido a problemas de configuración
- * de Docker/TestContainers en el entorno. En un proyecto con Docker disponible,
- * estas pruebas verificarían la persistencia contra PostgreSQL.
+ * Utiliza H2 en memoria para validar el adaptador JPA
+ * y el round-trip del agregado Tablero.
  */
-@Disabled("TestContainers requiere Docker configurado en el entorno")
-public class RepositorioTableroJPAIntegrationTest extends AbstractIntegrationTest {
+@DataJpaTest
+@Import(ConvertidorTableroJPA.class)
+@TestPropertySource(locations = "classpath:application-test.properties")
+public class RepositorioTableroJPAIntegrationTest {
 
     @Autowired
     private RepositorioTableroJpaSpring repositorioJpaSpring;
@@ -112,13 +111,15 @@ public class RepositorioTableroJPAIntegrationTest extends AbstractIntegrationTes
         // Guardar tablero
         repositorio.guardar(tablero1);
 
-        // Actualizar descripción
+        // Actualizar titulo y descripción
+        tablero1.actualizarTitulo("Proyecto A actualizado");
         tablero1.actualizarDescripcion("Nueva descripción");
         repositorio.guardar(tablero1);
 
         // Verificar actualización
         var resultado = repositorio.obtenerPorId("tab-1");
         assertTrue(resultado.isPresent());
+        assertEquals("Proyecto A actualizado", resultado.get().getTitulo());
         assertEquals("Nueva descripción", resultado.get().getDescripcion());
     }
 

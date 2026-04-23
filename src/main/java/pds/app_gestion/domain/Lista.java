@@ -58,6 +58,8 @@ public class Lista {
                     nombre, limiteMaximo.get())
             );
         }
+
+        tarjeta.registrarPasoPorLista(id);
         
         tarjetas.add(tarjeta);
         fechaActualizacion = LocalDateTime.now();
@@ -169,18 +171,17 @@ public class Lista {
     }
 
     /**
-     * Verifica si una tarjeta cumple con los requisitos para ser movida a esta lista.
-     * La tarjeta debe estar completada para poder moverse a una lista con requisitos.
+     * Verifica si una tarjeta cumple con los requisitos para llegar a esta lista.
+     * La tarjeta debe haber pasado previamente por todas las listas requeridas.
      * 
      * @param tarjeta tarjeta a validar
      * @return true si cumple los requisitos o no hay requisitos
      */
     public boolean cumpleRequisitos(Tarjeta tarjeta) {
         if (listasPrevias.isEmpty()) {
-            return true; // No hay requisitos
+            return true;
         }
-        
-        // Para moverse a una lista con requisitos, la tarjeta debe estar completada
-        return tarjeta.isCompletada();
+
+        return listasPrevias.stream().allMatch(tarjeta::haPasadoPorLista);
     }
 }
