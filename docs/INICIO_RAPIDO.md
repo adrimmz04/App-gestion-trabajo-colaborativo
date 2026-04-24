@@ -1,52 +1,55 @@
-# Guía de Inicio Rápido
+# Guía de Puesta en Marcha
+
+Este documento describe qué se necesita para ejecutar el proyecto, cómo validarlo localmente y qué modos de arranque están disponibles.
 
 ## Requisitos previos
 
 - JDK 21 o superior
 - Maven 3.8.1 o superior
 - Git
-- PostgreSQL local si se quiere arrancar la aplicación con la configuración por defecto
+- PostgreSQL local si se quiere usar la configuración estándar
 - IDE recomendado: VS Code o IntelliJ IDEA con soporte Java
 
-## 1. Clonar el repositorio
+## Clonado del repositorio
 
 ```bash
 git clone https://github.com/adrimmz04/App-gestion-trabajo-colaborativo.git
-cd App-gestion-trabajo-colaborativo
+cd App-gestion-trabajo-colaborativo/app-gestion
 ```
 
-## 2. Validar el estado del proyecto
+## Validación del proyecto
 
-Los tests usan H2 en memoria, así que no necesitan PostgreSQL externo.
+La suite de tests usa H2 en memoria, por lo que no depende de una base de datos PostgreSQL externa.
 
 ```bash
 mvn clean test
 ```
 
-Estado validado el 22/04/2026:
+Última validación completa registrada en este entorno:
 
-- 134 tests ejecutados
+- 169 tests ejecutados
 - 0 fallos
 - 0 errores
-- 0 omitidos
 
-## 3. Configurar la base de datos para ejecución normal
+## Modos de ejecución
 
-La aplicación arranca por defecto contra PostgreSQL con esta configuración:
+### 1. Ejecución estándar con PostgreSQL
+
+La configuración por defecto usa PostgreSQL con estos valores:
 
 - URL: `jdbc:postgresql://localhost:5432/app_gestion`
 - Usuario: `postgres`
 - Contraseña: `postgres`
 
-Ejemplo mínimo en PostgreSQL:
+Preparación mínima:
 
 ```sql
 CREATE DATABASE app_gestion;
 ```
 
-Flyway aplicará las migraciones al iniciar la aplicación.
+Flyway aplicará automáticamente las migraciones necesarias al arrancar.
 
-## 4. Ejecutar la aplicación
+Arranque:
 
 ```bash
 mvn spring-boot:run
@@ -54,12 +57,12 @@ mvn spring-boot:run
 
 Resultado esperado:
 
-- API REST en `http://localhost:8080`
-- Arranque de la ventana JavaFX principal
+- API REST disponible en `http://localhost:8080`
+- Ventana JavaFX iniciada junto con la aplicación
 
-### Alternativa rápida sin PostgreSQL
+### 2. Ejecución local rápida con H2
 
-Si no quieres levantar PostgreSQL para una prueba local, usa el perfil `local`, que arranca con H2 en memoria:
+Para desarrollo o demostración rápida sin PostgreSQL, se puede usar el perfil `local`.
 
 ```bash
 mvn spring-boot:run -Dspring-boot.run.profiles=local -DskipTests
@@ -67,56 +70,52 @@ mvn spring-boot:run -Dspring-boot.run.profiles=local -DskipTests
 
 Resultado esperado:
 
-- API REST en `http://localhost:8080`
-- Arranque de la ventana JavaFX principal
-- Sin conexión a PostgreSQL ni ejecución de Flyway sobre servidor externo
+- API REST disponible en `http://localhost:8080`
+- Ventana JavaFX iniciada
+- Persistencia en H2 en memoria
 
-## 5. Estructura útil del proyecto
+## Empaquetado
 
+```bash
+mvn clean package
 ```
-app-gestion/
-├── src/main/java/pds/app_gestion/domain/          # Modelo de dominio
-├── src/main/java/pds/app_gestion/application/     # Casos de uso y DTOs
-├── src/main/java/pds/app_gestion/infrastructure/  # Persistencia y adaptadores
-├── src/main/java/pds/app_gestion/ui/              # REST y JavaFX
-├── src/main/resources/db/migration/               # Migraciones Flyway
-├── src/test/                                      # Tests unitarios e integración
-└── docs/                                          # Documentación del proyecto
-```
+
+El artefacto generado queda disponible en `target/`.
 
 ## Comandos útiles
 
 ```bash
-# Compilar sin tests
+# Compilar el proyecto
 mvn clean compile
 
-# Ejecutar toda la suite
+# Ejecutar todos los tests
 mvn clean test
 
 # Empaquetar el proyecto
 mvn clean package
 
-# Ejecutar la aplicación
+# Arrancar con PostgreSQL
 mvn spring-boot:run
+
+# Arrancar con H2 en memoria
+mvn spring-boot:run -Dspring-boot.run.profiles=local -DskipTests
 ```
 
-## Estado funcional resumido
+## Componentes disponibles al arrancar
 
-- Backend Spring Boot operativo
-- Persistencia JPA con PostgreSQL en ejecución normal
-- H2 aislado para tests
-- Reglas de listas, plantillas YAML y compactación automática disponibles
-- Interfaz JavaFX presente pero todavía parcial
+- Backend Spring Boot con endpoints REST.
+- Persistencia JPA con migraciones Flyway.
+- Cliente JavaFX integrado en el mismo arranque.
+- Caché de lectura para consultas de tableros.
 
-## Limitaciones actuales
+## Recomendaciones de uso
 
-- La autenticación por código por correo del enunciado no está implementada.
-- La interfaz JavaFX no sustituye todavía todos los flujos REST.
-- El arranque conjunto Spring Boot + JavaFX sigue siendo mejorable.
+- Usar PostgreSQL para validación funcional completa y persistencia real.
+- Usar el perfil `local` cuando se necesite una ejecución rápida sin dependencias externas.
+- Ejecutar `mvn clean test` antes de cualquier entrega o demostración.
 
 ## Referencias
 
 - [README.md](../README.md)
-- [DISEÑO_DOMINIO.md](DISEÑO_DOMINIO.md)
-- [PLAN_CORRECCIONES.md](PLAN_CORRECCIONES.md)
+- [FUNCIONALIDADES_IMPLEMENTADAS.md](FUNCIONALIDADES_IMPLEMENTADAS.md)
 - [CREDITOS.md](../CREDITOS.md)

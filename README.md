@@ -1,122 +1,183 @@
 # App Gestión de Trabajo Colaborativo
 
-Proyecto práctico de PDS para gestionar trabajo colaborativo mediante tableros, listas y tarjetas. La solución combina un backend en Spring Boot, persistencia JPA y una interfaz de escritorio JavaFX inicial, siguiendo arquitectura hexagonal y DDD.
+Aplicación de gestión de trabajo colaborativo orientada a tableros, listas y tarjetas. El proyecto se ha desarrollado en Java con Spring Boot, JavaFX, Maven y persistencia JPA, siguiendo una arquitectura hexagonal con enfoque DDD.
+
+## Objetivo del proyecto
+
+La aplicación permite organizar trabajo colaborativo mediante tableros compartibles, listas de tareas y tarjetas con seguimiento de estado, historial de acciones y reglas de flujo. Además de la funcionalidad base, incorpora varias características opcionales del enunciado para ampliar el comportamiento del sistema.
 
 ## Participante
 
-- Adrian Martinez Zamora (adrimmz04@gmail.com)
+- Adrian Martinez Zamora
 
-## Estado actual
-
-- Requisitos base implementados: tableros, listas, tarjetas, historial, bloqueo temporal y compartición por usuario.
-- Características opcionales implementadas: reglas de listas, plantillas YAML y compactación automática.
-- Persistencia JPA operativa con Flyway y soporte PostgreSQL.
-- API REST en funcionamiento y batería de pruebas activa.
-- Interfaz JavaFX disponible, aunque todavía no cubre todos los flujos del sistema.
-
-## Características implementadas
+## Alcance implementado
 
 ### Funcionalidad principal
-- Crear, consultar, actualizar y compartir tableros.
-- Crear listas y mover tarjetas entre listas.
-- Crear tarjetas de tarea y checklist.
-- Marcar tarjetas como completadas y gestionar etiquetas.
-- Registrar historial de acciones del tablero.
-- Bloquear temporalmente un tablero para impedir altas nuevas y permitir movimientos.
+- Creación, consulta, edición y compartición de tableros.
+- Gestión de listas dentro de cada tablero.
+- Gestión de tarjetas de tipo tarea y checklist.
+- Marcado de tarjetas como completadas y movimiento a lista especial de completadas cuando existe.
+- Etiquetas con nombre y color para clasificar tarjetas.
+- Historial de acciones del tablero.
+- Bloqueo temporal del tablero para impedir nuevas altas y mantener el flujo de trabajo controlado.
 
-### Características opcionales ya incluidas
-- Reglas de listas: límite máximo de tarjetas y prerequisitos entre listas.
-- Plantillas definidas en YAML.
-- Compactación automática con archivado y eliminación diferida.
+### Características opcionales implementadas
+- Reglas de listas con límite máximo de tarjetas.
+- Prerequisitos entre listas basados en el recorrido real de cada tarjeta.
+- Filtrado de tarjetas por etiquetas.
+- Plantillas de tablero definidas en YAML, con importación y exportación.
+- Compactación automática mediante archivado y eliminación diferida.
 
-## Limitaciones conocidas
+## Arquitectura y tecnologías
 
-- La autenticación por código enviado por correo del enunciado no está implementada; el acceso actual se identifica por email en las peticiones.
-- La interfaz JavaFX actúa hoy como cliente inicial y todavía contiene partes estáticas.
-- El arranque conjunto Spring Boot + JavaFX sigue siendo una zona de mejora técnica.
+### Arquitectura
+- Arquitectura hexagonal con separación en `domain`, `application`, `infrastructure` y `ui`.
+- Agregado principal centrado en `Tablero`, que controla listas, tarjetas e historial.
+- Servicios de aplicación para orquestar casos de uso y adaptadores para REST, JavaFX y persistencia.
 
-## Tecnologías utilizadas
-
+### Stack técnico
 - Java 21
 - Spring Boot 3.1.5
 - JavaFX 21
-- JPA/Hibernate + Flyway
-- PostgreSQL para ejecución normal
-- H2 en memoria para pruebas
 - Maven
-- Caffeine, SnakeYAML y Testcontainers
+- JPA / Hibernate
+- Flyway
+- PostgreSQL para ejecución normal
+- H2 en memoria para pruebas y arranque local rápido
+- Caffeine para caché
+- SnakeYAML para plantillas
 
-## Estructura del proyecto
+## Estado actual
 
-```
+- API REST operativa para los casos de uso principales.
+- Interfaz JavaFX funcional como cliente de escritorio del proyecto.
+- Persistencia validada con migraciones Flyway y ejecución real sobre PostgreSQL.
+- Suite automática validada en verde en el estado final revisado: 169 tests, 0 fallos.
+
+## Estructura del repositorio
+
+```text
 app-gestion/
 ├── src/
 │   ├── main/
 │   │   ├── java/pds/app_gestion/
-│   │   │   ├── domain/          # Modelo de dominio
-│   │   │   ├── application/     # Casos de uso y DTOs
-│   │   │   ├── infrastructure/  # Persistencia, caché y adaptadores
-│   │   │   └── ui/              # REST y JavaFX
-│   │   └── resources/           # Configuración y migraciones
-│   └── test/                    # Pruebas unitarias e integración
+│   │   │   ├── domain/
+│   │   │   ├── application/
+│   │   │   ├── infrastructure/
+│   │   │   └── ui/
+│   │   └── resources/
+│   └── test/
 ├── docs/
 ├── pom.xml
-└── README.md
+├── README.md
+└── CREDITOS.md
 ```
 
-## Requisitos previos
+## Documentación del proyecto
 
-- JDK 21 o superior
-- Maven 3.8.1 o superior
-- PostgreSQL local si se quiere ejecutar la aplicación con la configuración por defecto
-
-## Ejecución rápida
-
-### Validar el proyecto
-
-```bash
-mvn clean test
-```
-
-Estado verificado el 22/04/2026:
-
-- 134 tests ejecutados
-- 0 fallos
-- 0 errores
-- 0 omitidos
-
-### Ejecutar la aplicación
-
-La configuración por defecto usa PostgreSQL en `localhost:5432/app_gestion` con usuario `postgres` y contraseña `postgres`.
-
-```bash
-mvn spring-boot:run
-```
-
-La API queda disponible en `http://localhost:8080` y el arranque lanza también la ventana JavaFX principal.
-
-### Ejecutar la aplicación sin PostgreSQL
-
-Para desarrollo local rápido se ha añadido un perfil `local` que usa H2 en memoria y no requiere base de datos externa:
-
-```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=local -DskipTests
-```
-
-Con ese perfil la aplicación arranca igualmente en `http://localhost:8080` y mantiene la ventana JavaFX activa para pruebas manuales.
-
-## Documentación relacionada
+La documentación pública del repositorio queda concentrada en estos documentos:
 
 - [docs/INICIO_RAPIDO.md](docs/INICIO_RAPIDO.md)
-- [docs/DISEÑO_DOMINIO.md](docs/DISEÑO_DOMINIO.md)
-- [docs/MEMORIA_DEFENSA.md](docs/MEMORIA_DEFENSA.md)
-- [docs/PLAN_CORRECCIONES.md](docs/PLAN_CORRECCIONES.md)
+- [docs/FUNCIONALIDADES_IMPLEMENTADAS.md](docs/FUNCIONALIDADES_IMPLEMENTADAS.md)
 - [CREDITOS.md](CREDITOS.md)
 
-## Estado del proyecto
+## Limitaciones conocidas
 
-- Versión: 1.0.0-SNAPSHOT
-- Arquitectura: hexagonal con enfoque DDD
-- Persistencia: JPA con migraciones Flyway
-- Interfaz: REST operativa y cliente JavaFX inicial
-- Calidad actual: build en verde y cobertura de rutas críticas mediante tests unitarios e integración
+- La autenticación por código por correo propuesta como opcional no está implementada.
+- No existe un modelo de permisos finos por tarjeta.
+- La interfaz JavaFX cubre los flujos relevantes del proyecto, pero no pretende sustituir a un cliente de producto completo.
+
+## Información académica relevante
+
+El enunciado exige que el `README.md` principal del repositorio incluya el nombre de la aplicación, los participantes, las características implementadas y un enlace al fichero de créditos. Esa información queda recogida en este documento y en [CREDITOS.md](CREDITOS.md).# App Gestión de Trabajo Colaborativo
+
+Aplicación de gestión de trabajo colaborativo orientada a tableros, listas y tarjetas. El proyecto se ha desarrollado en Java con Spring Boot, JavaFX, Maven y persistencia JPA, siguiendo una arquitectura hexagonal con enfoque DDD.
+
+## Objetivo del proyecto
+
+La aplicación permite organizar trabajo colaborativo mediante tableros compartibles, listas de tareas y tarjetas con seguimiento de estado, historial de acciones y reglas de flujo. Además de la funcionalidad base, incorpora varias características opcionales del enunciado para ampliar el comportamiento del sistema.
+
+## Participante
+
+- Adrian Martinez Zamora - adrimmz04@gmail.com
+
+## Alcance implementado
+
+### Funcionalidad principal
+- Creación, consulta, edición y compartición de tableros.
+- Gestión de listas dentro de cada tablero.
+- Gestión de tarjetas de tipo tarea y checklist.
+- Marcado de tarjetas como completadas y movimiento a lista especial de completadas cuando existe.
+- Etiquetas con nombre y color para clasificar tarjetas.
+- Historial de acciones del tablero.
+- Bloqueo temporal del tablero para impedir nuevas altas y mantener el flujo de trabajo controlado.
+
+### Características opcionales implementadas
+- Reglas de listas con límite máximo de tarjetas.
+- Prerequisitos entre listas basados en el recorrido real de cada tarjeta.
+- Filtrado de tarjetas por etiquetas.
+- Plantillas de tablero definidas en YAML, con importación y exportación.
+- Compactación automática mediante archivado y eliminación diferida.
+
+## Arquitectura y tecnologías
+
+### Arquitectura
+- Arquitectura hexagonal con separación en `domain`, `application`, `infrastructure` y `ui`.
+- Agregado principal centrado en `Tablero`, que controla listas, tarjetas e historial.
+- Servicios de aplicación para orquestar casos de uso y adaptadores para REST, JavaFX y persistencia.
+
+### Stack técnico
+- Java 21
+- Spring Boot 3.1.5
+- JavaFX 21
+- Maven
+- JPA / Hibernate
+- Flyway
+- PostgreSQL para ejecución normal
+- H2 en memoria para pruebas y arranque local rápido
+- Caffeine para caché
+- SnakeYAML para plantillas
+
+## Estado actual
+
+- API REST operativa para los casos de uso principales.
+- Interfaz JavaFX funcional como cliente de escritorio del proyecto.
+- Persistencia validada con migraciones Flyway y ejecución real sobre PostgreSQL.
+- Suite automática validada en verde en el estado final revisado: 169 tests, 0 fallos.
+
+## Estructura del repositorio
+
+```text
+app-gestion/
+├── src/
+│   ├── main/
+│   │   ├── java/pds/app_gestion/
+│   │   │   ├── domain/
+│   │   │   ├── application/
+│   │   │   ├── infrastructure/
+│   │   │   └── ui/
+│   │   └── resources/
+│   └── test/
+├── docs/
+├── pom.xml
+├── README.md
+└── CREDITOS.md
+```
+
+## Documentación del proyecto
+
+La documentación pública del repositorio queda concentrada en estos documentos:
+
+- [docs/INICIO_RAPIDO.md](docs/INICIO_RAPIDO.md)
+- [docs/FUNCIONALIDADES_IMPLEMENTADAS.md](docs/FUNCIONALIDADES_IMPLEMENTADAS.md)
+- [CREDITOS.md](CREDITOS.md)
+
+## Limitaciones conocidas
+
+- La autenticación por código por correo propuesta como opcional no está implementada.
+- No existe un modelo de permisos finos por tarjeta.
+- La interfaz JavaFX cubre los flujos relevantes del proyecto, pero no pretende sustituir a un cliente de producto completo.
+
+## Información académica relevante
+
+El enunciado exige que el `README.md` incluya el nombre de la aplicación, los participantes, las características implementadas y un enlace al fichero de créditos. Esa información queda recogida en este documento y en [CREDITOS.md](CREDITOS.md).
