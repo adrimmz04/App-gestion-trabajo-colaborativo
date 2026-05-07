@@ -98,12 +98,16 @@ Cómo se ha hecho:
 - Exportación de tableros a YAML.
 - Importación de tableros desde plantillas YAML.
 - Disponibilidad de plantillas predefinidas.
+- Compatibilidad entre las plantillas exportadas por la propia aplicación y la importación posterior.
+- Compatibilidad con exportaciones antiguas que incluían etiquetas de tipo generadas por SnakeYAML.
 
 Cómo se ha hecho:
 - `ServicioPlantillas` gestiona serialización y deserialización con SnakeYAML.
+- La exportación genera YAML sin etiquetas Java específicas para que el fichero sea reimportable de forma segura.
+- La importación acepta tanto el formato actual como exportaciones antiguas y convierte el contenido YAML a DTOs de plantilla antes de crear el tablero.
 - `ServicioTablero` expone los casos de uso de importación y exportación.
 
-### 4. Compactación automática
+### 5. Compactación automática
 - Archivado automático de tarjetas completadas tras un periodo configurable.
 - Eliminación diferida de tarjetas archivadas tras otro periodo configurable.
 
@@ -125,7 +129,7 @@ Cómo se ha hecho:
 
 ### Calidad y pruebas
 - El proyecto incluye tests unitarios, de integración REST y de persistencia.
-- La última validación completa terminó con 169 tests en verde.
+- La última validación completa terminó con 173 tests en verde.
 - También se verificó el arranque real con PostgreSQL local.
 
 ## Limitaciones conocidas

@@ -201,6 +201,9 @@ public class DialogoImportarPlantilla extends Stage {
             } catch (IOException ex) {
                 labelEstado.setText("✗ Error al cargar archivo: " + ex.getMessage());
                 labelEstado.setStyle("-fx-text-fill: #cc0000;");
+            } catch (RuntimeException ex) {
+                labelEstado.setText("✗ El archivo YAML no es válido: " + ex.getMessage());
+                labelEstado.setStyle("-fx-text-fill: #cc0000;");
             }
         }
     }

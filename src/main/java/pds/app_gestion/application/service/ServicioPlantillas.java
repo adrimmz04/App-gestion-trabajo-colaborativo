@@ -1,11 +1,13 @@
 package pds.app_gestion.application.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.representer.Representer;
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.nodes.Tag;
 import pds.app_gestion.application.dto.*;
 import pds.app_gestion.domain.*;
 import java.io.*;
@@ -15,14 +17,21 @@ import java.util.stream.Collectors;
 @Service
 public class ServicioPlantillas {
     private final Yaml yaml;
+    private final ObjectMapper objectMapper;
     public ServicioPlantillas() { 
         LoaderOptions loaderOptions = new LoaderOptions();
         DumperOptions dumperOptions = new DumperOptions();
         Representer representer = new Representer(dumperOptions);
+        representer.addClassTag(PlantillaTableroYAML.class, Tag.MAP);
+        representer.addClassTag(PlantillaListaYAML.class, Tag.MAP);
+        representer.addClassTag(PlantillaTarjetaYAML.class, Tag.MAP);
+        representer.addClassTag(PlantillaEtiquetaYAML.class, Tag.MAP);
         this.yaml = new Yaml(new SafeConstructor(loaderOptions), representer, dumperOptions);
+        this.objectMapper = new ObjectMapper();
     }
     public String exportarTableroComoYAML(Tablero tablero) { PlantillaTableroYAML p = convertirTableroAPlantilla(tablero); StringWriter w = new StringWriter(); yaml.dump(p, w); return w.toString(); }
-    public PlantillaTableroYAML importarPlantillaYAML(String y) { return yaml.loadAs(y, PlantillaTableroYAML.class); }
+    public PlantillaTableroYAML importarPlantillaYAML(String y) { return objectMapper.convertValue(yaml.load(normalizarYamlImportado(y)), PlantillaTableroYAML.class); }
+    private String normalizarYamlImportado(String y) { return y == null ? null : y.replaceFirst("^\\s*!![^\\r\\n]+\\r?\\n", ""); }
     private PlantillaTableroYAML convertirTableroAPlantilla(Tablero t) { return PlantillaTableroYAML.builder().titulo(t.getTitulo()).descripcion(t.getDescripcion()).listas(t.obtenerListas().stream().map(this::convertirListaAPlantilla).collect(Collectors.toList())).version("1.0").build(); }
     private PlantillaListaYAML convertirListaAPlantilla(Lista l) { return PlantillaListaYAML.builder().nombre(l.getNombre()).limiteMaximo(l.getLimiteMaximo().orElse(null)).listasPrevias(l.obtenerListasPrevias()).tarjetas(l.getTarjetas().stream().map(this::convertirTarjetaAPlantilla).collect(Collectors.toList())).build(); }
     private PlantillaTarjetaYAML convertirTarjetaAPlantilla(Tarjeta t) { return PlantillaTarjetaYAML.builder().titulo(t.getTitulo()).descripcion(t.getDescripcion()).tipo(t.getTipo().name()).etiquetas(t.getEtiquetas().stream().map(e -> PlantillaEtiquetaYAML.builder().nombre(e.getNombre()).color(e.getColor()).build()).collect(Collectors.toList())).completada(t.isCompletada()).build(); }

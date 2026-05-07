@@ -162,6 +162,54 @@ public class ServicioPlantillasTest {
         assertNotNull(yaml);
         assertTrue(yaml.length() > 0);
         assertTrue(yaml.contains("Test Board") || yaml.contains("Lista Test") || yaml.contains("Tarjeta Test"));
+        assertFalse(yaml.contains("!!pds.app_gestion.application.dto.PlantillaTableroYAML"));
+    }
+
+    @Test
+    public void testImportarPlantillaYAMLExportadaPorLaAplicacion() {
+        Tablero tablero = new Tablero("tab1", "Tablerito", "test@test.com");
+        Lista lista = new Lista("list1", "Tablerote");
+        Tarjeta tarjeta = new Tarjeta("tar1", "Hecho", "Por hacer", Tarjeta.TipoTarjeta.TAREA);
+
+        lista.agregarTarjeta(tarjeta);
+        tablero.agregarLista(lista);
+
+        String yaml = servicioPlantillas.exportarTableroComoYAML(tablero);
+        PlantillaTableroYAML plantilla = servicioPlantillas.importarPlantillaYAML(yaml);
+
+        assertNotNull(plantilla);
+        assertEquals("Tablerito", plantilla.getTitulo());
+        assertEquals(1, plantilla.getListas().size());
+        assertEquals("Hecho", plantilla.getListas().get(0).getTarjetas().get(0).getTitulo());
+    }
+
+    @Test
+    public void testImportarPlantillaYAMLConTagLegacy() {
+        String yaml = """
+                !!pds.app_gestion.application.dto.PlantillaTableroYAML
+                descripcion: Hola
+                listas:
+                - limiteMaximo: null
+                  listasPrevias: []
+                  nombre: Tablerote
+                  tarjetas:
+                  - completada: false
+                    descripcion: Por hacer
+                    etiquetas: []
+                    tipo: TAREA
+                    titulo: Hecho
+                titulo: Tablerito
+                version: '1.0'
+                """;
+
+        PlantillaTableroYAML plantilla = servicioPlantillas.importarPlantillaYAML(yaml);
+
+        assertNotNull(plantilla);
+        assertEquals("Tablerito", plantilla.getTitulo());
+        assertEquals("Hola", plantilla.getDescripcion());
+        assertEquals(1, plantilla.getListas().size());
+        assertEquals("Tablerote", plantilla.getListas().get(0).getNombre());
+        assertEquals("Hecho", plantilla.getListas().get(0).getTarjetas().get(0).getTitulo());
     }
 }
 
