@@ -122,10 +122,7 @@ public class ServicioAutenticacion {
             return;
         }
 
-        CodigoAcceso eliminado = codigosPorValor.remove(codigoAcceso.trim());
-        if (eliminado != null) {
-            codigoPorEmail.remove(eliminado.email(), eliminado.valor());
-        }
+        limpiarCodigosExpirados();
     }
 
     private CodigoAcceso obtenerCodigoValido(String codigoAcceso) {

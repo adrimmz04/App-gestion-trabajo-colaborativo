@@ -77,6 +77,16 @@ class ServicioAutenticacionTest {
     }
 
     @Test
+    void cerrarSesionNoInvalidaUnCodigoQueSigueVigente() {
+        SolicitarCodigoAccesoResponse response = servicioAutenticacion.solicitarCodigo("usuario@test.com");
+
+        servicioAutenticacion.cerrarSesion(response.getCodigoDesarrollo());
+        clock.avanzar(Duration.ofMinutes(4));
+
+        assertEquals("usuario@test.com", servicioAutenticacion.resolverEmailDesdeCodigo(response.getCodigoDesarrollo()));
+    }
+
+    @Test
     void codigoExpiraSiNoSeUsa() {
         SolicitarCodigoAccesoResponse response = servicioAutenticacion.solicitarCodigo("usuario@test.com");
 

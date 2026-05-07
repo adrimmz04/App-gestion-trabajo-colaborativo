@@ -67,13 +67,14 @@ Cómo se ha implementado:
 ### 1. Autenticación por código temporal
 - Solicitud de código de acceso por correo.
 - Validación de sesión temporal desde API REST y cliente JavaFX.
+- Reutilización del último código mientras siga vigente, incluso si el usuario cierra sesión y vuelve a entrar antes de que expire.
 - Modo desarrollo para devolver el código en local y facilitar pruebas.
 - Soporte de envío SMTP real mediante perfil de configuración separado.
 
 Cómo se ha hecho:
-- `ServicioAutenticacion` genera códigos de 6 dígitos, invalida el anterior del mismo usuario y renueva la expiración con cada uso.
+- `ServicioAutenticacion` genera códigos de 6 dígitos, invalida el anterior solo cuando se solicita uno nuevo y renueva la expiración con cada uso.
 - `ControladorAutenticacion` expone la solicitud de código, consulta de sesión y cierre de sesión.
-- `VentanaPrincipal` inicia y cierra sesión con ese código antes de cargar tableros o abrir flujos protegidos.
+- `VentanaPrincipal` inicia y cierra sesión con ese código antes de cargar tableros o abrir flujos protegidos, y permite recuperar el último código válido sin reenviarlo si aún no ha caducado.
 - `NotificadorCodigoAccesoEmail` utiliza Spring Mail cuando el perfil `mail` habilita SMTP y mantiene un fallback de desarrollo para pruebas locales.
 - Se añadió un perfil `gmail` para simplificar pruebas reales con una cuenta remitente fija y múltiples destinatarios.
 - Se añadió un perfil `outlook` equivalente para pruebas reales con cuentas Outlook personales.

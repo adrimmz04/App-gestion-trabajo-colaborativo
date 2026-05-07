@@ -51,6 +51,8 @@ public class VentanaPrincipal extends Application {
     private ListView<TableroResponse> listaCompartidos;
     private String emailUsuarioActivo;
     private String codigoAccesoActivo;
+    private String ultimoEmailConCodigo;
+    private String ultimoCodigoAcceso;
     private Label labelUsuarioActivo;
     private Label labelResumenCarga;
 
@@ -1024,7 +1026,40 @@ public class VentanaPrincipal extends Application {
     }
 
     private String iniciarSesionInteractiva(boolean mostrarConfirmacion) {
-        TextInputDialog dialogo = new TextInputDialog(emailUsuarioActivo != null ? emailUsuarioActivo : "");
+        if (ultimoCodigoAcceso != null && !ultimoCodigoAcceso.isBlank()
+                && ultimoEmailConCodigo != null && !ultimoEmailConCodigo.isBlank()) {
+            ButtonType reutilizarCodigo = new ButtonType("Reutilizar codigo");
+            ButtonType solicitarNuevo = new ButtonType("Solicitar nuevo");
+
+            Alert dialogoReutilizacion = new Alert(Alert.AlertType.CONFIRMATION);
+            dialogoReutilizacion.setTitle("Iniciar sesion");
+            dialogoReutilizacion.setHeaderText("Todavia puedes reutilizar el ultimo codigo de " + ultimoEmailConCodigo);
+            dialogoReutilizacion.setContentText("Si sigue vigente, no hara falta enviar un codigo nuevo.");
+            dialogoReutilizacion.getButtonTypes().setAll(reutilizarCodigo, solicitarNuevo, ButtonType.CANCEL);
+
+            var decision = dialogoReutilizacion.showAndWait();
+            if (decision.isEmpty() || decision.get() == ButtonType.CANCEL) {
+                return null;
+            }
+
+            if (decision.get() == reutilizarCodigo) {
+                try {
+                    SesionAutenticadaResponse sesion = servicioAutenticacion.obtenerSesionActiva(ultimoCodigoAcceso);
+                    return activarSesion(
+                        sesion,
+                        mostrarConfirmacion,
+                        "Acceso recuperado para " + sesion.getEmail() + " sin enviar un codigo nuevo"
+                    );
+                } catch (Exception e) {
+                    limpiarUltimoCodigoRecordado();
+                    mostrarAlerta("Codigo expirado", "El ultimo codigo ya no es valido. Se solicitara uno nuevo.");
+                }
+            }
+        }
+
+        TextInputDialog dialogo = new TextInputDialog(
+            emailUsuarioActivo != null ? emailUsuarioActivo : (ultimoEmailConCodigo != null ? ultimoEmailConCodigo : "")
+        );
         dialogo.setTitle("Iniciar sesion");
         dialogo.setHeaderText("Solicita un codigo temporal de acceso");
         dialogo.setContentText("Email:");
@@ -1068,18 +1103,29 @@ public class VentanaPrincipal extends Application {
             }
 
             SesionAutenticadaResponse sesion = servicioAutenticacion.obtenerSesionActiva(codigo);
-            codigoAccesoActivo = sesion.getCodigoAcceso();
-            cargarTablerosUsuario(sesion.getEmail());
-
-            if (mostrarConfirmacion) {
-                mostrarAlerta("Sesion iniciada", "Acceso concedido para " + sesion.getEmail());
-            }
-
-            return sesion.getEmail();
+            return activarSesion(sesion, mostrarConfirmacion, "Acceso concedido para " + sesion.getEmail());
         } catch (Exception e) {
             mostrarError("Error", "No se pudo iniciar sesion: " + e.getMessage());
             return null;
         }
+    }
+
+    private String activarSesion(SesionAutenticadaResponse sesion, boolean mostrarConfirmacion, String mensajeConfirmacion) {
+        codigoAccesoActivo = sesion.getCodigoAcceso();
+        ultimoCodigoAcceso = sesion.getCodigoAcceso();
+        ultimoEmailConCodigo = sesion.getEmail();
+        cargarTablerosUsuario(sesion.getEmail());
+
+        if (mostrarConfirmacion) {
+            mostrarAlerta("Sesion iniciada", mensajeConfirmacion);
+        }
+
+        return sesion.getEmail();
+    }
+
+    private void limpiarUltimoCodigoRecordado() {
+        ultimoCodigoAcceso = null;
+        ultimoEmailConCodigo = null;
     }
 
     private void mostrarInstruccionesCodigo(SolicitarCodigoAccesoResponse solicitud) {
@@ -1176,6 +1222,7 @@ public class VentanaPrincipal extends Application {
                 actualizarResumenUsuario();
                 return emailUsuarioActivo;
             } catch (Exception e) {
+                limpiarUltimoCodigoRecordado();
                 cerrarSesionActual(false);
                 mostrarError("Sesion expirada", "El codigo de acceso ya no es valido. Debes iniciar sesion de nuevo.");
             }

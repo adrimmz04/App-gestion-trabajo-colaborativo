@@ -27,11 +27,17 @@ mvn clean test
 
 Última validación completa registrada en este entorno:
 
-- 169 tests ejecutados
+- 173 tests ejecutados
 - 0 fallos
 - 0 errores
 
 ## Modos de ejecución
+
+Importante:
+
+- Para abrir la aplicación en Windows no hace falta preparar PostgreSQL ni configurar SMTP de antemano.
+- El flujo recomendado para un usuario normal es ejecutar `.\start-app.cmd`.
+- Las secciones siguientes describen modos manuales alternativos para desarrollo, validación o demostraciones concretas.
 
 ### 0. Arranque recomendado en Windows con un solo comando
 
@@ -43,6 +49,7 @@ Comportamiento:
 
 - Si existe `app-mail.local.ps1`, la aplicación arranca con `local,gmail` y envío real de códigos por correo.
 - Si no existe ese fichero, arranca con `local` y usa el modo desarrollo actual.
+- El código temporal sigue siendo reutilizable mientras no haya expirado; si se cierra sesión y se vuelve a entrar antes de 5 minutos, la aplicación ofrece reutilizar el último código sin enviar otro.
 
 
 Configuración inicial solo la primera vez si quieres correo real:
@@ -53,7 +60,9 @@ Copy-Item .\app-mail.local.example.ps1 .\app-mail.local.ps1
 
 Rellena `app-mail.local.ps1` con tu Gmail real y tu contraseña de aplicación. Después, para abrir la app, solo necesitarás volver a ejecutar `.\start-app.cmd`.
 
-### 1. Ejecución estándar con PostgreSQL
+### 1. Ejecución estándar con PostgreSQL (modo manual alternativo)
+
+Este modo no es necesario para arrancar la aplicación por primera vez. Solo úsalo si quieres trabajar explícitamente contra PostgreSQL real en lugar del arranque rápido local.
 
 La configuración por defecto usa PostgreSQL con estos valores:
 
@@ -80,7 +89,9 @@ Resultado esperado:
 - API REST disponible en `http://localhost:8080`
 - Ventana JavaFX iniciada junto con la aplicación
 
-### 2. Ejecución local rápida con H2
+### 2. Ejecución local rápida con H2 (modo manual alternativo)
+
+Este es el modo equivalente al que usa `.\start-app.cmd` cuando no hay configuración de correo real.
 
 Para desarrollo o demostración rápida sin PostgreSQL, se puede usar el perfil `local`.
 
@@ -96,7 +107,16 @@ Resultado esperado:
 
 ### 3. Ejecución con correo real por SMTP
 
+Esta sección es opcional. Solo hace falta si quieres que los códigos temporales se envíen por correo real en lugar de usar el modo desarrollo.
+
 La lógica de autenticación ya soporta envío real de correo. Para no mezclar credenciales con el repositorio, el perfil `mail` toma la configuración desde variables de entorno.
+
+Comportamiento del código temporal:
+
+- La validez por defecto es de 5 minutos.
+- Cada uso correcto del código renueva esa validez.
+- Cerrar sesión no obliga a pedir otro código si el último sigue vigente; la interfaz permite reutilizarlo.
+- Solicitar un código nuevo para el mismo email sí invalida el anterior.
 
 ### 3.1. Opción rápida con Gmail
 
