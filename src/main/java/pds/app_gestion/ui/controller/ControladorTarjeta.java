@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pds.app_gestion.application.dto.*;
+import pds.app_gestion.application.exception.ErrorValidacionException;
+import pds.app_gestion.application.service.ServicioAutenticacion;
 import pds.app_gestion.application.service.ServicioLista;
 import pds.app_gestion.application.service.ServicioTarjeta;
 
@@ -21,10 +23,13 @@ public class ControladorTarjeta {
 
     private final ServicioTarjeta servicioTarjeta;
     private final ServicioLista servicioLista;
+    private final ServicioAutenticacion servicioAutenticacion;
 
-    public ControladorTarjeta(ServicioTarjeta servicioTarjeta, ServicioLista servicioLista) {
+    public ControladorTarjeta(ServicioTarjeta servicioTarjeta, ServicioLista servicioLista,
+                              ServicioAutenticacion servicioAutenticacion) {
         this.servicioTarjeta = servicioTarjeta;
         this.servicioLista = servicioLista;
+        this.servicioAutenticacion = servicioAutenticacion;
     }
 
     /**
@@ -35,9 +40,15 @@ public class ControladorTarjeta {
     public ResponseEntity<TarjetaResponse> crearTarjeta(
             @PathVariable String idTablero,
             @PathVariable String idLista,
-            @RequestParam String emailUsuario,
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso,
             @RequestBody CrearTarjetaRequest request) {
-        TarjetaResponse response = servicioTarjeta.crearTarjeta(idTablero, idLista, emailUsuario, request);
+        TarjetaResponse response = servicioTarjeta.crearTarjeta(
+            idTablero,
+            idLista,
+            resolverEmail(emailUsuario, codigoAcceso),
+            request
+        );
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -50,9 +61,16 @@ public class ControladorTarjeta {
             @PathVariable String idTablero,
             @PathVariable String idLista,
             @PathVariable String idTarjeta,
-            @RequestParam String emailUsuario,
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso,
             @RequestBody ActualizarTarjetaRequest request) {
-        TarjetaResponse response = servicioTarjeta.actualizarTarjeta(idTablero, idLista, idTarjeta, emailUsuario, request);
+        TarjetaResponse response = servicioTarjeta.actualizarTarjeta(
+            idTablero,
+            idLista,
+            idTarjeta,
+            resolverEmail(emailUsuario, codigoAcceso),
+            request
+        );
         return ResponseEntity.ok(response);
     }
 
@@ -65,8 +83,9 @@ public class ControladorTarjeta {
             @PathVariable String idTablero,
             @PathVariable String idLista,
             @PathVariable String idTarjeta,
-            @RequestParam String emailUsuario) {
-        servicioTarjeta.eliminarTarjeta(idTablero, idLista, idTarjeta, emailUsuario);
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso) {
+        servicioTarjeta.eliminarTarjeta(idTablero, idLista, idTarjeta, resolverEmail(emailUsuario, codigoAcceso));
         return ResponseEntity.noContent().build();
     }
 
@@ -79,8 +98,14 @@ public class ControladorTarjeta {
             @PathVariable String idTablero,
             @PathVariable String idLista,
             @PathVariable String idTarjeta,
-            @RequestParam String emailUsuario) {
-        TarjetaResponse response = servicioTarjeta.marcarComoCompletada(idTablero, idLista, idTarjeta, emailUsuario);
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso) {
+        TarjetaResponse response = servicioTarjeta.marcarComoCompletada(
+            idTablero,
+            idLista,
+            idTarjeta,
+            resolverEmail(emailUsuario, codigoAcceso)
+        );
         return ResponseEntity.ok(response);
     }
 
@@ -93,8 +118,14 @@ public class ControladorTarjeta {
             @PathVariable String idTablero,
             @PathVariable String idLista,
             @PathVariable String idTarjeta,
-            @RequestParam String emailUsuario) {
-        TarjetaResponse response = servicioTarjeta.marcarComoNoCompletada(idTablero, idLista, idTarjeta, emailUsuario);
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso) {
+        TarjetaResponse response = servicioTarjeta.marcarComoNoCompletada(
+            idTablero,
+            idLista,
+            idTarjeta,
+            resolverEmail(emailUsuario, codigoAcceso)
+        );
         return ResponseEntity.ok(response);
     }
 
@@ -107,9 +138,16 @@ public class ControladorTarjeta {
             @PathVariable String idTablero,
             @PathVariable String idLista,
             @PathVariable String idTarjeta,
-            @RequestParam String emailUsuario,
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso,
             @RequestBody CrearEtiquetaRequest request) {
-        TarjetaResponse response = servicioTarjeta.agregarEtiqueta(idTablero, idLista, idTarjeta, emailUsuario, request);
+        TarjetaResponse response = servicioTarjeta.agregarEtiqueta(
+            idTablero,
+            idLista,
+            idTarjeta,
+            resolverEmail(emailUsuario, codigoAcceso),
+            request
+        );
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -123,8 +161,69 @@ public class ControladorTarjeta {
             @PathVariable String idLista,
             @PathVariable String idTarjeta,
             @RequestParam String idListaDestino,
-            @RequestParam String emailUsuario) {
-        servicioLista.moverTarjeta(idTablero, idLista, idListaDestino, idTarjeta, emailUsuario);
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso) {
+        servicioLista.moverTarjeta(
+            idTablero,
+            idLista,
+            idListaDestino,
+            idTarjeta,
+            resolverEmail(emailUsuario, codigoAcceso)
+        );
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * GET /api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/permisos
+     * Obtener permisos explícitos de una tarjeta.
+     */
+    @GetMapping("/{idTarjeta}/permisos")
+    public ResponseEntity<PermisosTarjetaResponse> obtenerPermisosTarjeta(
+            @PathVariable String idTablero,
+            @PathVariable String idLista,
+            @PathVariable String idTarjeta,
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso) {
+        PermisosTarjetaResponse response = servicioTarjeta.obtenerPermisosTarjeta(
+            idTablero,
+            idLista,
+            idTarjeta,
+            resolverEmail(emailUsuario, codigoAcceso)
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * PUT /api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/permisos
+     * Configurar permisos explícitos sobre una tarjeta.
+     */
+    @PutMapping("/{idTarjeta}/permisos")
+    public ResponseEntity<PermisosTarjetaResponse> configurarPermisoTarjeta(
+            @PathVariable String idTablero,
+            @PathVariable String idLista,
+            @PathVariable String idTarjeta,
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso,
+            @RequestBody ConfigurarPermisoTarjetaRequest request) {
+        PermisosTarjetaResponse response = servicioTarjeta.configurarPermisoTarjeta(
+            idTablero,
+            idLista,
+            idTarjeta,
+            resolverEmail(emailUsuario, codigoAcceso),
+            request
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    private String resolverEmail(String emailExplicito, String codigoAcceso) {
+        if (codigoAcceso != null && !codigoAcceso.isBlank()) {
+            return servicioAutenticacion.resolverEmailDesdeCodigo(codigoAcceso);
+        }
+
+        if (emailExplicito != null && !emailExplicito.isBlank()) {
+            return emailExplicito.trim();
+        }
+
+        throw new ErrorValidacionException("Debes indicar emailUsuario o codigoAcceso");
     }
 }

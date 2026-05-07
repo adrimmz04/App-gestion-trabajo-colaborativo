@@ -64,7 +64,21 @@ Cómo se ha implementado:
 
 ## Características opcionales implementadas
 
-### 1. Reglas a nivel de lista
+### 1. Autenticación por código temporal
+- Solicitud de código de acceso por correo.
+- Validación de sesión temporal desde API REST y cliente JavaFX.
+- Modo desarrollo para devolver el código en local y facilitar pruebas.
+- Soporte de envío SMTP real mediante perfil de configuración separado.
+
+Cómo se ha hecho:
+- `ServicioAutenticacion` genera códigos de 6 dígitos, invalida el anterior del mismo usuario y renueva la expiración con cada uso.
+- `ControladorAutenticacion` expone la solicitud de código, consulta de sesión y cierre de sesión.
+- `VentanaPrincipal` inicia y cierra sesión con ese código antes de cargar tableros o abrir flujos protegidos.
+- `NotificadorCodigoAccesoEmail` utiliza Spring Mail cuando el perfil `mail` habilita SMTP y mantiene un fallback de desarrollo para pruebas locales.
+- Se añadió un perfil `gmail` para simplificar pruebas reales con una cuenta remitente fija y múltiples destinatarios.
+- Se añadió un perfil `outlook` equivalente para pruebas reales con cuentas Outlook personales.
+
+### 2. Reglas a nivel de lista
 - Límite máximo de tarjetas por lista.
 - Prerequisitos entre listas.
 
@@ -73,14 +87,14 @@ Cómo se ha hecho:
 - La validación no depende solo del estado completado: una tarjeta debe haber pasado por las listas requeridas.
 - Ese recorrido se persiste mediante `listasVisitadas` en tarjeta y una migración Flyway específica.
 
-### 2. Filtrado de tarjetas por etiquetas
+### 3. Filtrado de tarjetas por etiquetas
 - Recuperación de tarjetas filtradas por etiquetas desde la API y desde la UI.
 
 Cómo se ha hecho:
 - `ServicioTarjeta` ofrece operaciones de filtrado.
 - La interfaz JavaFX reutiliza ese comportamiento para mostrar subconjuntos de tarjetas según etiquetas seleccionadas.
 
-### 3. Plantillas YAML
+### 4. Plantillas YAML
 - Exportación de tableros a YAML.
 - Importación de tableros desde plantillas YAML.
 - Disponibilidad de plantillas predefinidas.
@@ -116,8 +130,8 @@ Cómo se ha hecho:
 
 ## Limitaciones conocidas
 
-- No se implementa autenticación por código enviado por correo.
-- No hay permisos granulares por tarjeta.
+- El envío real de códigos por correo requiere configuración SMTP; en desarrollo y pruebas se usa entrega local controlada.
+- Los permisos granulares por tarjeta se aplican solo cuando el propietario los configura explícitamente; si no existen, se mantiene la compatibilidad con el acceso heredado del tablero compartido.
 - La interfaz JavaFX cubre el alcance académico del proyecto, pero no todos los escenarios de una aplicación de producto final.
 
 ## Referencias

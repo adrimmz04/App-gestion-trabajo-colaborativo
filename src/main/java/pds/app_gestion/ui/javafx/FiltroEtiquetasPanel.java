@@ -2,11 +2,11 @@ package pds.app_gestion.ui.javafx;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
 import pds.app_gestion.application.dto.EtiquetaResponse;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,25 +29,27 @@ public class FiltroEtiquetasPanel extends VBox {
     public FiltroEtiquetasPanel() {
         this.setSpacing(10);
         this.setPadding(new Insets(10));
-        this.setStyle("-fx-border-color: #CCCCCC; -fx-border-width: 1;");
+        this.getStyleClass().add("filter-panel");
         
         this.etiquetasSeleccionadas = new HashSet<>();
         
         // Título
-        Text titulo = new Text("Filtrar por etiquetas:");
-        titulo.setFont(new Font(14));
+        Label titulo = new Label("Filtrar por etiquetas");
+        titulo.getStyleClass().add("filter-title");
         this.getChildren().add(titulo);
         
         // ScrollPane para el contenido
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(120);
+        scrollPane.getStyleClass().add("filter-scroll");
         
         // FlowPane para mostrar los checkboxes
         flowPane = new FlowPane();
         flowPane.setHgap(10);
         flowPane.setVgap(10);
         flowPane.setPadding(new Insets(5));
+        flowPane.getStyleClass().add("filter-flow");
         
         scrollPane.setContent(flowPane);
         this.getChildren().add(scrollPane);
@@ -78,9 +80,9 @@ public class FiltroEtiquetasPanel extends VBox {
         
         // Estilo del checkbox con el color de la etiqueta
         String colorFondo = etiqueta.getColor();
-        checkbox.setStyle("-fx-text-fill: white; -fx-padding: 5px; " +
+        checkbox.setStyle("-fx-text-fill: " + obtenerColorTexto(colorFondo) + "; -fx-padding: 6px 10px; " +
                          "-fx-background-color: " + colorFondo + "; " +
-                         "-fx-border-radius: 5; -fx-background-radius: 5;");
+                         "-fx-border-radius: 999; -fx-background-radius: 999;");
         
         // Event listener para cuando se selecciona/deselecciona
         checkbox.selectedProperty().addListener((obs, oldVal, newVal) -> {
@@ -96,6 +98,16 @@ public class FiltroEtiquetasPanel extends VBox {
         });
         
         return checkbox;
+    }
+
+    private String obtenerColorTexto(String colorHex) {
+        try {
+            Color color = Color.web(colorHex);
+            double luminancia = 0.2126 * color.getRed() + 0.7152 * color.getGreen() + 0.0722 * color.getBlue();
+            return luminancia > 0.62 ? "#1F2937" : "#FFFFFF";
+        } catch (Exception e) {
+            return "#FFFFFF";
+        }
     }
 
     /**

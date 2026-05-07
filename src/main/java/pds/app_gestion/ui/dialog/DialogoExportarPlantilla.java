@@ -41,8 +41,7 @@ public class DialogoExportarPlantilla extends Stage {
 
     private void initUI() {
         setTitle("Exportar Plantilla YAML");
-        setWidth(400);
-        setHeight(250);
+        setMinWidth(420);
         setResizable(false);
 
         VBox root = new VBox(10);
@@ -74,12 +73,12 @@ public class DialogoExportarPlantilla extends Stage {
             desc,
             new Separator(),
             labelEstado,
-            createSpacer(),
             botonesBox
         );
 
         Scene scene = new Scene(root);
         setScene(scene);
+        sizeToScene();
     }
 
     private VBox createInfoBox() {
@@ -104,11 +103,13 @@ public class DialogoExportarPlantilla extends Stage {
         Button btnExportar = new Button("Exportar");
         btnExportar.setPrefWidth(100);
         btnExportar.setStyle("-fx-font-size: 11;");
+        btnExportar.setDefaultButton(true);
         btnExportar.setOnAction(e -> handleExportar());
 
         Button btnCancelar = new Button("Cancelar");
         btnCancelar.setPrefWidth(100);
         btnCancelar.setStyle("-fx-font-size: 11;");
+        btnCancelar.setCancelButton(true);
         btnCancelar.setOnAction(e -> close());
 
         Region spacer = new Region();
@@ -130,9 +131,9 @@ public class DialogoExportarPlantilla extends Stage {
         if (file != null) {
             try {
                 String yamlContent = servicioTablero.exportarTableroComoPlantilla(tablero.getId(), emailUsuario);
-                FileWriter writer = new FileWriter(file);
-                writer.write(yamlContent);
-                writer.close();
+                try (FileWriter writer = new FileWriter(file)) {
+                    writer.write(yamlContent);
+                }
 
                 labelEstado.setText("✓ Plantilla exportada exitosamente a: " + file.getName());
                 labelEstado.setStyle("-fx-text-fill: #00aa00;");
@@ -156,12 +157,6 @@ public class DialogoExportarPlantilla extends Stage {
 
     public boolean wasExported() {
         return exportado;
-    }
-
-    private Region createSpacer() {
-        Region spacer = new Region();
-        VBox.setVgrow(spacer, Priority.ALWAYS);
-        return spacer;
     }
 
 }

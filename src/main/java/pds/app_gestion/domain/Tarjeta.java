@@ -25,6 +25,7 @@ public class Tarjeta {
     private boolean completada;
     private final Set<Etiqueta> etiquetas;
     private final Set<String> listasVisitadas;
+    private final Map<String, PermisoTarjeta> permisosUsuarios;
     private final TipoTarjeta tipo;
     private final LocalDateTime fechaCreacion;
     private LocalDateTime fechaActualizacion;
@@ -46,6 +47,7 @@ public class Tarjeta {
         this.completada = false;
         this.etiquetas = new HashSet<>();
         this.listasVisitadas = new HashSet<>();
+        this.permisosUsuarios = new HashMap<>();
         this.tipo = TipoTarjeta.TAREA;
         this.fechaCreacion = LocalDateTime.now();
         this.fechaActualizacion = LocalDateTime.now();
@@ -68,6 +70,7 @@ public class Tarjeta {
         this.completada = false;
         this.etiquetas = new HashSet<>();
         this.listasVisitadas = new HashSet<>();
+        this.permisosUsuarios = new HashMap<>();
         this.tipo = Objects.requireNonNull(tipo, "El tipo de tarjeta no puede ser nulo");
         this.fechaCreacion = LocalDateTime.now();
         this.fechaActualizacion = LocalDateTime.now();
@@ -153,6 +156,57 @@ public class Tarjeta {
      */
     public boolean haPasadoPorLista(String idLista) {
         return listasVisitadas.contains(idLista);
+    }
+
+    /**
+     * Asigna o actualiza un permiso explícito para un usuario sobre esta tarjeta.
+     *
+     * @param emailUsuario email del usuario
+     * @param permiso permiso a asignar
+     */
+    public void asignarPermiso(String emailUsuario, PermisoTarjeta permiso) {
+        if (emailUsuario == null || emailUsuario.isBlank()) {
+            throw new IllegalArgumentException("El email del usuario no puede estar vacío");
+        }
+
+        permisosUsuarios.put(emailUsuario.trim(), Objects.requireNonNull(permiso, "El permiso no puede ser nulo"));
+        fechaActualizacion = LocalDateTime.now();
+    }
+
+    /**
+     * Revoca cualquier permiso explícito configurado para un usuario.
+     *
+     * @param emailUsuario email del usuario
+     */
+    public void revocarPermiso(String emailUsuario) {
+        if (emailUsuario == null || emailUsuario.isBlank()) {
+            throw new IllegalArgumentException("El email del usuario no puede estar vacío");
+        }
+
+        if (permisosUsuarios.remove(emailUsuario.trim()) != null) {
+            fechaActualizacion = LocalDateTime.now();
+        }
+    }
+
+    /**
+     * Obtiene el permiso explícito configurado para un usuario.
+     *
+     * @param emailUsuario email del usuario
+     * @return permiso configurado, si existe
+     */
+    public Optional<PermisoTarjeta> obtenerPermiso(String emailUsuario) {
+        if (emailUsuario == null || emailUsuario.isBlank()) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(permisosUsuarios.get(emailUsuario.trim()));
+    }
+
+    /**
+     * Indica si la tarjeta tiene permisos explícitos configurados.
+     */
+    public boolean tienePermisosConfigurados() {
+        return !permisosUsuarios.isEmpty();
     }
 
     /**

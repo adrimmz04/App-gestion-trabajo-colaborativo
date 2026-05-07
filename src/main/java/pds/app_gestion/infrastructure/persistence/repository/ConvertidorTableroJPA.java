@@ -152,6 +152,11 @@ public class ConvertidorTableroJPA {
         tarjeta.getEtiquetas().forEach(e -> colores.put(e.getNombre(), e.getColor()));
         jpa.setEtiquetasColores(colores);
         jpa.setListasVisitadas(new HashSet<>(tarjeta.getListasVisitadas()));
+        jpa.setPermisosUsuarios(tarjeta.getPermisosUsuarios().entrySet().stream()
+            .collect(Collectors.toMap(
+                java.util.Map.Entry::getKey,
+                entry -> entry.getValue().name()
+            )));
 
         return jpa;
     }
@@ -220,6 +225,15 @@ public class ConvertidorTableroJPA {
 
             if (jpa.getListasVisitadas() != null) {
                 tarjeta.getListasVisitadas().addAll(jpa.getListasVisitadas());
+            }
+
+            if (jpa.getPermisosUsuarios() != null) {
+                jpa.getPermisosUsuarios().entrySet().stream()
+                    .sorted(java.util.Map.Entry.comparingByKey())
+                    .forEach(entry -> tarjeta.getPermisosUsuarios().put(
+                        entry.getKey(),
+                        PermisoTarjeta.valueOf(entry.getValue())
+                    ));
             }
         } catch (Exception e) {
             throw new RuntimeException("Error al convertir TarjetaJPA a Tarjeta", e);

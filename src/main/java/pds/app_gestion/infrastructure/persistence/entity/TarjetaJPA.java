@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -83,6 +85,13 @@ public class TarjetaJPA {
     @CollectionTable(name = "tarjetas_listas_visitadas", joinColumns = @JoinColumn(name = "tarjeta_id"))
     @Column(name = "listas_visitadas")
     private Set<String> listasVisitadas = new HashSet<>();
+
+    @Builder.Default
+    @ElementCollection
+    @CollectionTable(name = "tarjetas_permisos_usuarios", joinColumns = @JoinColumn(name = "tarjeta_id"))
+    @MapKeyColumn(name = "email_usuario")
+    @Column(name = "permiso", nullable = false, length = 20)
+    private Map<String, String> permisosUsuarios = new HashMap<>();
 
     @PrePersist
     protected void onCreate() {

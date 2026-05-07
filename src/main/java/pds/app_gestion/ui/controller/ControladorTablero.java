@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pds.app_gestion.application.dto.*;
+import pds.app_gestion.application.exception.ErrorValidacionException;
+import pds.app_gestion.application.service.ServicioAutenticacion;
 import pds.app_gestion.application.service.ServicioLista;
 import pds.app_gestion.application.service.ServicioTablero;
 
@@ -24,10 +26,13 @@ public class ControladorTablero {
 
     private final ServicioTablero servicioTablero;
     private final ServicioLista servicioLista;
+    private final ServicioAutenticacion servicioAutenticacion;
 
-    public ControladorTablero(ServicioTablero servicioTablero, ServicioLista servicioLista) {
+    public ControladorTablero(ServicioTablero servicioTablero, ServicioLista servicioLista,
+                              ServicioAutenticacion servicioAutenticacion) {
         this.servicioTablero = servicioTablero;
         this.servicioLista = servicioLista;
+        this.servicioAutenticacion = servicioAutenticacion;
     }
 
     /**
@@ -35,7 +40,12 @@ public class ControladorTablero {
      * Crear un nuevo tablero.
      */
     @PostMapping
-    public ResponseEntity<TableroResponse> crearTablero(@RequestBody CrearTableroRequest request) {
+    public ResponseEntity<TableroResponse> crearTablero(
+            @RequestParam(required = false) String codigoAcceso,
+            @RequestBody CrearTableroRequest request) {
+        if (codigoAcceso != null && !codigoAcceso.isBlank()) {
+            request.setPropietarioEmail(servicioAutenticacion.resolverEmailDesdeCodigo(codigoAcceso));
+        }
         TableroResponse response = servicioTablero.crearTablero(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -50,8 +60,9 @@ public class ControladorTablero {
     @GetMapping("/{idTablero}")
     public ResponseEntity<TableroResponse> obtenerTablero(
             @PathVariable String idTablero,
-            @RequestParam String emailUsuario) {
-        TableroResponse response = servicioTablero.obtenerTablero(idTablero, emailUsuario);
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso) {
+        TableroResponse response = servicioTablero.obtenerTablero(idTablero, resolverEmail(emailUsuario, codigoAcceso, "emailUsuario"));
         return ResponseEntity.ok(response);
     }
 
@@ -62,8 +73,12 @@ public class ControladorTablero {
     @GetMapping("/{idTablero}/historial")
     public ResponseEntity<List<RegistroAccionResponse>> obtenerHistorialTablero(
             @PathVariable String idTablero,
-            @RequestParam String emailUsuario) {
-        List<RegistroAccionResponse> response = servicioTablero.obtenerHistorialTablero(idTablero, emailUsuario);
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso) {
+        List<RegistroAccionResponse> response = servicioTablero.obtenerHistorialTablero(
+            idTablero,
+            resolverEmail(emailUsuario, codigoAcceso, "emailUsuario")
+        );
         return ResponseEntity.ok(response);
     }
 
@@ -74,9 +89,14 @@ public class ControladorTablero {
     @PutMapping("/{idTablero}")
     public ResponseEntity<TableroResponse> actualizarTablero(
             @PathVariable String idTablero,
-            @RequestParam String emailUsuario,
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso,
             @RequestBody ActualizarTableroRequest request) {
-        TableroResponse response = servicioTablero.actualizarTablero(idTablero, emailUsuario, request);
+        TableroResponse response = servicioTablero.actualizarTablero(
+            idTablero,
+            resolverEmail(emailUsuario, codigoAcceso, "emailUsuario"),
+            request
+        );
         return ResponseEntity.ok(response);
     }
 
@@ -87,9 +107,17 @@ public class ControladorTablero {
     @DeleteMapping("/{idTablero}")
     public ResponseEntity<Void> eliminarTablero(
             @PathVariable String idTablero,
-            @RequestParam String emailUsuario) {
-        servicioTablero.eliminarTablero(idTablero, emailUsuario);
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso) {
+        servicioTablero.eliminarTablero(idTablero, resolverEmail(emailUsuario, codigoAcceso, "emailUsuario"));
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/propietario")
+    public ResponseEntity<List<TableroResponse>> obtenerTablerosPropietarioAutenticado(
+            @RequestParam String codigoAcceso) {
+        String emailUsuario = servicioAutenticacion.resolverEmailDesdeCodigo(codigoAcceso);
+        return ResponseEntity.ok(servicioTablero.obtenerTablerosPropietario(emailUsuario));
     }
 
     /**
@@ -114,6 +142,13 @@ public class ControladorTablero {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/compartidos")
+    public ResponseEntity<List<TableroResponse>> obtenerTablerosCompartidosAutenticado(
+            @RequestParam String codigoAcceso) {
+        String emailUsuario = servicioAutenticacion.resolverEmailDesdeCodigo(codigoAcceso);
+        return ResponseEntity.ok(servicioTablero.obtenerTablerosCompartidos(emailUsuario));
+    }
+
     /**
      * POST /api/v1/tableros/{idTablero}/compartir
      * Compartir un tablero con otro usuario.
@@ -121,9 +156,14 @@ public class ControladorTablero {
     @PostMapping("/{idTablero}/compartir")
     public ResponseEntity<Void> compartirTablero(
             @PathVariable String idTablero,
-            @RequestParam String emailPropietario,
+            @RequestParam(required = false) String emailPropietario,
+            @RequestParam(required = false) String codigoAcceso,
             @RequestBody CompartirTableroRequest request) {
-        servicioTablero.compartirTablero(idTablero, emailPropietario, request.getEmailUsuario());
+        servicioTablero.compartirTablero(
+            idTablero,
+            resolverEmail(emailPropietario, codigoAcceso, "emailPropietario"),
+            request.getEmailUsuario()
+        );
         return ResponseEntity.noContent().build();
     }
 
@@ -134,9 +174,14 @@ public class ControladorTablero {
     @PostMapping("/{idTablero}/bloquear")
     public ResponseEntity<Void> bloquearTablero(
             @PathVariable String idTablero,
-            @RequestParam String emailPropietario,
+            @RequestParam(required = false) String emailPropietario,
+            @RequestParam(required = false) String codigoAcceso,
             @RequestBody BloquearTableroRequest request) {
-        servicioTablero.bloquearTablero(idTablero, emailPropietario, request);
+        servicioTablero.bloquearTablero(
+            idTablero,
+            resolverEmail(emailPropietario, codigoAcceso, "emailPropietario"),
+            request
+        );
         return ResponseEntity.noContent().build();
     }
 
@@ -147,8 +192,9 @@ public class ControladorTablero {
     @PostMapping("/{idTablero}/desbloquear")
     public ResponseEntity<Void> desbloquearTablero(
             @PathVariable String idTablero,
-            @RequestParam String emailPropietario) {
-        servicioTablero.desbloquearTablero(idTablero, emailPropietario);
+            @RequestParam(required = false) String emailPropietario,
+            @RequestParam(required = false) String codigoAcceso) {
+        servicioTablero.desbloquearTablero(idTablero, resolverEmail(emailPropietario, codigoAcceso, "emailPropietario"));
         return ResponseEntity.noContent().build();
     }
 
@@ -159,9 +205,14 @@ public class ControladorTablero {
     @PostMapping("/{idTablero}/listas")
     public ResponseEntity<ListaResponse> agregarLista(
             @PathVariable String idTablero,
-            @RequestParam String emailUsuario,
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso,
             @RequestBody CrearListaRequest request) {
-        ListaResponse response = servicioTablero.agregarLista(idTablero, emailUsuario, request);
+        ListaResponse response = servicioTablero.agregarLista(
+            idTablero,
+            resolverEmail(emailUsuario, codigoAcceso, "emailUsuario"),
+            request
+        );
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -173,8 +224,9 @@ public class ControladorTablero {
     public ResponseEntity<Void> eliminarLista(
             @PathVariable String idTablero,
             @PathVariable String idLista,
-            @RequestParam String emailUsuario) {
-        servicioTablero.eliminarLista(idTablero, idLista, emailUsuario);
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso) {
+        servicioTablero.eliminarLista(idTablero, idLista, resolverEmail(emailUsuario, codigoAcceso, "emailUsuario"));
         return ResponseEntity.noContent().build();
     }
 
@@ -186,8 +238,13 @@ public class ControladorTablero {
     public ResponseEntity<ReglasListaResponse> obtenerReglasLista(
             @PathVariable String idTablero,
             @PathVariable String idLista,
-            @RequestParam String emailUsuario) {
-        ReglasListaResponse response = servicioLista.obtenerReglas(idTablero, idLista, emailUsuario);
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso) {
+        ReglasListaResponse response = servicioLista.obtenerReglas(
+            idTablero,
+            idLista,
+            resolverEmail(emailUsuario, codigoAcceso, "emailUsuario")
+        );
         return ResponseEntity.ok(response);
     }
 
@@ -199,9 +256,27 @@ public class ControladorTablero {
     public ResponseEntity<ReglasListaResponse> configurarReglasLista(
             @PathVariable String idTablero,
             @PathVariable String idLista,
-            @RequestParam String emailUsuario,
+            @RequestParam(required = false) String emailUsuario,
+            @RequestParam(required = false) String codigoAcceso,
             @RequestBody ConfigurarReglasListaRequest request) {
-        ReglasListaResponse response = servicioLista.configurarReglas(idTablero, idLista, emailUsuario, request);
+        ReglasListaResponse response = servicioLista.configurarReglas(
+            idTablero,
+            idLista,
+            resolverEmail(emailUsuario, codigoAcceso, "emailUsuario"),
+            request
+        );
         return ResponseEntity.ok(response);
+    }
+
+    private String resolverEmail(String emailExplicito, String codigoAcceso, String nombreParametro) {
+        if (codigoAcceso != null && !codigoAcceso.isBlank()) {
+            return servicioAutenticacion.resolverEmailDesdeCodigo(codigoAcceso);
+        }
+
+        if (emailExplicito != null && !emailExplicito.isBlank()) {
+            return emailExplicito.trim();
+        }
+
+        throw new ErrorValidacionException("Debes indicar " + nombreParametro + " o codigoAcceso");
     }
 }

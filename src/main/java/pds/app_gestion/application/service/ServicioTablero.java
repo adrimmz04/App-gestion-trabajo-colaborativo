@@ -58,7 +58,7 @@ public class ServicioTablero {
         }
         
         repositorioTablero.guardar(tablero);
-        return convertirATableroResponse(tablero);
+        return convertirATableroResponse(tablero, request.getPropietarioEmail());
     }
 
     /**
@@ -85,7 +85,7 @@ public class ServicioTablero {
             .build());
 
         repositorioTablero.guardar(tablero);
-        return convertirATableroResponse(tablero);
+        return convertirATableroResponse(tablero, emailUsuario);
     }
 
     /**
@@ -104,7 +104,7 @@ public class ServicioTablero {
             throw new PermisoNegadoException(emailUsuario, "tablero " + idTablero);
         }
         
-        return convertirATableroResponse(tablero);
+        return convertirATableroResponse(tablero, emailUsuario);
     }
 
     /**
@@ -205,7 +205,7 @@ public class ServicioTablero {
     public List<TableroResponse> obtenerTablerosPropietario(String emailPropietario) {
         return repositorioTablero.obtenerPorPropietario(emailPropietario)
             .stream()
-            .map(this::convertirATableroResponse)
+            .map(tablero -> convertirATableroResponse(tablero, emailPropietario))
             .collect(Collectors.toList());
     }
 
@@ -219,7 +219,7 @@ public class ServicioTablero {
     public List<TableroResponse> obtenerTablerosCompartidos(String emailUsuario) {
         return repositorioTablero.obtenerCompartidos(emailUsuario)
             .stream()
-            .map(this::convertirATableroResponse)
+            .map(tablero -> convertirATableroResponse(tablero, emailUsuario))
             .collect(Collectors.toList());
     }
 
@@ -239,7 +239,7 @@ public class ServicioTablero {
         }
 
         return tablero.obtenerListas().stream()
-            .map(this::convertirAListaResponse)
+            .map(lista -> convertirAListaResponse(tablero, lista, emailUsuario))
             .collect(Collectors.toList());
     }
 
@@ -342,7 +342,7 @@ public class ServicioTablero {
             tablero.agregarLista(lista);
             repositorioTablero.guardar(tablero);
             
-            return convertirAListaResponse(lista);
+            return convertirAListaResponse(tablero, lista, emailUsuario);
         } catch (IllegalArgumentException e) {
             throw new ErrorOperacionDominioException(e.getMessage());
         }
@@ -375,6 +375,24 @@ public class ServicioTablero {
      * Convierte un Tablero de dominio a TableroResponse.
      */
     private TableroResponse convertirATableroResponse(Tablero tablero) {
+        return convertirATableroResponse(tablero, tablero.getPropietarioEmail());
+    }
+
+    /**
+     * Convierte un Tablero de dominio a TableroResponse según el usuario visible.
+     */
+    private TableroResponse convertirATableroResponse(Tablero tablero, String emailUsuario) {
+        long totalTarjetasVisibles = tablero.obtenerListas().stream()
+            .flatMap(lista -> lista.getTarjetas().stream())
+            .filter(tarjeta -> tablero.puedeLeerTarjeta(tarjeta, emailUsuario))
+            .count();
+
+        long tarjetasCompletadasVisibles = tablero.obtenerListas().stream()
+            .flatMap(lista -> lista.getTarjetas().stream())
+            .filter(tarjeta -> tablero.puedeLeerTarjeta(tarjeta, emailUsuario))
+            .filter(Tarjeta::isCompletada)
+            .count();
+
         return TableroResponse.builder()
             .id(tablero.getId())
             .titulo(tablero.getTitulo())
@@ -382,8 +400,8 @@ public class ServicioTablero {
             .propietarioEmail(tablero.getPropietarioEmail())
             .bloqueado(tablero.isBloqueado())
             .fechaDesbloqueo(tablero.getFechaDesbloqueo().orElse(null))
-            .totalTarjetas(tablero.obtenerTotalTarjetas())
-            .tarjetasCompletadas(tablero.obtenerTarjetasCompletadas().size())
+            .totalTarjetas((int) totalTarjetasVisibles)
+            .tarjetasCompletadas((int) tarjetasCompletadasVisibles)
             .fechaCreacion(tablero.getFechaCreacion())
             .fechaActualizacion(tablero.getFechaActualizacion())
             .usuariosCompartidos(tablero.getUsuariosCompartidos())
@@ -394,15 +412,26 @@ public class ServicioTablero {
      * Convierte una Lista de dominio a ListaResponse.
      */
     private ListaResponse convertirAListaResponse(Lista lista) {
+        return convertirAListaResponse(null, lista, null);
+    }
+
+    /**
+     * Convierte una Lista de dominio a ListaResponse según el usuario visible.
+     */
+    private ListaResponse convertirAListaResponse(Tablero tablero, Lista lista, String emailUsuario) {
+        List<Tarjeta> tarjetasVisibles = lista.getTarjetas().stream()
+            .filter(tarjeta -> tablero == null || emailUsuario == null || tablero.puedeLeerTarjeta(tarjeta, emailUsuario))
+            .collect(Collectors.toList());
+
         return ListaResponse.builder()
             .id(lista.getId())
             .nombre(lista.getNombre())
-            .totalTarjetas(lista.obtenerCantidadTarjetas())
-            .tarjetasCompletadas(lista.obtenerTarjetasCompletadas().size())
+            .totalTarjetas(tarjetasVisibles.size())
+            .tarjetasCompletadas((int) tarjetasVisibles.stream().filter(Tarjeta::isCompletada).count())
             .limiteMaximo(lista.getLimiteMaximo().orElse(null))
             .fechaCreacion(lista.getFechaCreacion())
             .fechaActualizacion(lista.getFechaActualizacion())
-            .tarjetas(lista.getTarjetas().stream()
+            .tarjetas(tarjetasVisibles.stream()
                 .map(this::convertirATarjetaResponse)
                 .collect(Collectors.toList()))
             .build();

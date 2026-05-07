@@ -107,6 +107,18 @@ class ControladorTableroIntegrationTest {
     }
 
     @Test
+    @DisplayName("Obtener tablero por código de acceso")
+    void testObtenerTableroConCodigoAcceso() throws Exception {
+        String codigoAcceso = solicitarCodigoAcceso(emailPropietario);
+
+        mockMvc.perform(get("/api/v1/tableros/{id}", idTablero)
+                .param("codigoAcceso", codigoAcceso))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(idTablero))
+            .andExpect(jsonPath("$.titulo").value("Tablero Test"));
+    }
+
+    @Test
     @DisplayName("Obtener tablero sin acceso (usuario diferente)")
     void testObtenerTableroSinAcceso() throws Exception {
         mockMvc.perform(get("/api/v1/tableros/{id}", idTablero)
@@ -201,6 +213,18 @@ class ControladorTableroIntegrationTest {
     }
 
     @Test
+    @DisplayName("Listar tableros del propietario con código de acceso")
+    void testObtenerTablerosPropietarioConCodigoAcceso() throws Exception {
+        String codigoAcceso = solicitarCodigoAcceso(emailPropietario);
+
+        mockMvc.perform(get("/api/v1/tableros/propietario")
+                .param("codigoAcceso", codigoAcceso))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))))
+            .andExpect(jsonPath("$[0].propietarioEmail").value(emailPropietario));
+    }
+
+    @Test
     @DisplayName("Listar tableros compartidos (vacío inicialmente)")
     void testObtenerTablerosCompartidosVacio() throws Exception {
         mockMvc.perform(get("/api/v1/tableros/compartidos/{email}", emailUsuario2))
@@ -236,6 +260,24 @@ class ControladorTableroIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isForbidden());
+    }
+
+    private String solicitarCodigoAcceso(String email) throws Exception {
+        SolicitarCodigoAccesoRequest request = SolicitarCodigoAccesoRequest.builder()
+            .email(email)
+            .build();
+
+        MvcResult result = mockMvc.perform(post("/api/v1/auth/codigos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        SolicitarCodigoAccesoResponse response = objectMapper.readValue(
+            result.getResponse().getContentAsString(),
+            SolicitarCodigoAccesoResponse.class
+        );
+        return response.getCodigoDesarrollo();
     }
 
     @Test

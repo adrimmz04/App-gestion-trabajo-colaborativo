@@ -14,6 +14,7 @@ dependency-reduced-pom.xml
 *.iws
 *.ipr
 .vscode/
+*.code-workspace
 *.swp
 *.swo
 *~
@@ -44,13 +45,21 @@ spring-boot-maven-plugin-requirements.txt
 *.db
 *.sqlite
 *.sqlite3
+data/
 
 # Environment
 .env
 .env.local
+app-mail.local.ps1
+
 
 # Test Results - Archivos temporales de output de Maven/Tests
 test_results*.txt
+test_output*.txt
+test_output*.log
+test_run*.log
+*_output*.txt
+*_log.txt
 *_output.txt
 full_log.txt
 output_*.txt

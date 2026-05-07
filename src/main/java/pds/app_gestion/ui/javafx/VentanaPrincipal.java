@@ -2,11 +2,13 @@ package pds.app_gestion.ui.javafx;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -19,7 +21,11 @@ import pds.app_gestion.application.dto.CrearTableroRequest;
 import pds.app_gestion.application.dto.CrearListaRequest;
 import pds.app_gestion.application.dto.ListaResponse;
 import pds.app_gestion.application.dto.RegistroAccionResponse;
+import pds.app_gestion.application.dto.SesionAutenticadaResponse;
+import pds.app_gestion.application.dto.SolicitarCodigoAccesoRequest;
+import pds.app_gestion.application.dto.SolicitarCodigoAccesoResponse;
 import pds.app_gestion.application.dto.TableroResponse;
+import pds.app_gestion.application.service.ServicioAutenticacion;
 import pds.app_gestion.application.service.ServicioLista;
 import pds.app_gestion.application.service.ServicioTablero;
 import pds.app_gestion.application.service.ServicioTarjeta;
@@ -27,6 +33,7 @@ import pds.app_gestion.ui.dialog.DialogoExportarPlantilla;
 import pds.app_gestion.ui.dialog.DialogoImportarPlantilla;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -36,12 +43,16 @@ import java.util.concurrent.atomic.AtomicReference;
 public class VentanaPrincipal extends Application {
 
     private ConfigurableApplicationContext applicationContext;
+    private ServicioAutenticacion servicioAutenticacion;
     private ServicioLista servicioLista;
     private ServicioTablero servicioTablero;
     private ServicioTarjeta servicioTarjeta;
     private ListView<TableroResponse> listaTableros;
     private ListView<TableroResponse> listaCompartidos;
     private String emailUsuarioActivo;
+    private String codigoAccesoActivo;
+    private Label labelUsuarioActivo;
+    private Label labelResumenCarga;
 
     private static VentanaPrincipal instancia;
 
@@ -50,6 +61,7 @@ public class VentanaPrincipal extends Application {
         applicationContext = new SpringApplicationBuilder(pds.app_gestion.Application.class)
             .headless(false)
             .run(getParameters().getRaw().toArray(new String[0]));
+        servicioAutenticacion = applicationContext.getBean(ServicioAutenticacion.class);
         servicioLista = applicationContext.getBean(ServicioLista.class);
         servicioTablero = applicationContext.getBean(ServicioTablero.class);
         servicioTarjeta = applicationContext.getBean(ServicioTarjeta.class);
@@ -62,18 +74,22 @@ public class VentanaPrincipal extends Application {
             
             // Crear interfaz principal
             BorderPane raiz = new BorderPane();
-            raiz.setPadding(new Insets(10));
+            raiz.setPadding(new Insets(14));
+            raiz.getStyleClass().add("app-shell");
 
             // Barra de menú
             MenuBar menuBar = crearMenuBar();
-            raiz.setTop(menuBar);
+            VBox cabecera = new VBox(menuBar, crearEncabezadoAplicacion());
+            cabecera.getStyleClass().add("app-top");
+            raiz.setTop(cabecera);
 
             // Panel principal
             TabPane tabPane = crearPanelPrincipal();
             raiz.setCenter(tabPane);
 
             // Escena
-            Scene escena = new Scene(raiz, 1200, 800);
+            Scene escena = new Scene(raiz, 1280, 820);
+            aplicarEstilos(escena);
             ventanaPrincipal.setTitle("App Gestión de Trabajo Colaborativo");
             ventanaPrincipal.setScene(escena);
             ventanaPrincipal.show();
@@ -98,6 +114,13 @@ public class VentanaPrincipal extends Application {
         salir.setOnAction(e -> System.exit(0));
         menuArchivo.getItems().add(salir);
 
+        Menu menuSesion = new Menu("Sesion");
+        MenuItem iniciarSesion = new MenuItem("Iniciar sesion");
+        iniciarSesion.setOnAction(e -> mostrarDialogoCargarTableros());
+        MenuItem cerrarSesion = new MenuItem("Cerrar sesion");
+        cerrarSesion.setOnAction(e -> cerrarSesionActual(true));
+        menuSesion.getItems().addAll(iniciarSesion, cerrarSesion);
+
         // Menú Tablero
         Menu menuTablero = new Menu("Tablero");
         MenuItem crearTablero = new MenuItem("Crear nuevo tablero");
@@ -114,13 +137,51 @@ public class VentanaPrincipal extends Application {
         acercaDe.setOnAction(e -> mostrarAcercaDe());
         menuAyuda.getItems().add(acercaDe);
 
-        menuBar.getMenus().addAll(menuArchivo, menuTablero, menuAyuda);
+        menuBar.getMenus().addAll(menuArchivo, menuSesion, menuTablero, menuAyuda);
         return menuBar;
+    }
+
+    private VBox crearEncabezadoAplicacion() {
+        VBox cabecera = new VBox(8);
+        cabecera.getStyleClass().add("app-hero");
+
+        Label subtitulo = new Label("ESCRITORIO COLABORATIVO");
+        subtitulo.getStyleClass().add("hero-eyebrow");
+
+        Label titulo = new Label("Gestiona tableros, listas y tarjetas desde una vista clara y operativa");
+        titulo.getStyleClass().add("hero-title");
+        titulo.setWrapText(true);
+
+        Label descripcion = new Label("Inicia sesion con un codigo temporal, consulta tableros propios y compartidos, abre enlaces privados y trabaja desde una unica pantalla.");
+        descripcion.getStyleClass().add("hero-subtitle");
+        descripcion.setWrapText(true);
+
+        labelUsuarioActivo = new Label();
+        labelUsuarioActivo.getStyleClass().addAll("status-chip", "status-chip-muted");
+
+        labelResumenCarga = new Label();
+        labelResumenCarga.getStyleClass().addAll("status-chip", "status-chip-light");
+
+        HBox meta = new HBox(10, labelUsuarioActivo, labelResumenCarga);
+        meta.setAlignment(Pos.CENTER_LEFT);
+        meta.getStyleClass().add("hero-meta");
+
+        cabecera.getChildren().addAll(subtitulo, titulo, descripcion, meta);
+        actualizarResumenUsuario();
+        return cabecera;
+    }
+
+    private void aplicarEstilos(Scene escena) {
+        var recursoCss = VentanaPrincipal.class.getResource("/ui/javafx/app.css");
+        if (recursoCss != null) {
+            escena.getStylesheets().add(recursoCss.toExternalForm());
+        }
     }
 
     private TabPane crearPanelPrincipal() {
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        tabPane.getStyleClass().add("dashboard-tabs");
 
         // Tab de Mis Tableros
         Tab tabMisTableros = new Tab("Mis Tableros");
@@ -136,15 +197,20 @@ public class VentanaPrincipal extends Application {
 
     private VBox crearVistaMisTableros() {
         VBox vbox = new VBox(10);
-        vbox.setPadding(new Insets(10));
+        vbox.getStyleClass().add("workspace-section");
 
         Label titulo = new Label("Mis Tableros");
-        titulo.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+        titulo.getStyleClass().add("section-title");
+
+        Label descripcion = new Label("Acceso directo a tableros propios, importación de plantillas y apertura por ID privado.");
+        descripcion.getStyleClass().add("section-subtitle");
+        descripcion.setWrapText(true);
 
         listaTableros = new ListView<>();
         listaTableros.setPrefHeight(400);
+        listaTableros.getStyleClass().add("board-list");
         listaTableros.setCellFactory(listView -> crearCeldaTablero(false));
-        listaTableros.setPlaceholder(new Label("Carga un email para ver los tableros disponibles"));
+        listaTableros.setPlaceholder(new Label("Inicia sesion para ver los tableros disponibles"));
         listaTableros.setOnMouseClicked(evento -> {
             if (evento.getClickCount() == 2) {
                 TableroResponse tableroSeleccionado = listaTableros.getSelectionModel().getSelectedItem();
@@ -155,19 +221,23 @@ public class VentanaPrincipal extends Application {
         });
 
         Button btnCrear = new Button("+ Crear Tablero");
-        btnCrear.setStyle("-fx-font-size: 12; -fx-padding: 8;");
+        btnCrear.getStyleClass().add("primary-button");
         btnCrear.setOnAction(e -> mostrarDialogoCrearTablero());
 
-        Button btnCargar = new Button("Cargar por email");
+        Button btnCargar = new Button("Iniciar sesion");
+        btnCargar.getStyleClass().add("secondary-button");
         btnCargar.setOnAction(e -> mostrarDialogoCargarTableros());
 
         Button btnAbrirPorId = new Button("Abrir por ID/URL");
+        btnAbrirPorId.getStyleClass().add("secondary-button");
         btnAbrirPorId.setOnAction(e -> mostrarDialogoAbrirTableroPorId());
 
         Button btnImportarPlantilla = new Button("Importar plantilla");
+        btnImportarPlantilla.getStyleClass().add("secondary-button");
         btnImportarPlantilla.setOnAction(e -> mostrarDialogoImportarPlantilla());
 
         Button btnVerDetalle = new Button("Ver detalle");
+        btnVerDetalle.getStyleClass().add("secondary-button");
         btnVerDetalle.setOnAction(e -> {
             TableroResponse tableroSeleccionado = listaTableros.getSelectionModel().getSelectedItem();
             if (tableroSeleccionado != null) {
@@ -176,6 +246,7 @@ public class VentanaPrincipal extends Application {
         });
 
         Button btnEliminar = new Button("Eliminar tablero");
+        btnEliminar.getStyleClass().add("danger-button");
         btnEliminar.setOnAction(e -> {
             TableroResponse tableroSeleccionado = listaTableros.getSelectionModel().getSelectedItem();
             if (tableroSeleccionado == null) {
@@ -186,21 +257,29 @@ public class VentanaPrincipal extends Application {
             eliminarTablero(tableroSeleccionado, null);
         });
 
-        vbox.getChildren().addAll(titulo, listaTableros, new HBox(10, btnCrear, btnCargar, btnAbrirPorId, btnImportarPlantilla, btnVerDetalle, btnEliminar));
+        FlowPane acciones = new FlowPane(10, 10, btnCrear, btnCargar, btnAbrirPorId, btnImportarPlantilla, btnVerDetalle, btnEliminar);
+        acciones.getStyleClass().add("action-flow");
+
+        vbox.getChildren().addAll(titulo, descripcion, listaTableros, acciones);
         return vbox;
     }
 
     private VBox crearVistaTablerosCompartidos() {
         VBox vbox = new VBox(10);
-        vbox.setPadding(new Insets(10));
+        vbox.getStyleClass().add("workspace-section");
 
         Label titulo = new Label("Tableros Compartidos");
-        titulo.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+        titulo.getStyleClass().add("section-title");
+
+        Label descripcion = new Label("Vista rápida de tableros accesibles por compartición con el usuario activo.");
+        descripcion.getStyleClass().add("section-subtitle");
+        descripcion.setWrapText(true);
 
         listaCompartidos = new ListView<>();
         listaCompartidos.setPrefHeight(400);
+        listaCompartidos.getStyleClass().add("board-list");
         listaCompartidos.setCellFactory(listView -> crearCeldaTablero(true));
-        listaCompartidos.setPlaceholder(new Label("Carga un email para ver tableros compartidos"));
+        listaCompartidos.setPlaceholder(new Label("Inicia sesion para ver tableros compartidos"));
         listaCompartidos.setOnMouseClicked(evento -> {
             if (evento.getClickCount() == 2) {
                 TableroResponse tableroSeleccionado = listaCompartidos.getSelectionModel().getSelectedItem();
@@ -210,7 +289,7 @@ public class VentanaPrincipal extends Application {
             }
         });
 
-        vbox.getChildren().addAll(titulo, listaCompartidos);
+        vbox.getChildren().addAll(titulo, descripcion, listaCompartidos);
         return vbox;
     }
 
@@ -226,35 +305,56 @@ public class VentanaPrincipal extends Application {
                     return;
                 }
 
-                String sufijo = compartido
-                    ? " (propietario: " + tablero.getPropietarioEmail() + ")"
-                    : (tablero.isBloqueado() ? " [bloqueado]" : "");
-                setText(tablero.getTitulo() + sufijo);
+                VBox tarjeta = new VBox(6);
+                tarjeta.getStyleClass().add("board-card");
+                if (isSelected()) {
+                    tarjeta.getStyleClass().add("board-card-selected");
+                }
+
+                Label titulo = new Label(tablero.getTitulo());
+                titulo.getStyleClass().add("board-card-title");
+
+                String descripcionTablero = tablero.getDescripcion() == null || tablero.getDescripcion().isBlank()
+                    ? "Sin descripción disponible."
+                    : tablero.getDescripcion().trim();
+                Label descripcion = new Label(resumirTexto(descripcionTablero, 130));
+                descripcion.getStyleClass().add("board-card-description");
+                descripcion.setWrapText(true);
+
+                Label meta = new Label(compartido
+                    ? "Compartido por " + tablero.getPropietarioEmail()
+                    : "Propietario: " + tablero.getPropietarioEmail());
+                meta.getStyleClass().add("board-card-meta");
+
+                Label estado = new Label(tablero.isBloqueado() ? "Bloqueado" : "Activo");
+                estado.getStyleClass().addAll("status-chip", tablero.isBloqueado() ? "status-chip-blocked" : "status-chip-open");
+
+                Label identificador = new Label("ID " + resumirId(tablero.getId()));
+                identificador.getStyleClass().add("board-id");
+
+                HBox pie = new HBox(8, estado, identificador);
+                pie.setAlignment(Pos.CENTER_LEFT);
+                pie.getStyleClass().add("board-card-footer");
+
+                tarjeta.getChildren().addAll(titulo, descripcion, meta, pie);
+
+                setText(null);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                setGraphic(tarjeta);
             }
         };
     }
 
     private void mostrarDialogoCargarTableros() {
-        TextInputDialog dialogo = new TextInputDialog(emailUsuarioActivo != null ? emailUsuarioActivo : "");
-        dialogo.setTitle("Cargar tableros");
-        dialogo.setHeaderText("Introduce el email del usuario");
-        dialogo.setContentText("Email:");
-
-        dialogo.showAndWait().ifPresent(email -> {
-            if (email == null || email.trim().isEmpty()) {
-                mostrarError("Error", "Debes indicar un email para cargar tableros");
-                return;
-            }
-
-            try {
-                cargarTablerosUsuario(email.trim());
-            } catch (Exception e) {
-                mostrarError("Error", "No se pudieron cargar los tableros: " + e.getMessage());
-            }
-        });
+        iniciarSesionInteractiva(true);
     }
 
     private void mostrarDialogoCrearTablero() {
+        String email = resolverEmailUsuarioActivo();
+        if (email == null) {
+            return;
+        }
+
         Dialog<String> dialogo = new Dialog<>();
         dialogo.setTitle("Crear Nuevo Tablero");
         dialogo.setHeaderText("Ingresa los datos del nuevo tablero");
@@ -269,15 +369,11 @@ public class VentanaPrincipal extends Application {
         TextArea txtDescripcion = new TextArea();
         txtDescripcion.setPromptText("Descripción");
         txtDescripcion.setPrefRowCount(3);
-        TextField txtEmail = new TextField();
-        txtEmail.setPromptText("Tu email");
 
         grid.add(new Label("Título:"), 0, 0);
         grid.add(txtTitulo, 1, 0);
         grid.add(new Label("Descripción:"), 0, 1);
         grid.add(txtDescripcion, 1, 1);
-        grid.add(new Label("Email:"), 0, 2);
-        grid.add(txtEmail, 1, 2);
 
         dialogo.getDialogPane().setContent(grid);
         dialogo.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -287,10 +383,9 @@ public class VentanaPrincipal extends Application {
                 try {
                     String titulo = txtTitulo.getText() != null ? txtTitulo.getText().trim() : "";
                     String descripcion = txtDescripcion.getText() != null ? txtDescripcion.getText().trim() : "";
-                    String email = txtEmail.getText() != null ? txtEmail.getText().trim() : "";
 
-                    if (titulo.isEmpty() || email.isEmpty()) {
-                        throw new IllegalArgumentException("El título y el email son obligatorios");
+                    if (titulo.isEmpty()) {
+                        throw new IllegalArgumentException("El título es obligatorio");
                     }
 
                     servicioTablero.crearTablero(CrearTableroRequest.builder()
@@ -313,6 +408,11 @@ public class VentanaPrincipal extends Application {
     }
 
     private void mostrarDialogoAbrirTableroPorId() {
+        String email = resolverEmailUsuarioActivo();
+        if (email == null) {
+            return;
+        }
+
         Dialog<ButtonType> dialogo = new Dialog<>();
         dialogo.setTitle("Abrir tablero");
         dialogo.setHeaderText("Abrir tablero por ID o URL privada");
@@ -322,16 +422,11 @@ public class VentanaPrincipal extends Application {
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
 
-        TextField txtEmail = new TextField(emailUsuarioActivo != null ? emailUsuarioActivo : "");
-        txtEmail.setPromptText("Tu email");
-
         TextField txtId = new TextField();
         txtId.setPromptText("ID o URL del tablero");
 
-        grid.add(new Label("Email:"), 0, 0);
-        grid.add(txtEmail, 1, 0);
-        grid.add(new Label("ID o URL:"), 0, 1);
-        grid.add(txtId, 1, 1);
+        grid.add(new Label("ID o URL:"), 0, 0);
+        grid.add(txtId, 1, 0);
 
         dialogo.getDialogPane().setContent(grid);
         dialogo.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -341,10 +436,9 @@ public class VentanaPrincipal extends Application {
                 return;
             }
 
-            String email = txtEmail.getText() != null ? txtEmail.getText().trim() : "";
             String valorAcceso = txtId.getText() != null ? txtId.getText().trim() : "";
-            if (email.isEmpty() || valorAcceso.isEmpty()) {
-                mostrarError("Error", "Debes indicar el email y el ID o URL del tablero");
+            if (valorAcceso.isEmpty()) {
+                mostrarError("Error", "Debes indicar el ID o URL del tablero");
                 return;
             }
 
@@ -389,21 +483,28 @@ public class VentanaPrincipal extends Application {
 
         VBox contenedor = new VBox(10);
         contenedor.setPadding(new Insets(15));
+        contenedor.getStyleClass().add("workspace-section");
 
         Label titulo = new Label(tableroActual.get().getTitulo());
-        titulo.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
+        titulo.getStyleClass().add("detail-title");
 
         Label descripcion = new Label("Descripción: " +
             (tableroActual.get().getDescripcion() == null || tableroActual.get().getDescripcion().isBlank() ? "Sin descripción" : tableroActual.get().getDescripcion()));
+        descripcion.getStyleClass().add("detail-subtitle");
         Label estado = new Label("Estado: " + (tableroActual.get().isBloqueado() ? "Bloqueado" : "Activo"));
+        estado.getStyleClass().add("detail-subtitle");
         Label propietario = new Label("Propietario: " + tableroActual.get().getPropietarioEmail());
+        propietario.getStyleClass().add("detail-subtitle");
         Label identificador = new Label("ID privado: " + tableroActual.get().getId());
+        identificador.getStyleClass().add("detail-subtitle");
 
         Button btnCopiarId = new Button("Copiar ID");
+        btnCopiarId.getStyleClass().add("secondary-button");
         btnCopiarId.setOnAction(e -> copiarAlPortapapeles(tableroActual.get().getId()));
 
         ListView<ListaResponse> listas = new ListView<>();
         listas.setPrefHeight(260);
+        listas.getStyleClass().add("list-stack");
         listas.setPlaceholder(new Label("Este tablero todavía no tiene listas"));
         listas.setCellFactory(listView -> new ListCell<>() {
             @Override
@@ -412,11 +513,46 @@ public class VentanaPrincipal extends Application {
 
                 if (empty || lista == null) {
                     setText(null);
+                    setGraphic(null);
                     return;
                 }
 
-                String sufijoLimite = lista.getLimiteMaximo() != null ? ", límite " + lista.getLimiteMaximo() : "";
-                setText(lista.getNombre() + " (" + lista.getTotalTarjetas() + " tarjetas" + sufijoLimite + ")");
+                VBox tarjetaLista = new VBox(7);
+                tarjetaLista.getStyleClass().add("list-card");
+                if (isSelected()) {
+                    tarjetaLista.getStyleClass().add("list-card-selected");
+                }
+
+                Label nombreLista = new Label(lista.getNombre());
+                nombreLista.getStyleClass().add("list-card-title");
+
+                Label resumen = new Label(resumirEstadoLista(lista));
+                resumen.getStyleClass().add("list-card-summary");
+                resumen.setWrapText(true);
+
+                Label metadata = new Label(lista.getTarjetasCompletadas() + " completadas de " + lista.getTotalTarjetas() + " tarjetas");
+                metadata.getStyleClass().add("list-card-metadata");
+
+                Label chipCantidad = new Label(lista.getTotalTarjetas() == 0 ? "Vacía" : lista.getTotalTarjetas() + " en lista");
+                chipCantidad.getStyleClass().addAll("list-chip", lista.getTotalTarjetas() == 0 ? "list-chip-empty" : "list-chip-neutral");
+
+                Label chipCompletadas = new Label(lista.getTarjetasCompletadas() + " completadas");
+                chipCompletadas.getStyleClass().addAll("list-chip", "list-chip-done");
+
+                HBox footer = new HBox(8, chipCantidad, chipCompletadas);
+                footer.getStyleClass().add("list-card-footer");
+
+                if (lista.getLimiteMaximo() != null) {
+                    Label chipLimite = new Label("Límite " + lista.getLimiteMaximo());
+                    chipLimite.getStyleClass().addAll("list-chip", "list-chip-limit");
+                    footer.getChildren().add(chipLimite);
+                }
+
+                tarjetaLista.getChildren().addAll(nombreLista, resumen, metadata, footer);
+
+                setText(null);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                setGraphic(tarjetaLista);
             }
         });
         listas.setOnMouseClicked(evento -> {
@@ -431,9 +567,11 @@ public class VentanaPrincipal extends Application {
         cargarListasTablero(tableroActual.get(), listas);
 
         Button btnAgregarLista = new Button("Agregar lista");
+        btnAgregarLista.getStyleClass().add("primary-button");
         btnAgregarLista.setOnAction(e -> mostrarDialogoAgregarLista(tableroActual.get(), listas));
 
         Button btnAbrirLista = new Button("Abrir lista");
+        btnAbrirLista.getStyleClass().add("secondary-button");
         btnAbrirLista.setOnAction(e -> {
             ListaResponse listaSeleccionada = listas.getSelectionModel().getSelectedItem();
             if (listaSeleccionada != null) {
@@ -444,18 +582,22 @@ public class VentanaPrincipal extends Application {
         boolean esPropietario = tableroActual.get().getPropietarioEmail().equals(obtenerEmailContexto(tableroActual.get()));
 
         Button btnEditarTablero = new Button("Editar tablero");
+        btnEditarTablero.getStyleClass().add("secondary-button");
         btnEditarTablero.setDisable(!esPropietario);
         btnEditarTablero.setOnAction(e -> mostrarDialogoEditarTablero(tableroActual, ventana, titulo, descripcion, estado, propietario, listas));
 
         Button btnCompartirTablero = new Button("Compartir tablero");
+        btnCompartirTablero.getStyleClass().add("secondary-button");
         btnCompartirTablero.setDisable(!esPropietario);
         btnCompartirTablero.setOnAction(e -> mostrarDialogoCompartirTablero(tableroActual.get()));
 
         Button btnBloquearTablero = new Button(tableroActual.get().isBloqueado() ? "Desbloquear tablero" : "Bloquear tablero");
+        btnBloquearTablero.getStyleClass().add("secondary-button");
         btnBloquearTablero.setDisable(!esPropietario);
         btnBloquearTablero.setOnAction(e -> alternarBloqueoTablero(tableroActual, ventana, titulo, descripcion, estado, propietario, listas, btnBloquearTablero));
 
         Button btnEliminarLista = new Button("Eliminar lista");
+        btnEliminarLista.getStyleClass().add("danger-button");
         btnEliminarLista.setOnAction(e -> {
             ListaResponse listaSeleccionada = listas.getSelectionModel().getSelectedItem();
             if (listaSeleccionada == null) {
@@ -467,6 +609,7 @@ public class VentanaPrincipal extends Application {
         });
 
         Button btnConfigurarReglas = new Button("Configurar reglas");
+        btnConfigurarReglas.getStyleClass().add("secondary-button");
         btnConfigurarReglas.setOnAction(e -> {
             ListaResponse listaSeleccionada = listas.getSelectionModel().getSelectedItem();
             if (listaSeleccionada == null) {
@@ -478,17 +621,30 @@ public class VentanaPrincipal extends Application {
         });
 
         Button btnEliminarTablero = new Button("Eliminar tablero");
+        btnEliminarTablero.getStyleClass().add("danger-button");
         btnEliminarTablero.setDisable(!esPropietario);
         btnEliminarTablero.setOnAction(e -> eliminarTablero(tableroActual.get(), ventana));
 
         Button btnVerHistorial = new Button("Ver historial");
+        btnVerHistorial.getStyleClass().add("secondary-button");
         btnVerHistorial.setOnAction(e -> mostrarHistorialTablero(tableroActual.get()));
 
         Button btnExportarPlantilla = new Button("Exportar plantilla");
+        btnExportarPlantilla.getStyleClass().add("secondary-button");
         btnExportarPlantilla.setOnAction(e -> mostrarDialogoExportarPlantilla(tableroActual.get(), listas));
 
         Button btnCerrar = new Button("Cerrar");
+        btnCerrar.getStyleClass().add("secondary-button");
         btnCerrar.setOnAction(e -> ventana.close());
+
+        Label encabezadoListas = new Label("Listas del tablero");
+        encabezadoListas.getStyleClass().add("board-card-meta");
+
+        FlowPane acciones = new FlowPane(10, 10,
+            btnAgregarLista, btnAbrirLista, btnEditarTablero, btnCompartirTablero, btnBloquearTablero,
+            btnConfigurarReglas, btnVerHistorial, btnExportarPlantilla, btnEliminarLista, btnEliminarTablero, btnCerrar
+        );
+        acciones.getStyleClass().add("detail-actions");
 
         contenedor.getChildren().addAll(
             titulo,
@@ -497,12 +653,14 @@ public class VentanaPrincipal extends Application {
             estado,
             new HBox(10, identificador, btnCopiarId),
             new Separator(),
-            new Label("Listas"),
+            encabezadoListas,
             listas,
-            new HBox(10, btnAgregarLista, btnAbrirLista, btnEditarTablero, btnCompartirTablero, btnBloquearTablero, btnConfigurarReglas, btnVerHistorial, btnExportarPlantilla, btnEliminarLista, btnEliminarTablero, btnCerrar)
+            acciones
         );
 
-        ventana.setScene(new Scene(contenedor, 640, 520));
+        Scene escena = new Scene(contenedor, 900, 620);
+        aplicarEstilos(escena);
+        ventana.setScene(escena);
         ventana.show();
     }
 
@@ -581,9 +739,7 @@ public class VentanaPrincipal extends Application {
             try {
                 servicioTablero.compartirTablero(tablero.getId(), obtenerEmailContexto(tablero), emailNormalizado);
                 mostrarAlerta("Éxito", "Tablero compartido correctamente");
-                if (emailUsuarioActivo != null) {
-                    cargarTablerosUsuario(emailUsuarioActivo);
-                }
+                recargarTablerosSesionActiva();
             } catch (Exception e) {
                 mostrarError("Error", "No se pudo compartir el tablero: " + e.getMessage());
             }
@@ -652,9 +808,7 @@ public class VentanaPrincipal extends Application {
         }
 
         cargarListasTablero(tableroRefrescado, listas);
-        if (emailUsuarioActivo != null) {
-            cargarTablerosUsuario(emailUsuarioActivo);
-        }
+        recargarTablerosSesionActiva();
     }
 
     private void mostrarDialogoAgregarLista(TableroResponse tablero, ListView<ListaResponse> listas) {
@@ -674,9 +828,7 @@ public class VentanaPrincipal extends Application {
                 servicioTablero.agregarLista(tablero.getId(), obtenerEmailContexto(tablero),
                     CrearListaRequest.builder().nombre(nombreNormalizado).build());
                 cargarListasTablero(tablero, listas);
-                if (emailUsuarioActivo != null) {
-                    cargarTablerosUsuario(emailUsuarioActivo);
-                }
+                recargarTablerosSesionActiva();
             } catch (Exception e) {
                 mostrarError("Error", "No se pudo agregar la lista: " + e.getMessage());
             }
@@ -728,18 +880,25 @@ public class VentanaPrincipal extends Application {
             return;
         }
 
-        VBox contenedor = new VBox(10, new Label("Historial de acciones"), listaHistorial);
+        Label titulo = new Label("Historial de acciones");
+        titulo.getStyleClass().add("detail-title");
+
+        VBox contenedor = new VBox(10, titulo, listaHistorial);
         contenedor.setPadding(new Insets(10));
+        contenedor.getStyleClass().add("workspace-section");
+        listaHistorial.getStyleClass().add("board-list");
         VBox.setVgrow(listaHistorial, javafx.scene.layout.Priority.ALWAYS);
 
-        ventana.setScene(new Scene(contenedor, 760, 420));
+        Scene escena = new Scene(contenedor, 760, 420);
+        aplicarEstilos(escena);
+        ventana.setScene(escena);
         ventana.show();
     }
 
     private void mostrarDetalleLista(TableroResponse tablero, ListaResponse lista, ListView<ListaResponse> listas) {
         Stage ventana = new Stage();
         ventana.setTitle(tablero.getTitulo() + " / " + lista.getNombre());
-        ventana.setScene(new Scene(
+        Scene escena = new Scene(
             new PanelDetallesTablero(
                 tablero.getId(),
                 lista.getId(),
@@ -747,11 +906,15 @@ public class VentanaPrincipal extends Application {
                 obtenerEmailContexto(tablero),
                 servicioTarjeta,
                 servicioLista,
-                servicioTablero.obtenerListas(tablero.getId(), obtenerEmailContexto(tablero))
+                servicioTablero.obtenerListas(tablero.getId(), obtenerEmailContexto(tablero)),
+                tablero.getPropietarioEmail().equals(obtenerEmailContexto(tablero)),
+                Set.copyOf(tablero.getUsuariosCompartidos())
             ),
             820,
             560
-        ));
+        );
+        aplicarEstilos(escena);
+        ventana.setScene(escena);
         ventana.setOnHidden(evento -> cargarListasTablero(tablero, listas));
         ventana.show();
     }
@@ -776,9 +939,7 @@ public class VentanaPrincipal extends Application {
 
         try {
             servicioTablero.eliminarTablero(tablero.getId(), obtenerEmailContexto(tablero));
-            if (emailUsuarioActivo != null) {
-                cargarTablerosUsuario(emailUsuarioActivo);
-            }
+            recargarTablerosSesionActiva();
             if (ventanaDetalle != null) {
                 ventanaDetalle.close();
             }
@@ -791,6 +952,7 @@ public class VentanaPrincipal extends Application {
         emailUsuarioActivo = emailUsuario;
         actualizarLista(listaTableros, servicioTablero.obtenerTablerosPropietario(emailUsuario), false);
         actualizarLista(listaCompartidos, servicioTablero.obtenerTablerosCompartidos(emailUsuario), true);
+        actualizarResumenUsuario();
     }
 
     private void cargarListasTablero(TableroResponse tablero, ListView<ListaResponse> listas) {
@@ -805,8 +967,169 @@ public class VentanaPrincipal extends Application {
         lista.getItems().setAll(tableros);
     }
 
+    private void actualizarResumenUsuario() {
+        if (labelUsuarioActivo == null || labelResumenCarga == null) {
+            return;
+        }
+
+        String textoUsuario = emailUsuarioActivo == null || emailUsuarioActivo.isBlank()
+            ? "Sin sesion iniciada"
+            : "Sesión: " + emailUsuarioActivo;
+
+        labelUsuarioActivo.setText(textoUsuario);
+        labelUsuarioActivo.getStyleClass().removeAll("status-chip-live", "status-chip-muted");
+        labelUsuarioActivo.getStyleClass().add(emailUsuarioActivo == null || emailUsuarioActivo.isBlank()
+            ? "status-chip-muted"
+            : "status-chip-live");
+
+        int totalPropios = listaTableros != null ? listaTableros.getItems().size() : 0;
+        int totalCompartidos = listaCompartidos != null ? listaCompartidos.getItems().size() : 0;
+        labelResumenCarga.setText(totalPropios + " propios · " + totalCompartidos + " compartidos");
+    }
+
+    private String resumirTexto(String texto, int maximoCaracteres) {
+        if (texto == null || texto.length() <= maximoCaracteres) {
+            return texto;
+        }
+
+        return texto.substring(0, Math.max(0, maximoCaracteres - 1)) + "…";
+    }
+
+    private String resumirId(String idTablero) {
+        if (idTablero == null || idTablero.isBlank()) {
+            return "sin-id";
+        }
+
+        return idTablero.length() <= 8 ? idTablero : idTablero.substring(0, 8);
+    }
+
+    private String resumirEstadoLista(ListaResponse lista) {
+        if (lista.getTotalTarjetas() == 0) {
+            return "Lista preparada para recibir trabajo nuevo.";
+        }
+
+        if (lista.getTarjetasCompletadas() == lista.getTotalTarjetas()) {
+            return "Todo el contenido actual de la lista está completado.";
+        }
+
+        if (lista.getTarjetasCompletadas() > 0) {
+            return "La lista combina trabajo en curso con tarjetas ya cerradas.";
+        }
+
+        return "La lista tiene actividad abierta y aún no hay tarjetas completadas.";
+    }
+
     private String obtenerEmailContexto(TableroResponse tablero) {
-        return emailUsuarioActivo != null ? emailUsuarioActivo : tablero.getPropietarioEmail();
+        return emailUsuarioActivo != null ? emailUsuarioActivo : resolverEmailUsuarioActivo();
+    }
+
+    private String iniciarSesionInteractiva(boolean mostrarConfirmacion) {
+        TextInputDialog dialogo = new TextInputDialog(emailUsuarioActivo != null ? emailUsuarioActivo : "");
+        dialogo.setTitle("Iniciar sesion");
+        dialogo.setHeaderText("Solicita un codigo temporal de acceso");
+        dialogo.setContentText("Email:");
+
+        var resultadoEmail = dialogo.showAndWait();
+        if (resultadoEmail.isEmpty()) {
+            return null;
+        }
+
+        String email = resultadoEmail.get().trim();
+        if (email.isEmpty()) {
+            mostrarError("Error", "Debes indicar un email para iniciar sesion");
+            return null;
+        }
+
+        try {
+            SolicitarCodigoAccesoResponse solicitud = servicioAutenticacion.solicitarCodigo(
+                SolicitarCodigoAccesoRequest.builder()
+                    .email(email)
+                    .build()
+            );
+
+            mostrarInstruccionesCodigo(solicitud);
+
+            TextInputDialog dialogoCodigo = new TextInputDialog(
+                solicitud.getCodigoDesarrollo() != null ? solicitud.getCodigoDesarrollo() : ""
+            );
+            dialogoCodigo.setTitle("Validar codigo");
+            dialogoCodigo.setHeaderText("Introduce el codigo temporal para " + solicitud.getEmail());
+            dialogoCodigo.setContentText("Codigo:");
+
+            var resultadoCodigo = dialogoCodigo.showAndWait();
+            if (resultadoCodigo.isEmpty()) {
+                return null;
+            }
+
+            String codigo = resultadoCodigo.get().trim();
+            if (codigo.isEmpty()) {
+                mostrarError("Error", "Debes indicar el codigo de acceso");
+                return null;
+            }
+
+            SesionAutenticadaResponse sesion = servicioAutenticacion.obtenerSesionActiva(codigo);
+            codigoAccesoActivo = sesion.getCodigoAcceso();
+            cargarTablerosUsuario(sesion.getEmail());
+
+            if (mostrarConfirmacion) {
+                mostrarAlerta("Sesion iniciada", "Acceso concedido para " + sesion.getEmail());
+            }
+
+            return sesion.getEmail();
+        } catch (Exception e) {
+            mostrarError("Error", "No se pudo iniciar sesion: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private void mostrarInstruccionesCodigo(SolicitarCodigoAccesoResponse solicitud) {
+        StringBuilder mensaje = new StringBuilder();
+        if ("email".equalsIgnoreCase(solicitud.getModoEntrega())) {
+            mensaje.append("Se ha enviado un codigo temporal al correo indicado.");
+        } else {
+            mensaje.append("Se ha generado un codigo temporal en modo desarrollo.");
+        }
+
+        if (solicitud.getCodigoDesarrollo() != null && !solicitud.getCodigoDesarrollo().isBlank()) {
+            mensaje.append("\nCodigo: ").append(solicitud.getCodigoDesarrollo());
+        }
+
+        if (solicitud.getExpiraEn() != null) {
+            mensaje.append("\nExpira: ").append(solicitud.getExpiraEn());
+        }
+
+        mostrarAlerta("Codigo de acceso", mensaje.toString());
+    }
+
+    private void cerrarSesionActual(boolean mostrarConfirmacion) {
+        if (codigoAccesoActivo != null && !codigoAccesoActivo.isBlank()) {
+            servicioAutenticacion.cerrarSesion(codigoAccesoActivo);
+        }
+
+        codigoAccesoActivo = null;
+        emailUsuarioActivo = null;
+        if (listaTableros != null) {
+            listaTableros.getItems().clear();
+        }
+        if (listaCompartidos != null) {
+            listaCompartidos.getItems().clear();
+        }
+        actualizarResumenUsuario();
+
+        if (mostrarConfirmacion) {
+            mostrarAlerta("Sesion cerrada", "La sesion actual se ha cerrado correctamente");
+        }
+    }
+
+    private void recargarTablerosSesionActiva() {
+        if (codigoAccesoActivo == null || codigoAccesoActivo.isBlank()) {
+            return;
+        }
+
+        String email = resolverEmailUsuarioActivo();
+        if (email != null) {
+            cargarTablerosUsuario(email);
+        }
     }
 
     private void mostrarAcercaDe() {
@@ -845,22 +1168,24 @@ public class VentanaPrincipal extends Application {
     }
 
     private String resolverEmailUsuarioActivo() {
+        if (codigoAccesoActivo != null && !codigoAccesoActivo.isBlank()) {
+            try {
+                SesionAutenticadaResponse sesion = servicioAutenticacion.obtenerSesionActiva(codigoAccesoActivo);
+                codigoAccesoActivo = sesion.getCodigoAcceso();
+                emailUsuarioActivo = sesion.getEmail();
+                actualizarResumenUsuario();
+                return emailUsuarioActivo;
+            } catch (Exception e) {
+                cerrarSesionActual(false);
+                mostrarError("Sesion expirada", "El codigo de acceso ya no es valido. Debes iniciar sesion de nuevo.");
+            }
+        }
+
         if (emailUsuarioActivo != null && !emailUsuarioActivo.isBlank()) {
             return emailUsuarioActivo;
         }
 
-        TextInputDialog dialogo = new TextInputDialog();
-        dialogo.setTitle("Email del usuario");
-        dialogo.setHeaderText("Indica el email para importar la plantilla");
-        dialogo.setContentText("Email:");
-
-        var resultado = dialogo.showAndWait();
-        if (resultado.isEmpty() || resultado.get().trim().isEmpty()) {
-            mostrarError("Error", "Debes indicar un email para continuar");
-            return null;
-        }
-
-        return resultado.get().trim();
+        return iniciarSesionInteractiva(false);
     }
 
     private String extraerIdTablero(String valorAcceso) {

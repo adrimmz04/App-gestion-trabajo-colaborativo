@@ -102,6 +102,7 @@ public class ServicioLista {
         Lista listaOrigen = obtenerLista(tablero, idListaOrigen);
         Lista listaDestino = obtenerLista(tablero, idListaDestino);
         Tarjeta tarjeta = obtenerTarjeta(listaOrigen, idTarjeta);
+        validarPermisoEscritura(tablero, tarjeta, emailUsuario);
         
         // Validar requisitos de la lista destino
         if (listaDestino.tienePrerequisitos()) {
@@ -175,6 +176,12 @@ public class ServicioLista {
     private Tarjeta obtenerTarjeta(Lista lista, String idTarjeta) {
         return lista.obtenerTarjeta(idTarjeta)
             .orElseThrow(() -> new RecursoNoEncontradoException("Tarjeta", idTarjeta));
+    }
+
+    private void validarPermisoEscritura(Tablero tablero, Tarjeta tarjeta, String emailUsuario) {
+        if (!tablero.puedeEscribirTarjeta(tarjeta, emailUsuario)) {
+            throw new PermisoNegadoException(emailUsuario, "mover tarjeta " + tarjeta.getId());
+        }
     }
 
     /**

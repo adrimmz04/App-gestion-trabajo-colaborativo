@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pds.app_gestion.application.dto.*;
 import pds.app_gestion.application.exception.ErrorOperacionDominioException;
+import pds.app_gestion.application.exception.ErrorValidacionException;
 import pds.app_gestion.application.exception.PermisoNegadoException;
 import pds.app_gestion.application.exception.RecursoNoEncontradoException;
 import pds.app_gestion.domain.*;
@@ -269,6 +270,103 @@ public class ServicioTarjetaTest {
         var response = servicioTarjeta.obtenerTodasLasTarjetas("1", "lista-1", "adrian@example.com");
 
         assertEquals(2, response.size());
+    }
+
+    @Test
+    void obtenerTodasLasTarjetasFiltraLasNoVisiblesParaUsuarioCompartido() {
+        Tablero tablero = new Tablero("1", "Tablero", "propietario@example.com");
+        tablero.compartirCon("colaborador@example.com");
+
+        Lista lista = new Lista("lista-1", "Por hacer");
+        Tarjeta tarjetaVisible = new Tarjeta("t1", "Visible", "");
+        Tarjeta tarjetaOculta = new Tarjeta("t2", "Oculta", "");
+        tarjetaOculta.asignarPermiso("otro@example.com", PermisoTarjeta.LECTURA);
+
+        lista.agregarTarjeta(tarjetaVisible);
+        lista.agregarTarjeta(tarjetaOculta);
+        tablero.agregarLista(lista);
+
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        var response = servicioTarjeta.obtenerTodasLasTarjetas("1", "lista-1", "colaborador@example.com");
+
+        assertEquals(1, response.size());
+        assertEquals("t1", response.get(0).getId());
+    }
+
+    @Test
+    void actualizarTarjetaSinPermisoEscrituraThrows() {
+        Tablero tablero = new Tablero("1", "Tablero", "propietario@example.com");
+        tablero.compartirCon("lector@example.com");
+
+        Lista lista = new Lista("lista-1", "Por hacer");
+        Tarjeta tarjeta = new Tarjeta("t1", "Tarea 1", "Descripción");
+        tarjeta.asignarPermiso("lector@example.com", PermisoTarjeta.LECTURA);
+        lista.agregarTarjeta(tarjeta);
+        tablero.agregarLista(lista);
+
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        assertThrows(PermisoNegadoException.class, () ->
+            servicioTarjeta.actualizarTarjeta(
+                "1",
+                "lista-1",
+                "t1",
+                "lector@example.com",
+                ActualizarTarjetaRequest.builder().descripcion("Nueva descripción").build()
+            )
+        );
+    }
+
+    @Test
+    void configurarPermisoTarjetaExitosamente() {
+        Tablero tablero = new Tablero("1", "Tablero", "propietario@example.com");
+        tablero.compartirCon("lector@example.com");
+
+        Lista lista = new Lista("lista-1", "Por hacer");
+        Tarjeta tarjeta = new Tarjeta("t1", "Tarea 1", "Descripción");
+        lista.agregarTarjeta(tarjeta);
+        tablero.agregarLista(lista);
+
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        PermisosTarjetaResponse response = servicioTarjeta.configurarPermisoTarjeta(
+            "1",
+            "lista-1",
+            "t1",
+            "propietario@example.com",
+            ConfigurarPermisoTarjetaRequest.builder()
+                .emailUsuario("lector@example.com")
+                .permiso("ESCRITURA")
+                .build()
+        );
+
+        assertEquals("ESCRITURA", response.getPermisosUsuarios().get("lector@example.com"));
+        verify(repositorioTablero).guardar(tablero);
+    }
+
+    @Test
+    void configurarPermisoTarjetaParaUsuarioNoCompartidoThrows() {
+        Tablero tablero = new Tablero("1", "Tablero", "propietario@example.com");
+        Lista lista = new Lista("lista-1", "Por hacer");
+        Tarjeta tarjeta = new Tarjeta("t1", "Tarea 1", "Descripción");
+        lista.agregarTarjeta(tarjeta);
+        tablero.agregarLista(lista);
+
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        assertThrows(ErrorValidacionException.class, () ->
+            servicioTarjeta.configurarPermisoTarjeta(
+                "1",
+                "lista-1",
+                "t1",
+                "propietario@example.com",
+                ConfigurarPermisoTarjetaRequest.builder()
+                    .emailUsuario("no-compartido@example.com")
+                    .permiso("LECTURA")
+                    .build()
+            )
+        );
     }
 
     @Test

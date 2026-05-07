@@ -211,6 +211,27 @@ public class ServicioListaTest {
     }
 
     @Test
+    void moverTarjetaSinPermisoDeEscrituraThrows() {
+        Tablero tablero = new Tablero("1", "Tablero", "propietario@example.com");
+        tablero.compartirCon("lector@example.com");
+
+        Lista listaOrigen = new Lista("lista-origen", "Origen");
+        Lista listaDestino = new Lista("lista-destino", "Destino");
+        Tarjeta tarjeta = new Tarjeta("tarjeta-1", "Tarea 1", "");
+        tarjeta.asignarPermiso("lector@example.com", PermisoTarjeta.LECTURA);
+
+        listaOrigen.agregarTarjeta(tarjeta);
+        tablero.agregarLista(listaOrigen);
+        tablero.agregarLista(listaDestino);
+
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        assertThrows(PermisoNegadoException.class, () ->
+            servicioLista.moverTarjeta("1", "lista-origen", "lista-destino", "tarjeta-1", "lector@example.com")
+        );
+    }
+
+    @Test
     void obtenerReglasListaExitosamente() {
         Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
         Lista lista = new Lista("lista-1", "Por hacer");

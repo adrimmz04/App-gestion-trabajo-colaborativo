@@ -2,10 +2,12 @@ package pds.app_gestion.application.service;
 
 import org.springframework.stereotype.Service;
 import pds.app_gestion.application.dto.ActualizarTarjetaRequest;
+import pds.app_gestion.application.dto.ConfigurarPermisoTarjetaRequest;
 import pds.app_gestion.application.dto.CrearTarjetaRequest;
 import pds.app_gestion.application.dto.CrearEtiquetaRequest;
-import pds.app_gestion.application.dto.TarjetaResponse;
 import pds.app_gestion.application.dto.EtiquetaResponse;
+import pds.app_gestion.application.dto.PermisosTarjetaResponse;
+import pds.app_gestion.application.dto.TarjetaResponse;
 import pds.app_gestion.application.exception.ErrorOperacionDominioException;
 import pds.app_gestion.application.exception.ErrorValidacionException;
 import pds.app_gestion.application.exception.PermisoNegadoException;
@@ -13,8 +15,10 @@ import pds.app_gestion.application.exception.RecursoNoEncontradoException;
 import pds.app_gestion.domain.*;
 
 import java.text.Normalizer;
+import java.util.Map;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -95,6 +99,7 @@ public class ServicioTarjeta {
         Tablero tablero = obtenerTablero(idTablero, emailUsuario);
         Lista lista = obtenerLista(tablero, idLista);
         Tarjeta tarjeta = obtenerTarjeta(lista, idTarjeta);
+        validarPermisoEscritura(tablero, tarjeta, emailUsuario);
         
         if (request.getDescripcion() != null) {
             tarjeta.actualizarDescripcion(request.getDescripcion());
@@ -119,6 +124,7 @@ public class ServicioTarjeta {
         Tablero tablero = obtenerTablero(idTablero, emailUsuario);
         Lista lista = obtenerLista(tablero, idLista);
         Tarjeta tarjeta = obtenerTarjeta(lista, idTarjeta);
+        validarPermisoEscritura(tablero, tarjeta, emailUsuario);
 
         boolean estabaCompletada = tarjeta.isCompletada();
         tarjeta.marcarComoCompletada();
@@ -147,6 +153,7 @@ public class ServicioTarjeta {
         Tablero tablero = obtenerTablero(idTablero, emailUsuario);
         Lista lista = obtenerLista(tablero, idLista);
         Tarjeta tarjeta = obtenerTarjeta(lista, idTarjeta);
+        validarPermisoEscritura(tablero, tarjeta, emailUsuario);
 
         boolean estabaCompletada = tarjeta.isCompletada();
         tarjeta.marcarComoNoCompletada();
@@ -173,6 +180,7 @@ public class ServicioTarjeta {
         Tablero tablero = obtenerTablero(idTablero, emailUsuario);
         Lista lista = obtenerLista(tablero, idLista);
         Tarjeta tarjeta = obtenerTarjeta(lista, idTarjeta);
+        validarPermisoEscritura(tablero, tarjeta, emailUsuario);
 
         tablero.registrarAccion("TARJETA_ELIMINADA",
             String.format("Tarjeta '%s' eliminada de '%s'", tarjeta.getTitulo(), lista.getNombre()));
@@ -195,6 +203,7 @@ public class ServicioTarjeta {
         Tablero tablero = obtenerTablero(idTablero, emailUsuario);
         Lista lista = obtenerLista(tablero, idLista);
         Tarjeta tarjeta = obtenerTarjeta(lista, idTarjeta);
+        validarPermisoEscritura(tablero, tarjeta, emailUsuario);
         
         try {
             Etiqueta etiqueta = new Etiqueta(request.getNombre(), request.getColor());
@@ -227,6 +236,7 @@ public class ServicioTarjeta {
         Lista lista = obtenerLista(tablero, idLista);
         
         return lista.getTarjetas().stream()
+            .filter(tarjeta -> tablero.puedeLeerTarjeta(tarjeta, emailUsuario))
             .filter(tarjeta -> contieneTodasLasEtiquetas(tarjeta, nombreEtiquetas))
             .map(this::convertirATarjetaResponse)
             .collect(Collectors.toList());
@@ -245,6 +255,7 @@ public class ServicioTarjeta {
         Lista lista = obtenerLista(tablero, idLista);
         
         return lista.getTarjetas().stream()
+            .filter(tarjeta -> tablero.puedeLeerTarjeta(tarjeta, emailUsuario))
             .map(this::convertirATarjetaResponse)
             .collect(Collectors.toList());
     }
@@ -262,12 +273,68 @@ public class ServicioTarjeta {
         Lista lista = obtenerLista(tablero, idLista);
         
         return lista.getTarjetas().stream()
+            .filter(tarjeta -> tablero.puedeLeerTarjeta(tarjeta, emailUsuario))
             .flatMap(tarjeta -> tarjeta.getEtiquetas().stream())
             .map(e -> EtiquetaResponse.builder()
                 .nombre(e.getNombre())
                 .color(e.getColor())
                 .build())
             .collect(Collectors.toSet());
+    }
+
+    /**
+     * Caso de uso: Obtener los permisos explícitos de una tarjeta.
+     */
+    public PermisosTarjetaResponse obtenerPermisosTarjeta(String idTablero, String idLista, String idTarjeta,
+                                                          String emailUsuario) {
+        Tablero tablero = obtenerTablero(idTablero, emailUsuario);
+        validarPropietario(tablero, emailUsuario);
+
+        Lista lista = obtenerLista(tablero, idLista);
+        Tarjeta tarjeta = obtenerTarjeta(lista, idTarjeta);
+        return convertirAPermisosTarjetaResponse(tarjeta);
+    }
+
+    /**
+     * Caso de uso: Configurar el permiso explícito de un usuario sobre una tarjeta.
+     */
+    public PermisosTarjetaResponse configurarPermisoTarjeta(String idTablero, String idLista, String idTarjeta,
+                                                            String emailUsuario,
+                                                            ConfigurarPermisoTarjetaRequest request) {
+        validarConfigurarPermisoTarjeta(request);
+
+        Tablero tablero = obtenerTablero(idTablero, emailUsuario);
+        validarPropietario(tablero, emailUsuario);
+
+        Lista lista = obtenerLista(tablero, idLista);
+        Tarjeta tarjeta = obtenerTarjeta(lista, idTarjeta);
+
+        String emailObjetivo = request.getEmailUsuario().trim();
+        if (emailObjetivo.equals(tablero.getPropietarioEmail())) {
+            throw new ErrorValidacionException("El propietario ya tiene control total sobre la tarjeta");
+        }
+
+        if (!tablero.estaCompartidoCon(emailObjetivo)) {
+            throw new ErrorValidacionException("Solo se pueden configurar permisos para usuarios con los que el tablero ya está compartido");
+        }
+
+        Optional<PermisoTarjeta> permiso = resolverPermisoSolicitado(request.getPermiso());
+        if (permiso.isPresent()) {
+            tarjeta.asignarPermiso(emailObjetivo, permiso.get());
+            tablero.registrarAccion(
+                "PERMISO_TARJETA_CONFIGURADO",
+                String.format("Permiso %s asignado a %s sobre '%s'", permiso.get().name(), emailObjetivo, tarjeta.getTitulo())
+            );
+        } else {
+            tarjeta.revocarPermiso(emailObjetivo);
+            tablero.registrarAccion(
+                "PERMISO_TARJETA_REVOCADO",
+                String.format("Permiso revocado para %s sobre '%s'", emailObjetivo, tarjeta.getTitulo())
+            );
+        }
+
+        repositorioTablero.guardar(tablero);
+        return convertirAPermisosTarjetaResponse(tarjeta);
     }
 
     /**
@@ -349,6 +416,16 @@ public class ServicioTarjeta {
             .build();
     }
 
+    private PermisosTarjetaResponse convertirAPermisosTarjetaResponse(Tarjeta tarjeta) {
+        Map<String, String> permisos = new TreeMap<>();
+        tarjeta.getPermisosUsuarios().forEach((email, permiso) -> permisos.put(email, permiso.name()));
+
+        return PermisosTarjetaResponse.builder()
+            .idTarjeta(tarjeta.getId())
+            .permisosUsuarios(permisos)
+            .build();
+    }
+
     /**
      * Obtiene un tablero verificando que el usuario tenga acceso.
      */
@@ -361,6 +438,55 @@ public class ServicioTarjeta {
         }
         
         return tablero;
+    }
+
+    private void validarPermisoLectura(Tablero tablero, Tarjeta tarjeta, String emailUsuario) {
+        if (!tablero.puedeLeerTarjeta(tarjeta, emailUsuario)) {
+            throw new PermisoNegadoException(emailUsuario, "leer tarjeta " + tarjeta.getId());
+        }
+    }
+
+    private void validarPermisoEscritura(Tablero tablero, Tarjeta tarjeta, String emailUsuario) {
+        if (!tablero.puedeEscribirTarjeta(tarjeta, emailUsuario)) {
+            throw new PermisoNegadoException(emailUsuario, "modificar tarjeta " + tarjeta.getId());
+        }
+    }
+
+    private void validarPropietario(Tablero tablero, String emailUsuario) {
+        if (!tablero.getPropietarioEmail().equals(emailUsuario)) {
+            throw new PermisoNegadoException(emailUsuario, "gestionar permisos de tarjeta");
+        }
+    }
+
+    private Optional<PermisoTarjeta> resolverPermisoSolicitado(String permiso) {
+        if (permiso == null || permiso.isBlank()) {
+            throw new ErrorValidacionException("Debes indicar un permiso válido: LECTURA, ESCRITURA o NINGUNO");
+        }
+
+        String valor = permiso.trim().toUpperCase(Locale.ROOT);
+        if ("NINGUNO".equals(valor)) {
+            return Optional.empty();
+        }
+
+        try {
+            return Optional.of(PermisoTarjeta.valueOf(valor));
+        } catch (IllegalArgumentException ex) {
+            throw new ErrorValidacionException("Permiso inválido: " + permiso + ". Usa LECTURA, ESCRITURA o NINGUNO");
+        }
+    }
+
+    private void validarConfigurarPermisoTarjeta(ConfigurarPermisoTarjetaRequest request) {
+        if (request == null) {
+            throw new ErrorValidacionException("La configuración de permisos no puede ser nula");
+        }
+
+        if (request.getEmailUsuario() == null || request.getEmailUsuario().isBlank()) {
+            throw new ErrorValidacionException("Debes indicar el email del usuario al que quieres asignar el permiso");
+        }
+
+        if (request.getPermiso() == null || request.getPermiso().isBlank()) {
+            throw new ErrorValidacionException("Debes indicar el permiso a configurar");
+        }
     }
 
     /**

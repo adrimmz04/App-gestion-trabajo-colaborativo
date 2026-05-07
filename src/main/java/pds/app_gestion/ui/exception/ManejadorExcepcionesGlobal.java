@@ -54,6 +54,19 @@ public class ManejadorExcepcionesGlobal {
     }
 
     /**
+     * Maneja errores de autenticación.
+     */
+    @ExceptionHandler(AutenticacionException.class)
+    public ResponseEntity<ErrorResponse> manejarAutenticacion(AutenticacionException ex) {
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.UNAUTHORIZED.value(),
+            ex.getMessage(),
+            System.currentTimeMillis()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    /**
      * Maneja excepciones de permiso negado.
      */
     @ExceptionHandler(PermisoNegadoException.class)

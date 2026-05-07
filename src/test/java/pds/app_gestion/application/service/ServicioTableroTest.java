@@ -166,6 +166,29 @@ public class ServicioTableroTest {
     }
 
     @Test
+    void obtenerListasFiltraTarjetasSinPermisoLectura() {
+        Tablero tablero = new Tablero("1", "Tablero", "propietario@example.com");
+        tablero.compartirCon("lector@example.com");
+
+        Lista lista = new Lista("lista-1", "Pendientes");
+        Tarjeta tarjetaVisible = new Tarjeta("t1", "Visible", "");
+        Tarjeta tarjetaOculta = new Tarjeta("t2", "Oculta", "");
+        tarjetaOculta.asignarPermiso("otro@example.com", PermisoTarjeta.LECTURA);
+        lista.agregarTarjeta(tarjetaVisible);
+        lista.agregarTarjeta(tarjetaOculta);
+        tablero.agregarLista(lista);
+
+        when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));
+
+        var listas = servicioTablero.obtenerListas("1", "lector@example.com");
+
+        assertEquals(1, listas.size());
+        assertEquals(1, listas.get(0).getTotalTarjetas());
+        assertEquals(1, listas.get(0).getTarjetas().size());
+        assertEquals("t1", listas.get(0).getTarjetas().get(0).getId());
+    }
+
+    @Test
     void actualizarTableroTituloYDescripcionExitosamente() {
         Tablero tablero = new Tablero("1", "Tablero", "adrian@example.com");
         when(repositorioTablero.obtenerPorId("1")).thenReturn(Optional.of(tablero));

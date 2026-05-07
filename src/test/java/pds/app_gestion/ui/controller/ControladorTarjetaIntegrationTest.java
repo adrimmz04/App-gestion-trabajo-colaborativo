@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import pds.app_gestion.application.dto.*;
+import pds.app_gestion.application.service.ServicioTablero;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
@@ -38,6 +39,9 @@ class ControladorTarjetaIntegrationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private ServicioTablero servicioTablero;
 
     private String idTablero;
     private String idLista;
@@ -93,6 +97,24 @@ class ControladorTarjetaIntegrationTest {
             .andExpect(jsonPath("$.tipo").value("TAREA"))
             .andExpect(jsonPath("$.completada").value(false));
     }
+
+            @Test
+            @DisplayName("Crear tarjeta usando código de acceso")
+            void testCrearTarjetaConCodigoAcceso() throws Exception {
+            CrearTarjetaRequest request = new CrearTarjetaRequest();
+            request.setTitulo("Tarjeta con código");
+            request.setDescripcion("Creada con autenticación temporal");
+            request.setTipo("TAREA");
+
+            String codigoAcceso = solicitarCodigoAcceso(emailPropietario);
+
+            mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas", idTablero, idLista)
+                .param("codigoAcceso", codigoAcceso)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.titulo").value("Tarjeta con código"));
+            }
 
     @Test
     @DisplayName("Crear tarjeta tipo CHECKLIST")
@@ -172,6 +194,85 @@ class ControladorTarjetaIntegrationTest {
     }
 
     @Test
+    @DisplayName("Filtra tarjetas por permiso explícito y deniega escritura con permiso solo lectura")
+    void testPermisosPorTarjetaFiltranLecturaYBloqueanEscritura() throws Exception {
+        String emailCompartido = "colaborador@test.com";
+
+        mockMvc.perform(post("/api/v1/tableros/{id}/compartir", idTablero)
+            .param("emailPropietario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new CompartirTableroRequest(emailCompartido))))
+            .andExpect(status().isNoContent());
+
+        String idTarjetaLectura = crearTarjeta("Tarjeta lectura", "Visible para colaborador");
+        String idTarjetaOculta = crearTarjeta("Tarjeta oculta", "No visible para colaborador");
+
+        MvcResult permisoLecturaResult = mockMvc.perform(put("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/permisos",
+                idTablero, idLista, idTarjetaLectura)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(
+                ConfigurarPermisoTarjetaRequest.builder()
+                    .emailUsuario(emailCompartido)
+                    .permiso("LECTURA")
+                    .build())))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        PermisosTarjetaResponse permisoLecturaResponse = objectMapper.readValue(
+            permisoLecturaResult.getResponse().getContentAsString(),
+            PermisosTarjetaResponse.class
+        );
+        assertThat(permisoLecturaResponse.getPermisosUsuarios())
+            .containsEntry(emailCompartido, "LECTURA");
+
+        mockMvc.perform(put("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/permisos",
+                idTablero, idLista, idTarjetaOculta)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(
+                ConfigurarPermisoTarjetaRequest.builder()
+                    .emailUsuario("otro@test.com")
+                    .permiso("LECTURA")
+                    .build())))
+            .andExpect(status().isBadRequest());
+
+        mockMvc.perform(post("/api/v1/tableros/{id}/compartir", idTablero)
+            .param("emailPropietario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(new CompartirTableroRequest("otro@test.com"))))
+            .andExpect(status().isNoContent());
+
+        mockMvc.perform(put("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}/permisos",
+                idTablero, idLista, idTarjetaOculta)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(
+                ConfigurarPermisoTarjetaRequest.builder()
+                    .emailUsuario("otro@test.com")
+                    .permiso("LECTURA")
+                    .build())))
+            .andExpect(status().isOk());
+
+        var listasVisibles = servicioTablero.obtenerListas(idTablero, emailCompartido);
+        assertThat(listasVisibles).hasSize(1);
+        assertThat(listasVisibles.get(0).getTarjetas())
+            .extracting(TarjetaResponse::getId)
+            .containsExactly(idTarjetaLectura);
+
+        ActualizarTarjetaRequest updateRequest = new ActualizarTarjetaRequest();
+        updateRequest.setDescripcion("Intento de edición sin permiso");
+
+        mockMvc.perform(put("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas/{idTarjeta}",
+                idTablero, idLista, idTarjetaLectura)
+            .param("emailUsuario", emailCompartido)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(updateRequest)))
+            .andExpect(status().isForbidden())
+            .andExpect(jsonPath("$.mensaje", containsString("no tiene permiso")));
+    }
+
+    @Test
     @DisplayName("Marcar tarjeta como no completada")
     void testMarcarComoNoCompletada() throws Exception {
         // Crear tarjeta
@@ -203,6 +304,44 @@ class ControladorTarjetaIntegrationTest {
             .param("emailUsuario", emailPropietario))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.completada").value(false));
+    }
+
+    private String solicitarCodigoAcceso(String email) throws Exception {
+        SolicitarCodigoAccesoRequest request = SolicitarCodigoAccesoRequest.builder()
+            .email(email)
+            .build();
+
+        MvcResult result = mockMvc.perform(post("/api/v1/auth/codigos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        SolicitarCodigoAccesoResponse response = objectMapper.readValue(
+            result.getResponse().getContentAsString(),
+            SolicitarCodigoAccesoResponse.class
+        );
+        return response.getCodigoDesarrollo();
+    }
+
+    private String crearTarjeta(String titulo, String descripcion) throws Exception {
+        CrearTarjetaRequest crearRequest = new CrearTarjetaRequest();
+        crearRequest.setTitulo(titulo);
+        crearRequest.setDescripcion(descripcion);
+        crearRequest.setTipo("TAREA");
+
+        MvcResult crearResult = mockMvc.perform(post("/api/v1/tableros/{idTablero}/listas/{idLista}/tarjetas", idTablero, idLista)
+            .param("emailUsuario", emailPropietario)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(crearRequest)))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        TarjetaResponse tarjetaResponse = objectMapper.readValue(
+            crearResult.getResponse().getContentAsString(),
+            TarjetaResponse.class
+        );
+        return tarjetaResponse.getId();
     }
 
     @Test

@@ -191,6 +191,78 @@ public class Tablero {
     }
 
     /**
+     * Comprueba si el tablero está compartido explícitamente con un usuario.
+     *
+     * @param emailUsuario email del usuario
+     * @return true si el tablero está compartido con ese usuario
+     */
+    public boolean estaCompartidoCon(String emailUsuario) {
+        if (emailUsuario == null || emailUsuario.isBlank()) {
+            return false;
+        }
+
+        return usuariosCompartidos.contains(emailUsuario.trim());
+    }
+
+    /**
+     * Evalúa si un usuario puede leer una tarjeta del tablero.
+     *
+     * Si la tarjeta no tiene permisos explícitos, se mantiene el comportamiento
+     * actual del tablero compartido para no romper el acceso existente.
+     */
+    public boolean puedeLeerTarjeta(Tarjeta tarjeta, String emailUsuario) {
+        if (tarjeta == null || emailUsuario == null || emailUsuario.isBlank()) {
+            return false;
+        }
+
+        String emailNormalizado = emailUsuario.trim();
+        if (emailNormalizado.equals(propietarioEmail)) {
+            return true;
+        }
+
+        if (!tieneAcceso(emailNormalizado)) {
+            return false;
+        }
+
+        if (!tarjeta.tienePermisosConfigurados()) {
+            return true;
+        }
+
+        return tarjeta.obtenerPermiso(emailNormalizado)
+            .map(PermisoTarjeta::permiteLectura)
+            .orElse(false);
+    }
+
+    /**
+     * Evalúa si un usuario puede modificar una tarjeta del tablero.
+     *
+     * Si la tarjeta no tiene permisos explícitos, se mantiene el comportamiento
+     * actual del tablero compartido para no romper la edición existente.
+     */
+    public boolean puedeEscribirTarjeta(Tarjeta tarjeta, String emailUsuario) {
+        if (tarjeta == null || emailUsuario == null || emailUsuario.isBlank()) {
+            return false;
+        }
+
+        String emailNormalizado = emailUsuario.trim();
+        if (emailNormalizado.equals(propietarioEmail)) {
+            return true;
+        }
+
+        if (!tieneAcceso(emailNormalizado)) {
+            return false;
+        }
+
+        if (!tarjeta.tienePermisosConfigurados()) {
+            return true;
+        }
+
+        return tarjeta.obtenerPermiso(emailNormalizado)
+            .map(PermisoTarjeta::permiteEscritura)
+            .orElse(false);
+    }
+
+    /**
      * Actualiza la descripción del tablero.
      * 
      * @param nuevaDescripcion nueva descripción
