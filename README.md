@@ -8,7 +8,7 @@ La aplicación cubre los requisitos principales del enunciado sobre tableros col
 
 ## Participante
 
-- Adrian Martinez Zamora - adrimmz04@gmail.com
+- Adrian Martinez Zamora - adrian.m.z@um.es
 
 ## Funcionalidad implementada
 
