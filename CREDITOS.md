@@ -30,22 +30,6 @@ El estado actual del repositorio refleja trabajo individual sobre análisis, imp
 - Redacción y actualización de README, guía de inicio rápido y documentación técnica.
 - Mantenimiento del plan interno de correcciones para continuar el trabajo sin perder contexto.
 
-### Evidencias representativas en commits
-
-Algunos commits relevantes para valorar la participación:
-
-- `5919607`: correcciones de persistencia JPA y tests de integración.
-- `d3e1107`: correcciones relacionadas con persistencia del estado de bloqueo.
-- `1ed2463`: compactación automática con archivado y eliminación.
-- `630e7ad`: consolidación de suite de tests en verde.
-- `a3b9425`: arreglos de integración.
-- `5821a45`: ampliación de documentación.
-- `afab88c`: actualización del README.
-
-### Nota sobre evidencias de colaboración
-
-En el estado actual del repositorio, la evidencia más clara y verificable son los commits. No se documentan aquí PRs, issues o discusiones porque no aportan más señal que el propio historial disponible en local.
-
 ### Decisiones de diseño relevantes
 
 #### Arquitectura hexagonal
