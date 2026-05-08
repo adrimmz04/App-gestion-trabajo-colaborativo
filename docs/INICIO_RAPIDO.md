@@ -47,7 +47,7 @@ Importante:
 
 Comportamiento:
 
-- Si existe `app-mail.local.ps1`, la aplicación arranca con `local,gmail` y envío real de códigos por correo.
+- Si existe `app-mail.local.ps1`, la aplicación arranca con `local-gmail` y envío real de códigos por correo.
 - Si no existe ese fichero, arranca con `local` y usa el modo desarrollo actual.
 - El código temporal sigue siendo reutilizable mientras no haya expirado; si se cierra sesión y se vuelve a entrar antes de 5 minutos, la aplicación ofrece reutilizar el último código sin enviar otro.
 
@@ -90,6 +90,10 @@ Resultado esperado:
 - Ventana JavaFX iniciada junto con la aplicación
 
 ### 2. Ejecución local rápida con H2 (modo manual alternativo)
+
+Este es un modo técnico pensado para desarrollo, validación rápida o demostraciones controladas.
+
+Un usuario normal no necesita ejecutarlo manualmente ni conocer H2 para abrir la aplicación.
 
 Este es el modo equivalente al que usa `.\start-app.cmd` cuando no hay configuración de correo real.
 
@@ -137,7 +141,7 @@ set APP_MAIL_USERNAME=tu_cuenta@gmail.com
 set APP_MAIL_PASSWORD=tu_contrasena_de_aplicacion
 set APP_MAIL_FROM=tu_cuenta@gmail.com
 set APP_MAIL_SENDER_NAME=APP-GESTION
-mvn spring-boot:run "-Dspring-boot.run.profiles=local,gmail" "-DskipTests"
+mvn spring-boot:run "-Dspring-boot.run.profiles=local-gmail" "-DskipTests"
 ```
 
 Notas específicas de Gmail:

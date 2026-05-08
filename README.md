@@ -48,8 +48,8 @@ Los permisos por tarjeta se han implementado con una decisión de compatibilidad
 - Maven
 - JPA / Hibernate
 - Flyway
-- PostgreSQL para ejecución normal
-- H2 en memoria para pruebas y arranque local rápido
+- PostgreSQL como persistencia principal
+- H2 en memoria para tests y soporte local de desarrollo
 - Caffeine para caché
 - SnakeYAML para plantillas
 - Spring Mail para autenticación por correo
@@ -63,7 +63,7 @@ Los permisos por tarjeta se han implementado con una decisión de compatibilidad
 
 ## Arranque rápido
 
-### Windows, un solo comando
+### Uso normal en Windows
 
 ```powershell
 .\start-app.cmd
@@ -74,17 +74,9 @@ Comportamiento:
 - Si existe `app-mail.local.ps1`, arranca con `local-gmail` y envío real de códigos por correo.
 - Si no existe, arranca con `local` en modo desarrollo.
 
-### Validación básica
+Con JDK y Maven ya instalados y situándose dentro de `app-gestion`, ese es el único comando que hace falta para abrir la aplicación.
 
-```bash
-mvn clean test
-```
-
-### Ejecución local rápida con H2
-
-```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=local -DskipTests
-```
+Los modos alternativos de arranque, validación técnica y perfiles de desarrollo están explicados en `docs/INICIO_RAPIDO.md`.
 
 ## Correo real para autenticación
 
